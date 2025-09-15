@@ -1,0 +1,3 @@
+[submodule "extern/byOpen"]
+	path = extern/byOpen
+	url = https://github.com/hack0z/byOpen

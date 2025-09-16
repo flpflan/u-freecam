@@ -43,7 +43,7 @@ namespace FreeCam
             if (UnityApi::GetKeyDown(Plus))
             {
                 Debug::LOG("set timescale: +=1");
-                UTYPE::Time::SetTimeScale(UTYPE::Time::GetTimeScale()+1);
+                UTYPE::Time::SetTimeScale(UTYPE::Time::GetTimeScale() + 1);
             }
             if (UnityApi::GetKeyDown(Minus))
             {
@@ -168,8 +168,8 @@ namespace FreeCam
                 if (toMove.x || toMove.y || toMove.z) camera.Move(toMove, UnityApi::GetKey(SHIFT_L));
 
                 UTYPE::Vector2 toRotate(0, 0);
-                toRotate.x = 5 * UnityApi::GetAxis("Mouse X");
-                toRotate.y = 5 * UnityApi::GetAxis("Mouse Y");
+                toRotate.x = UnityApi::GetAxis("Mouse X");
+                toRotate.y = UnityApi::GetAxis("Mouse Y");
                 if (UnityApi::GetKey(UpArrow)) toRotate.y = 1;
                 if (UnityApi::GetKey(DownArrow)) toRotate.y = -1;
                 if (UnityApi::GetKey(RightArrow)) toRotate.x = 1;

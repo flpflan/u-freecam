@@ -3,7 +3,7 @@
 #include "unity_side.hpp"
 #include <fstream>
 
-inline static auto _f() -> std::ofstream& {
+inline auto _f() -> std::ofstream& {
 #if ANDROID_MODE
     static auto f = std::ofstream("/sdcard/Android/data/com.nexon.bluearchive/cache/debug.txt", std::ios::out | std::ios::trunc);
 #else

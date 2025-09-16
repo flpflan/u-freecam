@@ -8,7 +8,11 @@ namespace FreeCam {
         UTYPE::Camera *camera;
         UTYPE::Transform *transform;
 
+#if ANDROID_MODE
         const float rotationSpeed = 100.0f;
+#else
+        const float rotationSpeed = 500.0f;
+#endif
         float yaw;
         float pitch;
         float roll;

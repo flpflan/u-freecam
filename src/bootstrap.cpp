@@ -1,29 +1,37 @@
 ﻿#include "bootstrap.hpp"
 
 #include "freecam.hpp"
-#include <dlfcn.h>
 #include <thread>
-#include "byopen.h"
 #include "debug.hpp"
+#if ANDROID_MODE
+#include "byopen.h"
+#else
+#include "Windows.h"
+#endif
 
-void BootStrap::Run()
+void Bootstrap::Run()
 {
     std::this_thread::sleep_for(std::chrono::seconds(5));
-    FreeCam::Debug::LOG("waiting for unity initialized");
+    Debug::LOG("waiting for unity initialized");
     while(!initializeUnity())
         std::this_thread::sleep_for(std::chrono::seconds(2));
-    FreeCam::Debug::LOG("unity initializing success");
+    Debug::LOG("unity initializing success");
     std::thread(FreeCam::FreeCam::Hack).detach();
 }
 
-void BootStrap::Shutdown()
+void Bootstrap::Shutdown()
 {
 }
 
 
-std::pair<void*, UnityResolve::Mode> BootStrap::getUnityBackend()
+std::pair<void*, UnityResolve::Mode> Bootstrap::getUnityBackend()
 {
-    if (auto assembly = by_dlopen("libil2cpp.so", RTLD_NOW))
+#if ANDROID_MODE
+    const auto assembly = by_dlopen("libil2cpp.so", RTLD_NOW);
+#else
+    const auto assembly = GetModuleHandleA("UnityPlayer.dll");
+#endif
+    if (assembly)
     {
         return {assembly, UnityResolve::Mode::Il2Cpp};
     }
@@ -31,7 +39,7 @@ std::pair<void*, UnityResolve::Mode> BootStrap::getUnityBackend()
     return {nullptr, UnityResolve::Mode::Mono};
 }
 
-bool BootStrap::initializeUnity()
+bool Bootstrap::initializeUnity()
 {
     auto [module, mode] = getUnityBackend();
     if (module == nullptr)

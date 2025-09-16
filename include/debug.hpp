@@ -3,13 +3,18 @@
 #include "unity_side.hpp"
 #include <fstream>
 
-namespace FreeCam::Debug {
-
+inline static auto _f() -> std::ofstream& {
+#if ANDROID_MODE
+    static auto f = std::ofstream("/sdcard/Android/data/com.nexon.bluearchive/cache/debug.txt", std::ios::out | std::ios::trunc);
+#else
+    static auto f = std::ofstream("debug.txt", std::ios::out | std::ios::trunc);
+#endif
+    return f;
+}
+namespace Debug {
     template <typename... Args>
-    static void LOG(Args &&...args) {
-        static auto f = std::fstream();
-        if(!f.is_open())
-            f.open("/sdcard/Android/data/com.nexon.bluearchive/cache/debug.txt", std::ios::out | std::ios::trunc);
+    void LOG(Args &&...args) {
+        auto& f = _f();
         ((f << args << " "), ...);
         f << std::endl;
     }
@@ -21,5 +26,4 @@ namespace FreeCam::Debug {
             }
         }
     }
-
-} // namespace FreeCamDebug
+}

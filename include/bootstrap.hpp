@@ -1,13 +1,8 @@
 ﻿#pragma once
 
-#define __ANDROID__ 1
-#define WINDOWS_MODE 0
-#define ANDROID_MODE 1
-#define LINUX_MODE 0
-
 #include "UnityResolve.hpp"
 
-class BootStrap
+class Bootstrap
 {
 public:
     static void Run();

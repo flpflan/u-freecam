@@ -1,13 +1,30 @@
-#include "freecam.hpp"
 #include "freecam/camera_proxy.hpp"
 
+template <typename T>
+constexpr inline static T Clamp(T n, T bb, T bt)
+{
+    if (n < bb) return bb;
+    if (n > bt) return bt;
+    return n;
+}
+
 namespace FreeCam {
-    template <typename T>
-    constexpr inline T Clamp(T n, T bb, T bt)
+    CameraProxy::CameraProxy(UTYPE::Camera *c)
     {
-        if (n < bb) return bb;
-        if (n > bt) return bt;
-        return n;
+        camera = c;
+        transform = camera->GetTransform();
+        position = transform->GetPosition();
+        const auto angles = transform->GetRotation().ToEuler();
+        yaw = angles.y;
+        pitch = angles.x;
+        roll = angles.z;
+    }
+    bool CameraProxy::IsCurrentFreeCamera()
+    {
+        const auto curCam = UTYPE::Camera::GetMain();
+        if(curCam == nullptr) return true;
+        const auto _n = std::wstring(curCam->GetName()->m_firstChar);
+        return std::string(_n.begin(), _n.end()).starts_with("U_rea");
     }
     auto CameraProxy::Rotate(UTYPE::Vector2 input) -> void
     {

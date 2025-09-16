@@ -93,7 +93,7 @@ namespace FreeCam
             freeCamera = UnityApi::AddComponent<UTYPE::Camera>(go, originCamera->GetType());
         }
 
-        UnityApi::SetTag(freeCameraGObject, UTYPE::String::New("MainCamera"));
+        UnityApi::SetTag(freeCameraGObject, "MainCamera");
         freeCameraGObject->SetActive(true);
 
         static UTYPE::Transform *freeTransform;
@@ -128,7 +128,7 @@ namespace FreeCam
             freeTransform->SetPosition(originPosition);
             freeTransform->SetRotation(originRotation);
 
-            UnityApi::SetTag(freeCameraGObject, UTYPE::String::New("Bulabula"));
+            UnityApi::SetTag(freeCameraGObject, "Bulabula");
         }
 
         if (originGObject)
@@ -152,17 +152,14 @@ namespace FreeCam
 
         CameraProxy camera(freeCamera);
 
-        const auto transform = freeCamera->GetTransform();
-        auto positon = transform->GetPosition();
-        const auto rotation = transform->GetRotation();
         auto ui_layer = false;
         while (listenKeys)
         {
             if (!ui_layer)
             {
                 UTYPE::Vector3 toMove(0, 0, 0);
-                // toMove.x = UnityApi::GetAxis(UTYPE::String::New("Horizontal"));
-                // toMove.y = UnityApi::GetAxis(UTYPE::String::New("Vertical"));
+                // toMove.x = UnityApi::GetAxis("Horizontal");
+                // toMove.y = UnityApi::GetAxis("Vertical");
                 if (UnityApi::GetKey(Space)) toMove.z = 1;
                 if (UnityApi::GetKey(Ctrl_L)) toMove.z = -1;
                 if (UnityApi::GetKey(W)) toMove.y = 1;
@@ -172,8 +169,8 @@ namespace FreeCam
                 if (toMove.x || toMove.y || toMove.z) camera.Move(toMove, UnityApi::GetKey(SHIFT_L));
 
                 UTYPE::Vector2 toRotate(0, 0);
-                toRotate.x = UnityApi::GetAxis(UTYPE::String::New("Mouse X"));
-                toRotate.y = UnityApi::GetAxis(UTYPE::String::New("Mouse Y"));
+                toRotate.x = UnityApi::GetAxis("Mouse X");
+                toRotate.y = UnityApi::GetAxis("Mouse Y");
                 if (UnityApi::GetKey(UpArrow)) toRotate.y = 1;
                 if (UnityApi::GetKey(DownArrow)) toRotate.y = -1;
                 if (UnityApi::GetKey(RightArrow)) toRotate.x = 1;

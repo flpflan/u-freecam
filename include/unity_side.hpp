@@ -52,7 +52,7 @@ namespace FreeCam {
         using UMethod = UnityResolve::Method;
         using UTYPE = UnityResolve::UnityType;
 
-        inline static auto GetKey(KeyCode key) -> bool {
+        inline static auto GetKey(const KeyCode key) -> bool {
             static UMethod * method;
             if(!method)
                 method = UnityResolve::Get("UnityEngine.InputLegacyModule.dll")
@@ -60,7 +60,7 @@ namespace FreeCam {
                             ->Get<UnityResolve::Method>("GetKey");
             return method->Invoke<bool>(key);
         }
-        inline static auto GetKeyDown(KeyCode key) -> bool {
+        inline static auto GetKeyDown(const KeyCode key) -> bool {
             static UMethod * method;
             if(!method)
                 method = UnityResolve::Get("UnityEngine.InputLegacyModule.dll")
@@ -68,7 +68,7 @@ namespace FreeCam {
                             ->Get<UnityResolve::Method>("GetKey");
             return method->Invoke<bool>(key);
         }
-        inline static auto GetAxis(UTYPE::String *axis) -> float {
+        inline static auto GetAxis(const UTYPE::String *const axis) -> float {
             static UMethod * method;
             if (!method)
                 method = UnityResolve::Get("UnityEngine.InputLegacyModule.dll")
@@ -76,7 +76,10 @@ namespace FreeCam {
                             ->Get<UnityResolve::Method>("GetAxis");
             return method->Invoke<float>(axis);
         }
-        inline static auto GetMouseButtonDown(int key) -> bool {
+        inline static auto GetAxis(const std::string &axis) -> float {
+            return GetAxis(UTYPE::String::New(axis));
+        }
+        inline static auto GetMouseButtonDown(const int key) -> bool {
             static UMethod *method;
             if (!method)
                 method = UnityResolve::Get("UnityEngine.InputLegacyModule.dll")
@@ -84,7 +87,7 @@ namespace FreeCam {
                             ->Get<UnityResolve::Method>("GetMouseButtonDown");
             return method->Invoke<bool>(key);
         }
-        inline static auto SetTag(UTYPE::GameObject *go, UTYPE::String* name) -> void {
+        inline static auto SetTag(const UTYPE::GameObject *const go, const UTYPE::String *const  name) -> void {
             static UMethod *method;
             if (!method)
                 method = UnityResolve::Get("UnityEngine.CoreModule.dll")
@@ -92,8 +95,11 @@ namespace FreeCam {
                             ->Get<UnityResolve::Method>("set_tag");
             return method->Invoke<void>(go, name);
         }
+        inline static auto SetTag(const UTYPE::GameObject *const go, const std::string &name) -> void {
+            return SetTag(go, UTYPE::String::New(name));
+        }
         template<typename T>
-        inline static auto AddComponent(UTYPE::GameObject *go, UTYPE::CsType *ty) -> T * {
+        inline static auto AddComponent(const UTYPE::GameObject *const go, const UTYPE::CsType *const ty) -> T * {
             static UMethod *method;
             if (!method)
                 method = UnityResolve::Get("UnityEngine.CoreModule.dll")

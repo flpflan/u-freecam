@@ -29,7 +29,7 @@ std::pair<void*, UnityResolve::Mode> Bootstrap::getUnityBackend()
 #if ANDROID_MODE
     const auto assembly = by_dlopen("libil2cpp.so", RTLD_NOW);
 #else
-    const auto assembly = GetModuleHandleA("UnityPlayer.dll");
+    const auto assembly = GetModuleHandleA("GameAssembly.dll");
 #endif
     if (assembly)
     {

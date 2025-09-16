@@ -12,13 +12,13 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD reason, LPVOID lpReserved)
     {
     case DLL_PROCESS_ATTACH:
         DisableThreadLibraryCalls(hModule);
-        std::thread(Bootstrap::run).detach();
+        std::thread(Bootstrap::Run).detach();
         break;
 
     case DLL_PROCESS_DETACH:
         if (lpReserved == nullptr)
         {
-            Bootstrap::shutdown();
+            Bootstrap::Shutdown();
         }
         break;
 

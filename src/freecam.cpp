@@ -13,7 +13,6 @@ namespace FreeCam
         UnityResolve::ThreadAttach();
 
         FreeCam freecam;
-        using namespace std::chrono_literals;
         std::thread(
             [&freecam]
             {
@@ -24,6 +23,7 @@ namespace FreeCam
                 }
             })
             .detach();
+
         Debug::LOG("main loop start");
         while (true)
         {
@@ -50,7 +50,7 @@ namespace FreeCam
                 Debug::LOG("set timescale: -=1");
                 UTYPE::Time::SetTimeScale(UTYPE::Time::GetTimeScale() - 1);
             }
-            if (UnityApi::GetKey(Enter))
+            if (UnityApi::GetKeyDown(Enter))
             {
                 if (freecam.isFreeCamBegin)
                 {
@@ -60,7 +60,6 @@ namespace FreeCam
                 {
                     freecam.BeginFreeCam();
                 }
-                std::this_thread::sleep_for(std::chrono::microseconds(1s));
             }
 
             std::this_thread::sleep_for(std::chrono::microseconds((int)DeltaTime_us));

@@ -65,7 +65,7 @@ namespace FreeCam {
             if(!method)
                 method = UnityResolve::Get("UnityEngine.InputLegacyModule.dll")
                             ->Get("Input")
-                            ->Get<UnityResolve::Method>("GetKey");
+                            ->Get<UnityResolve::Method>("GetKeyDown");
             return method->Invoke<bool>(key);
         }
         inline static auto GetAxis(const UTYPE::String *const axis) -> float {

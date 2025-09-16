@@ -9,7 +9,7 @@ namespace FreeCam::Debug {
     static void LOG(Args &&...args) {
         static auto f = std::fstream();
         if(!f.is_open())
-            f.open("/sdcard/Android/data/com.nexon.bluearchive/cache/debug.txt", std::ios::out | std::ios::app);
+            f.open("/sdcard/Android/data/com.nexon.bluearchive/cache/debug.txt", std::ios::out | std::ios::trunc);
         ((f << args << " "), ...);
         f << std::endl;
     }

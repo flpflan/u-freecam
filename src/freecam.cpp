@@ -39,16 +39,19 @@ namespace FreeCam
                     Debug::LOG("set timescale: 0");
                     UTYPE::Time::SetTimeScale(0);
                 }
+                std::this_thread::sleep_for(100ms);
             }
             if (UnityApi::GetKeyDown(Plus))
             {
                 Debug::LOG("set timescale: +=1");
                 UTYPE::Time::SetTimeScale(UTYPE::Time::GetTimeScale() + 1);
+                std::this_thread::sleep_for(100ms);
             }
             if (UnityApi::GetKeyDown(Minus))
             {
                 Debug::LOG("set timescale: -=1");
                 UTYPE::Time::SetTimeScale(UTYPE::Time::GetTimeScale() - 1);
+                std::this_thread::sleep_for(100ms);
             }
             if (UnityApi::GetKeyDown(Enter))
             {
@@ -60,6 +63,7 @@ namespace FreeCam
                 {
                     freecam.BeginFreeCam();
                 }
+                std::this_thread::sleep_for(100ms);
             }
 
             std::this_thread::sleep_for(std::chrono::microseconds((int)DeltaTime_us));
@@ -180,6 +184,7 @@ namespace FreeCam
             {
                 CursorProxy::ToggleCursor();
                 ui_layer = !ui_layer;
+                std::this_thread::sleep_for(100ms);
             }
 
             std::this_thread::sleep_for(std::chrono::microseconds((int)DeltaTime_us));

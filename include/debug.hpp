@@ -1,6 +1,6 @@
 #pragma once
 
-#include "unity_side.hpp"
+// #include "unity_side.hpp"
 #include <fstream>
 
 inline auto _f() -> std::ofstream& {
@@ -19,11 +19,11 @@ namespace Debug {
         f << std::endl;
     }
 
-    static void TestKey() {
-        for (int i = 0; i <= 500; i++) {
-            if (UnityApi::GetKey((KeyCode)i)) {
-                LOG(i);
-            }
-        }
-    }
+    // static void TestKey() {
+    //     for (int i = 0; i <= 500; i++) {
+    //         if (UnityApi::GetKey((KeyCode)i)) {
+    //             LOG(i);
+    //         }
+    //     }
+    // }
 }

@@ -1,4 +1,4 @@
-﻿#include "main.hpp"
+﻿#include "bootstrap.hpp"
 
 #include "freecam.hpp"
 #include <dlfcn.h>
@@ -6,7 +6,7 @@
 #include "byopen.h"
 #include "debug.hpp"
 
-void Main::run()
+void BootStrap::Run()
 {
     std::this_thread::sleep_for(std::chrono::seconds(5));
     FreeCam::Debug::LOG("waiting for unity initialized");
@@ -16,12 +16,12 @@ void Main::run()
     std::thread(FreeCam::FreeCam::Hack).detach();
 }
 
-void Main::shutdown()
+void BootStrap::Shutdown()
 {
 }
 
 
-std::pair<void*, UnityResolve::Mode> Main::getUnityBackend()
+std::pair<void*, UnityResolve::Mode> BootStrap::getUnityBackend()
 {
     if (auto assembly = by_dlopen("libil2cpp.so", RTLD_NOW))
     {
@@ -31,7 +31,7 @@ std::pair<void*, UnityResolve::Mode> Main::getUnityBackend()
     return {nullptr, UnityResolve::Mode::Mono};
 }
 
-bool Main::initializeUnity()
+bool BootStrap::initializeUnity()
 {
     auto [module, mode] = getUnityBackend();
     if (module == nullptr)

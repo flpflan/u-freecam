@@ -4,7 +4,7 @@ endif()
 
 set(SOURCE_FILES
     lib.cpp
-    main.cpp
+    bootstrap.cpp
     freecam.cpp
     camera_proxy.cpp
     cursor_proxy.cpp

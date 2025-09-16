@@ -7,11 +7,11 @@
 
 #include "UnityResolve.hpp"
 
-class Main
+class BootStrap
 {
 public:
-    static void run();
-    static void shutdown();
+    static void Run();
+    static void Shutdown();
 
 private:
     static std::pair<void*, UnityResolve::Mode> getUnityBackend();

@@ -2,7 +2,7 @@
 如其名所示，这是一个针对基于 Unity 引擎制作的游戏的自由镜头作弊程序。\
 此外，还附带了游戏内变速功能。
 
-As the name suggests, this a free camera cheat/tool for games built on the Unity engine.\
+As the name suggests, this a free camera cheat/tool for games built on the Unity engine. \
 It also comes with an in-game speed hack feature.
 
 ## 如何使用 (How to Use)
@@ -13,6 +13,9 @@ By any means, inject this dynamic library into the target process or application
 For example, on Windows, you can use the DLL injection tool that comes with Cheat Engine (CE), while on Android, you can use [XInjector](https://github.com/WindySha/XInjector).
 
 ## 按键 (Keybindings)
+> ** Android 上可使用外接键盘 ** \
+> ** You can use an external keyboard on Android. **
+
 |自由镜头|Free Camera|
 | - | - |
 |打开/关闭自由镜头 -> Enter|Toggle free camera -> Enter|

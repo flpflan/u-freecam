@@ -33,4 +33,4 @@ namespace FreeCam
     };
 
 
-} // namespace cheat::features
+}

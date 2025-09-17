@@ -190,4 +190,4 @@ namespace FreeCam
             std::this_thread::sleep_for(std::chrono::microseconds((int)DeltaTime_us));
         }
     }
-} // namespace cheat::features
+}

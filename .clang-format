@@ -1,5 +1,15 @@
+---
+Language: Cpp
 BasedOnStyle: LLVM
 IndentWidth: 4
+TabWidth: 4
 BreakTemplateDeclarations: Yes
 SpaceAfterTemplateKeyword: true
+UseTab: Never
+BreakBeforeBraces: Allman
+AllowShortIfStatementsOnASingleLine: WithoutElse
+IndentCaseLabels: false
 ColumnLimit: 200
+AccessModifierOffset: -4
+NamespaceIndentation: All
+FixNamespaceComments: false

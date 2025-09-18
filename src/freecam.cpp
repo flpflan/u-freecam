@@ -24,32 +24,32 @@ namespace FreeCam
             })
             .detach();
 
-        Debug::LOG("main loop start");
+        Debug::Logger::LOGI("Main loop start");
         while (true)
         {
             if (UnityApi::GetKeyDown(Backspace))
             {
                 if (UTYPE::Time::GetTimeScale() <= 0)
                 {
-                    Debug::LOG("set timescale: 1");
+                    Debug::Logger::LOGI("Set timescale: 1");
                     UTYPE::Time::SetTimeScale(1);
                 }
                 else
                 {
-                    Debug::LOG("set timescale: 0");
+                    Debug::Logger::LOGI("Set timescale: 0");
                     UTYPE::Time::SetTimeScale(0);
                 }
                 std::this_thread::sleep_for(100ms);
             }
             if (UnityApi::GetKeyDown(Plus))
             {
-                Debug::LOG("set timescale: +=1");
+                Debug::Logger::LOGI("Set timescale: +=1");
                 UTYPE::Time::SetTimeScale(UTYPE::Time::GetTimeScale() + 1);
                 std::this_thread::sleep_for(100ms);
             }
             if (UnityApi::GetKeyDown(Minus))
             {
-                Debug::LOG("set timescale: -=1");
+                Debug::Logger::LOGI("Set timescale: -=1");
                 UTYPE::Time::SetTimeScale(UTYPE::Time::GetTimeScale() - 1);
                 std::this_thread::sleep_for(100ms);
             }
@@ -73,7 +73,7 @@ namespace FreeCam
 
     auto FreeCam::BeginFreeCam() -> void
     {
-        Debug::LOG("start freecam");
+        Debug::Logger::LOGI("Start freecam");
         if (isFreeCamBegin) return;
 
         isFreeCamBegin = true;
@@ -119,7 +119,7 @@ namespace FreeCam
 
     auto FreeCam::EndFreeCam() -> void
     {
-        Debug::LOG("end freecam");
+        Debug::Logger::LOGI("End freecam");
         if (!isFreeCamBegin) return;
 
         isFreeCamBegin = false;
@@ -151,7 +151,7 @@ namespace FreeCam
     }
     auto FreeCam::StartListenKeys() -> void
     {
-        Debug::LOG("start listen keys");
+        Debug::Logger::LOGI("Start listen keys");
 
         CameraProxy camera(freeCamera);
 

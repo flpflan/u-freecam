@@ -12,10 +12,12 @@
 void Bootstrap::Run()
 {
     std::this_thread::sleep_for(std::chrono::seconds(5));
-    Debug::LOG("waiting for unity initialized");
+    Debug::Logger::Init();
+
+    Debug::Logger::LOGI("Waiting for unity initialized");
     while(!initializeUnity())
         std::this_thread::sleep_for(std::chrono::seconds(2));
-    Debug::LOG("unity initializing success");
+    Debug::Logger::LOGI("Unity initializing success");
     std::thread(FreeCam::FreeCam::Hack).detach();
 }
 

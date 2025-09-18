@@ -1,30 +1,32 @@
 cmake_minimum_required(VERSION 3.22)
 project(freecam LANGUAGES C CXX)
 
-if(NOT TARGET_PLATFORM)
-    set(TARGET_PLATFORM "ANDROID")
-endif()
-string(TOUPPER ${TARGET_PLATFORM} TARGET_PLATFORM)
-
-if(${TARGET_PLATFORM} STREQUAL "ANDROID")
-    set(ANDROID_NDK "/opt/android-ndk")
-    set(CMAKE_C_COMPILER "${ANDROID_NDK}/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android24-clang")
-    set(CMAKE_CXX_COMPILER "${ANDROID_NDK}/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android24-clang++")
+if(${CMAKE_SYSTEM_NAME} STREQUAL "Android")
+    set(ANDROID_NDK_TOOLCHAINS "${CMAKE_ANDROID_NDK}/toolchains/llvm/prebuilt/linux-x86_64")
+    set(CMAKE_C_COMPILER "${ANDROID_NDK_TOOLCHAINS}/bin/aarch64-linux-android24-clang")
+    set(CMAKE_CXX_COMPILER "${ANDROID_NDK_TOOLCHAINS}/bin/aarch64-linux-android24-clang++")
     add_definitions(-DWINDOWS_MODE=0 -DANDROID_MODE=1 -DLINUX_MODE=0)
-elseif(${TARGET_PLATFORM} STREQUAL "WINDOWS")
+    include_directories(${ANDROID_NDK_TOOLCHAINS}/sysroot/usr/include)
+elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
     add_definitions(-DWINDOWS_MODE=1 -DANDROID_MODE=0 -DLINUX_MODE=0)
 endif()
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON CACHE BOOL "" FORCE)
 
 file(GLOB BY_OPEN_SRC
     extern/byOpen/src/native/prefix.h
     extern/byOpen/src/native/byopen.h
     extern/byOpen/src/native/byopen_android.c
 )
+include_directories(extern/byOpen/src/native)
+
+set(SPDLOG_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+set(SPDLOG_BUILD_BENCH OFF CACHE BOOL "" FORCE)
+include_directories(extern/spdlog/include)
+add_subdirectory(extern/spdlog)
 
 include_directories(include)
-
 add_subdirectory(src)

@@ -9,23 +9,20 @@ set(SOURCE_FILES
     camera_proxy.cpp
     cursor_proxy.cpp
 )
-if(TARGET_PLATFORM STREQUAL "ANDROID")
+if(CMAKE_SYSTEM_NAME STREQUAL "Android")
     list(APPEND SOURCE_FILES ${BY_OPEN_SRC})
 endif()
-
-set(EXTERN_BASE ${CMAKE_CURRENT_SOURCE_DIR}/../extern)
-
-set(ANDROID_ABI "arm64-v8a")
-include_directories(${EXTERN_BASE}/byOpen/src/native)
 
 add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES})
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_20)
 
+target_link_libraries(${PROJECT_NAME} PRIVATE spdlog::spdlog_header_only)
+
 if(UNIX AND NOT APPLE)
     target_link_libraries(${PROJECT_NAME} PRIVATE dl)
     target_compile_options(${PROJECT_NAME} PRIVATE -fPIC)
-    target_link_options(${PROJECT_NAME} PRIVATE -static-libstdc++ -static-libgcc)
+    target_link_options(${PROJECT_NAME} PRIVATE -fseh-exceptions -static-libstdc++)
 elseif(WIN32)
     target_compile_options(${PROJECT_NAME} PRIVATE /MT)
 endif()

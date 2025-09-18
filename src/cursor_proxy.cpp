@@ -3,7 +3,7 @@
 
 namespace FreeCam {
     auto CursorProxy::EnableCursor() -> void {
-        Debug::LOG("enable cursor");
+        Debug::Logger::LOGI("Enable cursor");
         if (!Cursor) Cursor = UnityResolve::Get("UnityEngine.CoreModule.dll")->Get("Cursor");
         if (!SetCursorLockState) SetCursorLockState = Cursor->Get<UnityResolve::Method>("set_lockState");
         if (!SetCursorVisible) SetCursorVisible = Cursor->Get<UnityResolve::Method>("set_visible");
@@ -13,7 +13,7 @@ namespace FreeCam {
     }
     auto CursorProxy::DisableCursor() -> void
     {
-        Debug::LOG("disable cursor");
+        Debug::Logger::LOGI("Disable cursor");
         if (!Cursor) Cursor = UnityResolve::Get("UnityEngine.CoreModule.dll")->Get("Cursor");
         if (!SetCursorLockState) SetCursorLockState = Cursor->Get<UnityResolve::Method>("set_lockState");
         if (!SetCursorVisible) SetCursorVisible = Cursor->Get<UnityResolve::Method>("set_visible");

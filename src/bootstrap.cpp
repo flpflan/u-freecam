@@ -1,8 +1,9 @@
 ﻿#include "bootstrap.hpp"
-
 #include "freecam.hpp"
+#include "debug/logger.hpp"
+
 #include <thread>
-#include "debug.hpp"
+
 #if ANDROID_MODE
 #include "byopen.h"
 #else

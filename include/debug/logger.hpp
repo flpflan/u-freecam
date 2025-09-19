@@ -1,7 +1,7 @@
 #pragma once
 
-// #include "unity_side.hpp"
 #include <spdlog/spdlog.h>
+#include <string_view>
 #if ANDROID_MODE
 #include "spdlog/sinks/android_sink.h"
 #else
@@ -9,6 +9,7 @@
 #endif
 
 #ifndef NDEBUG
+// #include "backward.hpp"
 #include <csignal>
 #endif
 
@@ -44,27 +45,27 @@ namespace Debug
 #endif
         }
         template <typename... Args>
-        inline static constexpr void LOGD(Args &&...args)
+        inline static void LOGD(std::string_view fmt, Args &&...args)
         {
-            logger->debug(args...);
+            logger->debug(fmt::runtime(fmt), args...);
         }
         template <typename... Args>
-        inline static constexpr void LOGI(Args &&...args)
+        inline static void LOGI(std::string_view fmt, Args &&...args)
         {
-            logger->info(args...);
+            logger->info(fmt::runtime(fmt), args...);
         }
         template <typename... Args>
-        inline static constexpr void LOGW(Args &&...args)
+        inline static void LOGW(Args &&...args)
         {
             logger->warn(args...);
         }
         template <typename... Args>
-        inline static constexpr void LOGE(Args &&...args)
+        inline static void LOGE(Args &&...args)
         {
             logger->error(args...);
         }
         template <typename... Args>
-        inline static constexpr void LOGC(Args &&...args)
+        inline static void LOGC(Args &&...args)
         {
             logger->critical(args...);
         }
@@ -95,14 +96,19 @@ namespace Debug
             logger->critical("Signal: {}", signal_name);
             logger->critical("Stack Trace:");
             // TODO:
+            // backward::StackTrace st;
+            // st.load_here(32);
+            //
+            // backward::Printer p;
+            // p.address = true;
+            // p.object = true;
+            //
+            // std::ostringstream oss;
+            // p.print(st, oss);
+            // logger->critical(oss.str());
+
+            spdlog::shutdown();
+            std::exit(signal);
         }
     };
-
-    // static void TestKey() {
-    //     for (int i = 0; i <= 500; i++) {
-    //         if (UnityApi::GetKey((KeyCode)i)) {
-    //             LOG(i);
-    //         }
-    //     }
-    // }
 }

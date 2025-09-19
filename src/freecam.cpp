@@ -2,7 +2,8 @@
 #include "freecam/camera_proxy.hpp"
 #include "freecam/cursor_proxy.hpp"
 #include "unity_side.hpp"
-#include "debug.hpp"
+#include "debug/logger.hpp"
+#include "debug/test.hpp"
 
 using namespace std::chrono_literals;
 
@@ -23,6 +24,7 @@ namespace FreeCam
                 }
             })
             .detach();
+        Debug::Test::Start();
 
         Debug::Logger::LOGI("Main loop start");
         while (true)

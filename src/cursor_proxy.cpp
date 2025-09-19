@@ -1,5 +1,5 @@
 #include "freecam/cursor_proxy.hpp"
-#include "debug.hpp"
+#include "debug/logger.hpp"
 
 namespace FreeCam {
     auto CursorProxy::EnableCursor() -> void {

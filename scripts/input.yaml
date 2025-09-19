@@ -1,0 +1,5 @@
+class: Input
+methods:
+  - name: GetKey
+    rtype: std::string
+    args: [{ name: key, type: KeyCode }]

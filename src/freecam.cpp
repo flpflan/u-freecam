@@ -1,9 +1,8 @@
 #include "freecam.hpp"
+#include "debug/logger.hpp"
 #include "freecam/camera_proxy.hpp"
 #include "freecam/cursor_proxy.hpp"
 #include "unity_side.hpp"
-#include "debug/logger.hpp"
-#include "debug/test.hpp"
 
 using namespace std::chrono_literals;
 
@@ -24,7 +23,6 @@ namespace FreeCam
                 }
             })
             .detach();
-        Debug::Test::Start();
 
         Debug::Logger::LOGI("Main loop start");
         while (true)
@@ -158,10 +156,27 @@ namespace FreeCam
         CameraProxy camera(freeCamera);
 
         auto ui_layer = false;
+        // auto zoom_mode = false;
         while (listenKeys)
         {
             if (!ui_layer)
             {
+                // const bool toZoom = UnityApi::GetKey(Z);
+                // if (!toZoom && zoom_mode) camera.ResetZoom();
+                // zoom_mode = toZoom;
+                // if (zoom_mode)
+                // {
+                //     const float mouseCenter = UnityApi::GetAxis("Mouse ScrollWheel");
+                //     if (mouseCenter < 0)
+                //     {
+                //         camera.ZoomOut(mouseCenter);
+                //     }
+                //     else
+                //     {
+                //         camera.ZoomIn(mouseCenter);
+                //     };
+                // }
+
                 UTYPE::Vector3 toMove(0, 0, 0);
                 // toMove.x = UnityApi::GetAxis("Horizontal");
                 // toMove.y = UnityApi::GetAxis("Vertical");
@@ -182,7 +197,7 @@ namespace FreeCam
                 if (UnityApi::GetKey(LeftArrow)) toRotate.x = -1;
                 if (toRotate.x || toRotate.y) camera.Rotate(toRotate);
             }
-            if (UnityApi::GetMouseButtonDown(2)||UnityApi::GetKeyDown(U))
+            if (UnityApi::GetMouseButtonDown(2) || UnityApi::GetKeyDown(U))
             {
                 CursorProxy::ToggleCursor();
                 ui_layer = !ui_layer;

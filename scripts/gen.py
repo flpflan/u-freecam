@@ -8,25 +8,6 @@ from jinja2 import Environment, FileSystemLoader
 
 # -- code --
 
-config = {
-    "class_name": "Person",
-    "base_class": "Human",
-    "properties": [
-        {"name": "name", "type": "std::string"},
-        {"name": "age", "type": "int"},
-    ],
-    "methods": [
-        {
-            "name": "greet",
-            "rtype": "std::string",
-            "args": [
-                {"name": "prefix", "type": "const std::string&"},
-                {"name": "times", "type": "int"},
-            ],
-        }
-    ],
-}
-
 env = Environment(loader=FileSystemLoader("."))
 template = env.get_template("klass.hpp.j2")
 

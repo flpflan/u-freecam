@@ -1,0 +1,8 @@
+Unity.InputSystem.dll:
+  classes:
+    - class: Touchscreen
+      static_properties:
+        - name: current
+          type: Touchscreen
+        - name: touches
+          type: UTYPE::Array<TouchControl>

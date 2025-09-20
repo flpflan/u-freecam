@@ -1,47 +1,81 @@
 #pragma once
 
 #include "UnityResolve.hpp"
-using UMethod = UnityResolve::Method;
-using UTYPE = UnityResolve::UnityType;
 
-class {{ class }}{% if base_class %} : public {{ base_class }}{% endif %}
+namespace UType
 {
-    {% for p in properties %}
-    template <typename T>
-    class Property_{{ p.name }}
+    using UClass = UnityResolve::Class;
+    using UMethod = UnityResolve::Method;
+    using UTYPE = UnityResolve::UnityType;
+
+    {% for module in modules -%}
+    {% for enum in module.enums -%}
+    enum class {{ enum.enum }}
+    {
+        {% for k, v in enum.members.items() -%}
+        {{ k }} = {{ v }},
+        {% endfor -%}
+    };
+    {% endfor -%}
+    {% for class in module.classes -%}
+    class {{ class.class }}{% if class.base_class %} : public {{ class.base_class }}{% endif %}
     {
     public:
-        Property_{{ p.name }}() = default;
+        {% for p in class.properties %}
+        template <typename T>
+        class Property_{{ p.name }}
+        {
+        public:
+            Property_{{ p.name }}() = default;
 
-        inline Property_{{ p.name }} &operator=(const T &v)
-        {
-            set(v);
-            return *this;
-        }
-        inline operator const T &() const { return get(); }
-    private:
-        auto set(const T value) -> void
+            inline Property_{{ p.name }} &operator=(const T &v)
+            {
+                set(v);
+                return *this;
+            }
+            inline operator const T &() { return get(); }
+        private:
+            auto set(const T value) -> void
+            {
+                static UMethod *method;
+                if (!method) method = {{ class.class }}::GetUClass()->Get<UMethod>("set_{{p.name}}");
+                return method->Invoke<void>(value);
+            }
+            auto get() -> const T
+            {
+                static UMethod *method;
+                if (!method) method = {{ class.class }}::GetUClass()->Get<UMethod>("get_{{p.name}}");
+                return method->Invoke<T>();
+            }
+        };
+        {% if p.static %}inline static {% endif %}Property_{{ p.name }}<{{ p.type }}> {{ p.name }};
+        {% endfor -%}
+    public:
+        {% for m in class.static_methods -%}
+        inline static auto {{m.name}}({%- for t in m.args -%}const {% if t.name and t.type %}{{t.type}} {{t.name}}{% else %}{{t}} arg{{loop.index0}}{{ ", " if not loop.last }}{% endif %}{%- endfor -%}) -> {{m.rtype}}
         {
             static UMethod *method;
-            if (!method) method = UnityResolve::Get("{{ module }}")->Get("{{ class }}")->Get<UnityResolve::Method>("set_{{p.name}}");
-            return method->Invoke<void>(value);
+            if (!method) method = GetUClass()->Get<UMethod>("{{ m.name }}");
+            return method->Invoke<{{ m.rtype }}>({%- for t in m.args -%}{% if t.name %}{{ t.name }}{% else %}arg{{loop.index0}}{{ ", " if not loop.last }}{% endif %}{%- endfor -%});
         }
-        auto get() -> T
+        {% endfor -%}
+    public:
+        {% for m in class.methods -%}
+        auto {{m.name}}({%- for t in m.args -%}const {% if t.name and t.type %}{{t.type}} {{t.name}}{% else %}{{t}} arg{{loop.index0}}{{ ", " if not loop.last }}{% endif %}{%- endfor -%}) -> {{m.rtype}}
         {
             static UMethod *method;
-            if (!method) method = UnityResolve::Get("{{ module }}")->Get("{{ class }}")->Get<UnityResolve::Method>("get_{{p.name}}");
-            return method->Invoke<T>();
+            if (!method) method = GetUClass()->Get<UMethod>("{{ m.name }}");
+            return method->Invoke<{{ m.rtype }}>(this, {%- for t in m.args -%}{% if t.name %}{{ t.name }}{% else %}arg{{loop.index0}}{{ ", " if not loop.last }}{% endif %}{%- endfor -%});
+        }
+        {% endfor -%}
+    public:
+        inline static auto GetUClass() -> UClass *
+        {
+            static UClass *klass;
+            if(!klass) klass = UnityResolve::Get("{{ module.module }}")->Get("{{ class.class }}");
+            return klass;
         }
     };
-public:
-    Property_{{ p.name }}<{{ p.type }}> {{ p.name }};
-    {% endfor %}
-    {% for m in methods %}
-    inline static auto {{m.name}}({%- for t in m.args -%}const {% if t.name and t.type %}{{t.type}} {{t.name}}{% else %}{{t}} arg{{loop.index0}}{{ ", " if not loop.last }}{% endif %}{%- endfor -%}) -> {{m.rtype}}
-    {
-        static UMethod *method;                                                                                                                                                                        \
-        if (!method) method = UnityResolve::Get("{{ module }}")->Get("{{ class }}")->Get<UMethod>("{{ m.name }}");                                                                                                           \
-        return method->Invoke<{{ m.rtype }}>({%- for t in m.args -%}{% if t.name %}{{ t.name }}{% else %}arg{{loop.index0}}{{ ", " if not loop.last }}{% endif %}{%- endfor -%});                                                                                                                                                             \
-    }
-    {% endfor %}
-};
+    {% endfor -%}
+    {% endfor -%}
+}

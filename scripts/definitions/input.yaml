@@ -1,0 +1,59 @@
+UnityEngine.InputLegacyModule.dll:
+  classes:
+    - class: Input
+      static_methods:
+        - name: GetKey
+          args: [{ name: key, type: KeyCode }]
+          rtype: bool
+        - name: GetKeyDown
+          args: [{ name: key, type: KeyCode }]
+          rtype: bool
+        - name: GetAxis
+          args: [{ name: axis, type: UTYPE::String *const }]
+          rtype: float
+        - name: GetMouseButtonDown
+          args: [{ name: key, type: int }]
+          rtype: bool
+  enums:
+    - enum: KeyCode
+      members:
+        Backspace: 8
+        TAB: 9
+        Enter: 13
+        Space: 32
+        Minus: 45
+        Plus: 61
+        A: 97
+        B: 98
+        C: 99
+        D: 100
+        E: 101
+        F: 102
+        G: 103
+        H: 104
+        I: 105
+        J: 106
+        K: 107
+        L: 108
+        M: 109
+        N: 110
+        O: 111
+        P: 112
+        Q: 113
+        R: 114
+        S: 115
+        T: 116
+        U: 117
+        V: 118
+        W: 119
+        X: 120
+        Y: 121
+        Z: 122
+        UpArrow: 273
+        DownArrow: 274
+        RightArrow: 275
+        LeftArrow: 276
+        CTRL_R: 275
+        SHIFT_R: 303
+        SHIFT_L: 304
+        Ctrl_L: 306

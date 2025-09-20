@@ -1,0 +1,7 @@
+UnityEngine.CoreModule.dll:
+  classes:
+    - class: Camera
+      base_class: UTYPE::Camera
+      properties:
+        - name: fieldOfView
+          type: float

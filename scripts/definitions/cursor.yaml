@@ -1,0 +1,8 @@
+UnityEngine.CoreModule.dll:
+  classes:
+    - class: Cursor
+      static_properties:
+        - name: lockState
+          type: int
+        - name: visible
+          type: bool

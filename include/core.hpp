@@ -1,13 +1,13 @@
 #pragma once
 
 #include <atomic>
-#include "UnityResolve.hpp"
+#include "utype/camera.hpp"
 
 using UTYPE = UnityResolve::UnityType;
 
 namespace FreeCam
 {
-    class FreeCam
+    class Core
     {
     public:
         inline static constexpr float DeltaTime_s = 0.0167f;
@@ -16,7 +16,7 @@ namespace FreeCam
 
     private:
         std::atomic<bool> listenKeys = false;
-        UTYPE::Camera *freeCamera = nullptr;
+        UType::Camera *freeCamera = nullptr;
         UTYPE::GameObject *freeCameraGObject = nullptr;
         UTYPE::Camera *originCamera = nullptr;
         UTYPE::GameObject *originGObject = nullptr;

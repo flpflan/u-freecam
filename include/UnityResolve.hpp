@@ -3010,6 +3010,23 @@ class UnityResolve final {
             auto GetComponentsInParent(Class *type, const bool includeInactive = false) -> std::vector<T> {
                 return GetComponents<T>(type, false, true, includeInactive, true, nullptr);
             }
+            template<typename T>
+            auto AddComponent(Class *ty) -> T {
+                static Method *method;
+                if (!method)
+                    method = Get("UnityEngine.CoreModule.dll")->Get("GameObject")->Get<Method>("AddComponent", {"System.Type"});
+                return method->Invoke<T>(this, ty->GetType());
+
+            }
+            auto SetTag(const String *const  name) -> void {
+                static Method *method;
+                if (!method)
+                    method = Get("UnityEngine.CoreModule.dll") ->Get("GameObject") ->Get<Method>("set_tag");
+                return method->Invoke<void>(this, name);
+            }
+            inline auto SetTag(const std::string &name) -> void {
+                return SetTag(String::New(name));
+            }
         };
 
         struct LayerMask : Object {

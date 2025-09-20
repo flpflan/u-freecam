@@ -1,7 +1,5 @@
-#include "freecam/camera_proxy.hpp"
-#include "UnityResolve.hpp"
-using UTYPE = UnityResolve::UnityType;
-using UMethod = UnityResolve::Method;
+#include "proxy/camera.hpp"
+#include "freecam.hpp"
 
 template <typename T>
 constexpr inline static T Clamp(T n, T bb, T bt)
@@ -11,9 +9,9 @@ constexpr inline static T Clamp(T n, T bb, T bt)
     return n;
 }
 
-namespace FreeCam
+namespace FreeCam::Proxy
 {
-    CameraProxy::CameraProxy(UTYPE::Camera *c)
+    Camera::Camera(UType::Camera *c)
     {
         camera = c;
         transform = camera->GetTransform();
@@ -23,7 +21,7 @@ namespace FreeCam
         pitch = angles.x;
         roll = angles.z;
     }
-    bool CameraProxy::IsCurrentFreeCamera()
+    bool Camera::IsCurrentFreeCamera()
     {
         const auto curCam = UTYPE::Camera::GetMain();
         if (curCam == nullptr) return true;
@@ -32,7 +30,7 @@ namespace FreeCam
         // return name.starts_with("U_rea") || name == "UE_Freecam";
         return curCam->GetName()->ToString() == "UE_Freecam";
     }
-    auto CameraProxy::Rotate(UTYPE::Vector2 input) -> void
+    auto Camera::Rotate(UTYPE::Vector2 input) -> void
     {
         yaw += input.x * rotationSpeed * FreeCam::DeltaTime_s;
         pitch -= input.y * rotationSpeed * FreeCam::DeltaTime_s;
@@ -41,7 +39,7 @@ namespace FreeCam
         const auto euler = UTYPE::Quaternion().Euler(pitch, yaw, roll);
         transform->SetRotation(euler);
     }
-    auto CameraProxy::Move(UTYPE::Vector3 input, bool sprint = true) -> void
+    auto Camera::Move(UTYPE::Vector3 input, bool sprint = true) -> void
     {
         const auto speed = sprint ? moveSpeed * moveSpeedMultiplier : moveSpeed;
 
@@ -64,21 +62,17 @@ namespace FreeCam
         position.x += move.x * speed * FreeCam::DeltaTime_s;
         transform->SetPosition(position);
     }
-    auto CameraProxy::ZoomIn(float am) -> void
+    auto Camera::ZoomIn(float am) -> void
     {
-        static UMethod *method;
-        if (!method) method = UnityResolve::Get("UnityEngine.CoreModule.dll")->Get("Camera")->Get<UMethod>("set_fieldOfView");
         currentZoom -= am * zommSpeed * FreeCam::DeltaTime_s;
-        return method->Invoke<void>(currentZoom);
+        fieldOfView = currentZoom;
     }
-    auto CameraProxy::ZoomOut(float am) -> void
+    auto Camera::ZoomOut(float am) -> void
     {
-        static UMethod *method;
-        if (!method) method = UnityResolve::Get("UnityEngine.CoreModule.dll")->Get("Camera")->Get<UMethod>("get_fieldOfView");
-        if (method->Invoke<float>() > defaultZoom) return;
+        if (fieldOfView > defaultZoom) return;
         return ZoomIn(-am);
     }
-    auto CameraProxy::ResetZoom() -> void
+    auto Camera::ResetZoom() -> void
     {
         currentZoom = defaultZoom;
         return ZoomIn(0);

@@ -5,9 +5,9 @@ endif()
 set(SOURCE_FILES
     lib.cpp
     bootstrap.cpp
-    freecam.cpp
-    camera_proxy.cpp
-    cursor_proxy.cpp
+    core.cpp
+    proxy/camera.cpp
+    proxy/cursor.cpp
 )
 if(CMAKE_SYSTEM_NAME STREQUAL "Android")
     list(APPEND SOURCE_FILES ${BY_OPEN_SRC})

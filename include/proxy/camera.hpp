@@ -1,11 +1,15 @@
 #pragma once
 
-#include "freecam.hpp"
+#include "utype/camera.hpp"
 
-namespace FreeCam {
-    class CameraProxy
+using UTYPE = UnityResolve::UnityType;
+using UMethod = UnityResolve::Method;
+
+namespace FreeCam::Proxy
+{
+    class Camera : public UType::Camera
     {
-        UTYPE::Camera *camera;
+        UType::Camera *camera;
         UTYPE::Transform *transform;
 
 #if ANDROID_MODE
@@ -26,7 +30,7 @@ namespace FreeCam {
         const float zommSpeed = 10.f;
 
     public:
-        CameraProxy(UTYPE::Camera *);
+        Camera(UType::Camera *);
         auto Rotate(UTYPE::Vector2) -> void;
         auto Move(UTYPE::Vector3, bool) -> void;
         auto ZoomIn(float) -> void;

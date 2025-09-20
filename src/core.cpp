@@ -1,24 +1,28 @@
-#include "freecam.hpp"
+#include "core.hpp"
 #include "debug/logger.hpp"
-#include "freecam/camera_proxy.hpp"
-#include "freecam/cursor_proxy.hpp"
-#include "unity_side.hpp"
-
-using namespace std::chrono_literals;
+#include "proxy/camera.hpp"
+#include "proxy/cursor.hpp"
+#include "utype/input.hpp"
 
 namespace FreeCam
 {
-    auto FreeCam::Hack() -> void
+    using FreeCamera = Proxy::Camera;
+    using UType::Input;
+    using enum UType::KeyCode;
+
+    using namespace std::chrono_literals;
+
+    auto Core::Hack() -> void
     {
         UnityResolve::ThreadAttach();
 
-        FreeCam freecam;
+        Core freecam;
         std::thread(
             [&freecam]
             {
                 while (true)
                 {
-                    if (freecam.isFreeCamBegin && !CameraProxy::IsCurrentFreeCamera()) freecam.EndFreeCam();
+                    if (freecam.isFreeCamBegin && !FreeCamera::IsCurrentFreeCamera()) freecam.EndFreeCam();
                     std::this_thread::sleep_for(1s);
                 }
             })
@@ -27,7 +31,7 @@ namespace FreeCam
         Debug::Logger::LOGI("Main loop start");
         while (true)
         {
-            if (UnityApi::GetKeyDown(Backspace))
+            if (Input::GetKeyDown(Backspace))
             {
                 if (UTYPE::Time::GetTimeScale() <= 0)
                 {
@@ -41,19 +45,19 @@ namespace FreeCam
                 }
                 std::this_thread::sleep_for(100ms);
             }
-            if (UnityApi::GetKeyDown(Plus))
+            if (Input::GetKeyDown(Plus))
             {
                 Debug::Logger::LOGI("Set timescale: +=1");
                 UTYPE::Time::SetTimeScale(UTYPE::Time::GetTimeScale() + 1);
                 std::this_thread::sleep_for(100ms);
             }
-            if (UnityApi::GetKeyDown(Minus))
+            if (Input::GetKeyDown(Minus))
             {
                 Debug::Logger::LOGI("Set timescale: -=1");
                 UTYPE::Time::SetTimeScale(UTYPE::Time::GetTimeScale() - 1);
                 std::this_thread::sleep_for(100ms);
             }
-            if (UnityApi::GetKeyDown(Enter))
+            if (Input::GetKeyDown(Enter))
             {
                 if (freecam.isFreeCamBegin)
                 {
@@ -71,7 +75,7 @@ namespace FreeCam
         UnityResolve::ThreadDetach();
     }
 
-    auto FreeCam::BeginFreeCam() -> void
+    auto Core::BeginFreeCam() -> void
     {
         Debug::Logger::LOGI("Start freecam");
         if (isFreeCamBegin) return;
@@ -79,7 +83,7 @@ namespace FreeCam
         isFreeCamBegin = true;
 
         // Backup
-        originCamera = UTYPE::Camera::GetMain();
+        originCamera = UType::Camera::GetMain();
         const auto originTransform = originCamera->GetTransform();
         originPosition = originTransform->GetPosition();
         originRotation = originTransform->GetRotation();
@@ -93,10 +97,10 @@ namespace FreeCam
             freeCameraGObject = go;
             UTYPE::GameObject::DontDestroyOnLoad(go);
 
-            freeCamera = UnityApi::AddComponent<UTYPE::Camera>(go, originCamera->GetType());
+            freeCamera = go->AddComponent<UType::Camera *>(UType::Camera::GetUClass());
         }
 
-        UnityApi::SetTag(freeCameraGObject, "MainCamera");
+        freeCameraGObject->SetTag("MainCamera");
         freeCameraGObject->SetActive(true);
 
         static UTYPE::Transform *freeTransform;
@@ -105,7 +109,7 @@ namespace FreeCam
         freeTransform->SetRotation(originRotation);
 
         // Set Cursor
-        CursorProxy::DisableCursor();
+        Proxy::Cursor::DisableCursor();
 
         // Start Listen Keys
         std::thread(
@@ -117,7 +121,7 @@ namespace FreeCam
             .detach();
     }
 
-    auto FreeCam::EndFreeCam() -> void
+    auto Core::EndFreeCam() -> void
     {
         Debug::Logger::LOGI("End freecam");
         if (!isFreeCamBegin) return;
@@ -131,13 +135,13 @@ namespace FreeCam
             freeTransform->SetPosition(originPosition);
             freeTransform->SetRotation(originRotation);
 
-            UnityApi::SetTag(freeCameraGObject, "Bulabula");
+            freeCameraGObject->SetTag("Bulabula");
         }
 
         if (originGObject)
         {
             const auto curCam = UTYPE::Camera::GetMain();
-            if (CameraProxy::IsCurrentFreeCamera())
+            if (FreeCamera::IsCurrentFreeCamera())
             {
                 originGObject->SetActive(true);
                 const auto originTransform = originCamera->GetTransform();
@@ -146,17 +150,17 @@ namespace FreeCam
             }
         }
 
-        CursorProxy::EnableCursor();
+        Proxy::Cursor::EnableCursor();
         listenKeys = false;
     }
-    auto FreeCam::StartListenKeys() -> void
+    auto Core::StartListenKeys() -> void
     {
         Debug::Logger::LOGI("Start listen keys");
 
-        CameraProxy camera(freeCamera);
+        FreeCamera camera(freeCamera);
 
         auto ui_layer = false;
-        // auto zoom_mode = false;
+        auto zoom_mode = false;
         while (listenKeys)
         {
             if (!ui_layer)
@@ -180,26 +184,26 @@ namespace FreeCam
                 UTYPE::Vector3 toMove(0, 0, 0);
                 // toMove.x = UnityApi::GetAxis("Horizontal");
                 // toMove.y = UnityApi::GetAxis("Vertical");
-                if (UnityApi::GetKey(Space)) toMove.z = 1;
-                if (UnityApi::GetKey(Ctrl_L)) toMove.z = -1;
-                if (UnityApi::GetKey(W)) toMove.y = 1;
-                if (UnityApi::GetKey(S)) toMove.y = -1;
-                if (UnityApi::GetKey(A)) toMove.x = -1;
-                if (UnityApi::GetKey(D)) toMove.x = 1;
-                if (toMove.x || toMove.y || toMove.z) camera.Move(toMove, UnityApi::GetKey(SHIFT_L));
+                if (Input::GetKey(Space)) toMove.z = 1;
+                if (Input::GetKey(Ctrl_L)) toMove.z = -1;
+                if (Input::GetKey(W)) toMove.y = 1;
+                if (Input::GetKey(S)) toMove.y = -1;
+                if (Input::GetKey(A)) toMove.x = -1;
+                if (Input::GetKey(D)) toMove.x = 1;
+                if (toMove.x || toMove.y || toMove.z) camera.Move(toMove, Input::GetKey(SHIFT_L));
 
                 UTYPE::Vector2 toRotate(0, 0);
-                toRotate.x = UnityApi::GetAxis("Mouse X");
-                toRotate.y = UnityApi::GetAxis("Mouse Y");
-                if (UnityApi::GetKey(UpArrow)) toRotate.y = 1;
-                if (UnityApi::GetKey(DownArrow)) toRotate.y = -1;
-                if (UnityApi::GetKey(RightArrow)) toRotate.x = 1;
-                if (UnityApi::GetKey(LeftArrow)) toRotate.x = -1;
+                toRotate.x = Input::GetAxis("Mouse X");
+                toRotate.y = Input::GetAxis("Mouse Y");
+                if (Input::GetKey(UpArrow)) toRotate.y = 1;
+                if (Input::GetKey(DownArrow)) toRotate.y = -1;
+                if (Input::GetKey(RightArrow)) toRotate.x = 1;
+                if (Input::GetKey(LeftArrow)) toRotate.x = -1;
                 if (toRotate.x || toRotate.y) camera.Rotate(toRotate);
             }
-            if (UnityApi::GetMouseButtonDown(2) || UnityApi::GetKeyDown(U))
+            if (Input::GetMouseButtonDown(2) || Input::GetKeyDown(U))
             {
-                CursorProxy::ToggleCursor();
+                Proxy::Cursor::ToggleCursor();
                 ui_layer = !ui_layer;
                 std::this_thread::sleep_for(100ms);
             }

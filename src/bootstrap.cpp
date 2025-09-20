@@ -1,5 +1,5 @@
 ﻿#include "bootstrap.hpp"
-#include "freecam.hpp"
+#include "core.hpp"
 #include "debug/logger.hpp"
 
 #include <thread>
@@ -16,18 +16,15 @@ void Bootstrap::Run()
     Debug::Logger::Init();
 
     Debug::Logger::LOGI("Waiting for unity initialized");
-    while(!initializeUnity())
+    while (!initializeUnity())
         std::this_thread::sleep_for(std::chrono::seconds(2));
     Debug::Logger::LOGI("Unity initializing success");
-    std::thread(FreeCam::FreeCam::Hack).detach();
+    std::thread(FreeCam::Core::Hack).detach();
 }
 
-void Bootstrap::Shutdown()
-{
-}
+void Bootstrap::Shutdown() {}
 
-
-std::pair<void*, UnityResolve::Mode> Bootstrap::getUnityBackend()
+std::pair<void *, UnityResolve::Mode> Bootstrap::getUnityBackend()
 {
 #if ANDROID_MODE
     const auto assembly = by_dlopen("libil2cpp.so", RTLD_NOW);
@@ -54,4 +51,3 @@ bool Bootstrap::initializeUnity()
 
     return true;
 }
-

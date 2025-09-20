@@ -2012,25 +2012,25 @@ class UnityResolve final {
 
         struct String : Object {
             int32_t m_stringLength{0};
-            wchar_t m_firstChar[32]{};
+            char16_t m_firstChar[32]{};
 
             [[nodiscard]] auto ToString() const -> std::string {
-                std::wstring_convert<std::codecvt_utf8<wchar_t>> converterX;
+                std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> converterX;
                 return converterX.to_bytes(m_firstChar);
             }
 
-            auto operator[](const int i) const -> wchar_t { return m_firstChar[i]; }
+            auto operator[](const int i) const -> char16_t { return m_firstChar[i]; }
 
             auto operator=(const std::string &newString) const -> String * { return New(newString); }
 
-            auto operator==(const std::wstring &newString) const -> bool { return Equals(newString); }
+            auto operator==(const std::u16string &newString) const -> bool { return Equals(newString); }
 
             auto Clear() -> void {
                 memset(m_firstChar, 0, m_stringLength);
                 m_stringLength = 0;
             }
 
-            [[nodiscard]] auto Equals(const std::wstring &newString) const -> bool {
+            [[nodiscard]] auto Equals(const std::u16string &newString) const -> bool {
                 if (newString.size() != m_stringLength)
                     return false;
                 if (std::memcmp(newString.data(), m_firstChar, m_stringLength) != 0)

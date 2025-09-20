@@ -27,9 +27,10 @@ namespace FreeCam
     {
         const auto curCam = UTYPE::Camera::GetMain();
         if (curCam == nullptr) return true;
-        const auto _n = std::wstring(curCam->GetName()->m_firstChar);
-        const auto name = std::string(_n.begin(), _n.end());
-        return name.starts_with("U_rea") || name == "UE_Freecam";
+        // const auto _n = std::wstring(curCam->GetName()->m_firstChar);
+        // const auto name = std::string(_n.begin(), _n.end());
+        // return name.starts_with("U_rea") || name == "UE_Freecam";
+        return curCam->GetName()->ToString() == "UE_Freecam";
     }
     auto CameraProxy::Rotate(UTYPE::Vector2 input) -> void
     {

@@ -160,17 +160,17 @@ namespace FreeCam
         FreeCamera camera(freeCamera);
 
         auto ui_layer = false;
-        auto zoom_mode = false;
+        // auto zoom_mode = false;
         while (listenKeys)
         {
             if (!ui_layer)
             {
-                // const bool toZoom = UnityApi::GetKey(Z);
+                // const bool toZoom = Input::GetKey(Z);
                 // if (!toZoom && zoom_mode) camera.ResetZoom();
                 // zoom_mode = toZoom;
                 // if (zoom_mode)
                 // {
-                //     const float mouseCenter = UnityApi::GetAxis("Mouse ScrollWheel");
+                //     const float mouseCenter = Input::GetAxis("Mouse ScrollWheel");
                 //     if (mouseCenter < 0)
                 //     {
                 //         camera.ZoomOut(mouseCenter);

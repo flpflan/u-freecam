@@ -1,5 +1,5 @@
 #include "proxy/camera.hpp"
-#include "freecam.hpp"
+#include "core.hpp"
 
 template <typename T>
 constexpr inline static T Clamp(T n, T bb, T bt)
@@ -32,8 +32,8 @@ namespace FreeCam::Proxy
     }
     auto Camera::Rotate(UTYPE::Vector2 input) -> void
     {
-        yaw += input.x * rotationSpeed * FreeCam::DeltaTime_s;
-        pitch -= input.y * rotationSpeed * FreeCam::DeltaTime_s;
+        yaw += input.x * rotationSpeed * Core::DeltaTime_s;
+        pitch -= input.y * rotationSpeed * Core::DeltaTime_s;
 
         pitch = Clamp(pitch, -80.0f, 80.0f);
         const auto euler = UTYPE::Quaternion().Euler(pitch, yaw, roll);
@@ -57,14 +57,15 @@ namespace FreeCam::Proxy
                                          right.z * input.x + forward.z * input.y + up.z * input.z);
         // clang-format on
 
-        position.y += move.y * speed * FreeCam::DeltaTime_s;
-        position.z += move.z * speed * FreeCam::DeltaTime_s;
-        position.x += move.x * speed * FreeCam::DeltaTime_s;
+        position.y += move.y * speed * Core::DeltaTime_s;
+        position.z += move.z * speed * Core::DeltaTime_s;
+        position.x += move.x * speed * Core::DeltaTime_s;
         transform->SetPosition(position);
     }
     auto Camera::ZoomIn(float am) -> void
     {
-        currentZoom -= am * zommSpeed * FreeCam::DeltaTime_s;
+        currentZoom -= am * zommSpeed * Core::DeltaTime_s;
+        currentZoom = Clamp(currentZoom, 1.f, 179.f);
         fieldOfView = currentZoom;
     }
     auto Camera::ZoomOut(float am) -> void

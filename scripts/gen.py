@@ -21,11 +21,6 @@ for cfg in glob.glob("./definitions/*.yaml"):
     modules = []
     config = {"modules": []}
     for module, content in raw_config.items():
-        for klass in content.get("classes", []):
-            for p in klass.get("static_properties", []):
-                p["static"] = True
-            klass["properties"] = klass.get("properties", [])
-            klass["properties"] += klass.get("static_properties", [])
         modules.append({"module": module} | content)
 
     config = {"modules": modules}

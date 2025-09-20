@@ -11,6 +11,7 @@ namespace UType
     class Cursor
     {
     public:
+        public:
         
         template <typename T>
         class Property_lockState

@@ -15,8 +15,9 @@ namespace UType
         template <typename T>
         class Property_fieldOfView
         {
+            Camera *k;
         public:
-            Property_fieldOfView() = default;
+            Property_fieldOfView(Camera *k) : k(k) {};
 
             inline Property_fieldOfView &operator=(const T &v)
             {
@@ -29,16 +30,17 @@ namespace UType
             {
                 static UMethod *method;
                 if (!method) method = Camera::GetUClass()->Get<UMethod>("set_fieldOfView");
-                return method->Invoke<void>(value);
+                return method->Invoke<void>(k, value);
             }
             auto get() -> const T
             {
                 static UMethod *method;
                 if (!method) method = Camera::GetUClass()->Get<UMethod>("get_fieldOfView");
-                return method->Invoke<T>();
+                return method->Invoke<T>(k);
             }
         };
-        Property_fieldOfView<float> fieldOfView;
+        Property_fieldOfView<float> fieldOfView = Property_fieldOfView<float>(this);
+        public:
         public:
         public:
         public:

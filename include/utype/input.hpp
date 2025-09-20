@@ -50,11 +50,12 @@ namespace UType
         SHIFT_R = 303,
         SHIFT_L = 304,
         Ctrl_L = 306,
-    };
+        };
     class Input
     {
     public:
-    public:
+        public:
+        public:
         inline static auto GetKey(const KeyCode key) -> bool
         {
             static UMethod *method;
@@ -80,14 +81,13 @@ namespace UType
             if (!method) method = GetUClass()->Get<UMethod>("GetMouseButtonDown");
             return method->Invoke<bool>(key);
         }
-
-    public:
-    public:
+        public:
+        public:
         inline static auto GetUClass() -> UClass *
         {
             static UClass *klass;
-            if (!klass) klass = UnityResolve::Get("UnityEngine.InputLegacyModule.dll")->Get("Input");
+            if(!klass) klass = UnityResolve::Get("UnityEngine.InputLegacyModule.dll")->Get("Input");
             return klass;
         }
     };
-}
+    }

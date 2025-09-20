@@ -25,6 +25,37 @@ namespace UType
         template <typename T>
         class Property_{{ p.name }}
         {
+            {{ class.class }} *k;
+        public:
+            Property_{{ p.name }}({{ class.class }} *k) : k(k) {};
+
+            inline Property_{{ p.name }} &operator=(const T &v)
+            {
+                set(v);
+                return *this;
+            }
+            inline operator const T &() { return get(); }
+        private:
+            auto set(const T value) -> void
+            {
+                static UMethod *method;
+                if (!method) method = {{ class.class }}::GetUClass()->Get<UMethod>("set_{{p.name}}");
+                return method->Invoke<void>(k, value);
+            }
+            auto get() -> const T
+            {
+                static UMethod *method;
+                if (!method) method = {{ class.class }}::GetUClass()->Get<UMethod>("get_{{p.name}}");
+                return method->Invoke<T>(k);
+            }
+        };
+        Property_{{ p.name }}<{{ p.type }}> {{ p.name }} = Property_{{ p.name }}<{{ p.type }}>(this);
+        {% endfor -%}
+    public:
+        {% for p in class.static_properties %}
+        template <typename T>
+        class Property_{{ p.name }}
+        {
         public:
             Property_{{ p.name }}() = default;
 
@@ -48,7 +79,7 @@ namespace UType
                 return method->Invoke<T>();
             }
         };
-        {% if p.static %}inline static {% endif %}Property_{{ p.name }}<{{ p.type }}> {{ p.name }};
+        inline static Property_{{ p.name }}<{{ p.type }}> {{ p.name }};
         {% endfor -%}
     public:
         {% for m in class.static_methods -%}

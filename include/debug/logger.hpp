@@ -12,6 +12,8 @@
 #include <csignal>
 #endif
 
+using namespace std::chrono_literals;
+
 namespace Debug
 {
     class Logger
@@ -35,6 +37,8 @@ namespace Debug
 #endif
             spdlog::set_default_logger(logger);
             spdlog::set_pattern("[%Y-%m-%d %H:%M:%S.%e] [%l] %v");
+            spdlog::flush_every(1s);
+            spdlog::flush_on(spdlog::level::warn);
 #ifndef NDEBUG
             // Setup Crash Handler
             std::signal(SIGSEGV, crachHandler);
@@ -54,19 +58,19 @@ namespace Debug
             logger->info(fmt::runtime(fmt), args...);
         }
         template <typename... Args>
-        inline static void LOGW(Args &&...args)
+        inline static void LOGW(std::string_view fmt, Args &&...args)
         {
-            logger->warn(args...);
+            logger->warn(fmt::runtime(fmt), args...);
         }
         template <typename... Args>
-        inline static void LOGE(Args &&...args)
+        inline static void LOGE(std::string_view fmt, Args &&...args)
         {
-            logger->error(args...);
+            logger->error(fmt::runtime(fmt), args...);
         }
         template <typename... Args>
-        inline static void LOGC(Args &&...args)
+        inline static void LOGC(std::string_view fmt, Args &&...args)
         {
-            logger->critical(args...);
+            logger->critical(fmt::runtime(fmt), args...);
         }
 
     private:

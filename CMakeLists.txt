@@ -25,5 +25,9 @@ set(SPDLOG_BUILD_BENCH OFF CACHE BOOL "" FORCE)
 include_directories(extern/spdlog/include)
 add_subdirectory(extern/spdlog)
 
+set(DOBBY_DEBUG OFF CACHE INTERNAL "" FORCE)
+set(DOBBY_GENERATE_SHARED OFF CACHE INTERNAL "" FORCE)
+add_subdirectory(extern/Dobby)
+
 include_directories(include)
 add_subdirectory(src)

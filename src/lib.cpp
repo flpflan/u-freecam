@@ -1,7 +1,7 @@
 #include "bootstrap.hpp"
 #include <thread>
 
-#if ANDROID_MODE
+#ifdef __ANDROID__
 __attribute__((constructor)) void on_load() { std::thread(Bootstrap::Run).detach(); }
 
 __attribute__((destructor)) void on_unload() { Bootstrap::Shutdown(); }

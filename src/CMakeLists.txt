@@ -18,6 +18,7 @@ add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES})
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_20)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE spdlog::spdlog_header_only)
+target_link_libraries(${PROJECT_NAME} PRIVATE dobby)
 
 if(UNIX AND NOT APPLE)
     target_link_libraries(${PROJECT_NAME} PRIVATE dl)

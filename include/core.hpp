@@ -1,7 +1,6 @@
 #pragma once
 
-#include <atomic>
-#include "utype/camera.hpp"
+#include "proxy/camera.hpp"
 
 using UTYPE = UnityResolve::UnityType;
 
@@ -15,22 +14,18 @@ namespace FreeCam
         inline static constexpr float DeltaTime_us = DeltaTime_ms * 1000;
 
     private:
-        std::atomic<bool> listenKeys = false;
-        UType::Camera *freeCamera = nullptr;
-        UTYPE::GameObject *freeCameraGObject = nullptr;
-        UTYPE::Camera *originCamera = nullptr;
-        UTYPE::GameObject *originGObject = nullptr;
-        UTYPE::Vector3 originPosition;
-        UTYPE::Quaternion originRotation;
-
-        auto StartListenKeys() -> void;
+        inline static Proxy::Camera *freeCamera = nullptr;
+        inline static UTYPE::GameObject *freeCameraGObject = nullptr;
+        inline static UTYPE::Camera *originCamera = nullptr;
+        inline static UTYPE::GameObject *originGObject = nullptr;
+        inline static UTYPE::Vector3 originPosition;
+        inline static UTYPE::Quaternion originRotation;
 
     public:
-        bool isFreeCamBegin = false;
-        auto BeginFreeCam() -> void;
-        auto EndFreeCam() -> void;
-        static void Hack();
+        inline static bool IsFreeCamBegin = false;
+        static auto BeginFreeCam() -> void;
+        static auto EndFreeCam() -> void;
+        static auto Update() -> void;
     };
-
 
 }

@@ -9,7 +9,9 @@ public:
     static void Shutdown();
 
 private:
-    static std::pair<void*, UnityResolve::Mode> getUnityBackend();
+    static std::pair<void *, UnityResolve::Mode> getUnityBackend();
     static bool initializeUnity();
     static std::pair<uintptr_t, int> getUnityVersionMajor();
+    template <auto UpdateFn>
+    static void attachToGameUpdate();
 };

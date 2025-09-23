@@ -2,7 +2,7 @@
 
 #include <spdlog/spdlog.h>
 #include <string_view>
-#if ANDROID_MODE
+#ifdef __ANDROID__
 #include "spdlog/sinks/android_sink.h"
 #else
 #include "spdlog/sinks/basic_file_sink.h"
@@ -20,7 +20,7 @@ namespace Debug
     {
     private:
         inline static constexpr auto TAG = "freecam";
-#if ANDROID_MODE
+#ifdef __ANDROID__
         inline static auto logger = spdlog::android_logger_mt("freecam_logger", TAG);
 #else
         inline static auto logger = spdlog::basic_logger_mt("freecam_logger", "logs/log.txt");

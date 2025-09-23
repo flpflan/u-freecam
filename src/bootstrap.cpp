@@ -3,6 +3,7 @@
 #include "core.hpp"
 #include "debug/logger.hpp"
 #include "dobby.h"
+#include "memory/memory.hpp"
 
 #include <chrono>
 #include <thread>
@@ -72,82 +73,34 @@ bool Bootstrap::initializeUnity()
     return true;
 }
 
-uintptr_t patternScan(const char *signature)
-{
-    static auto patternToByte = [](const char *pattern)
-    {
-        auto bytes = std::vector<int>{};
-        const auto start = const_cast<char *>(pattern);
-        const auto end = const_cast<char *>(pattern) + strlen(pattern);
-
-        for (auto current = start; current < end; ++current)
-        {
-            if (*current == '?')
-            {
-                ++current;
-                if (*current == '?' && current < end) ++current;
-                bytes.push_back(-1);
-            }
-            else
-            {
-                bytes.push_back(strtoul(current, &current, 16));
-            }
-        }
-        return bytes;
-    };
-
-    // #ifdef __ANDROID__
-    //     const auto module = reinterpret_cast<uintptr_t>(by_dlopen("libunity.so", RTLD_NOW));
-    // #else
-    //     const auto module = reinterpret_cast<uintptr_t>(GetModuleHandleA("UnityPlayer.dll"));
-    // #endif
-    //     const auto header = reinterpret_cast<uint8_t *>(module);
-    //     const auto moduleSize = header->OptionalHeader.SizeOfImage;
-    //     auto patternBytes = patternToByte(signature);
-    //     const auto scanBytes = reinterpret_cast<uint8_t *>(module);
-    //
-    //     const auto s = patternBytes.size();
-    //     const auto d = patternBytes.data();
-    //
-    //     for (auto i = 0ul; i < moduleSize - s; ++i)
-    //     {
-    //         bool found = true;
-    //         for (auto j = 0ul; j < s; ++j)
-    //         {
-    //             if (scanBytes[i + j] != d[j] && d[j] != -1)
-    //             {
-    //                 found = false;
-    //                 break;
-    //             }
-    //         }
-    //         if (found) return module + i;
-    //     }
-    return 0;
-}
-
 void (*orig_update)(void *, int);
 void (*detour_update)(void *, int);
 template <auto UpdateFn>
 void Bootstrap::attachToGameUpdate()
 {
     Debug::Logger::LOGI("Searching for MonoBehaviour::CallUpdateMethod");
+#ifdef __ANDROID__
+    const auto patterns = {"FF C3 05 D1 FC A3 00 F9 F5 53 15 A9 F3 7B 16 A9 08 78 40 F9", "FF C3 05 D1 FC A3 00 F9 F5 53 15 A9 F3 7B 16 A9 08 88 40 F9"};
+#else
     const auto patterns = {"48 89 5c 24 ? 57 48 83 ec ? 48 8b 41 ? 8b fa 48 8b d9 48 85 c0 74 ? 80 78",
                            "48 89 5c 24 ? 57 48 83 ec ? 48 8b 81 ? ? ? ? 8b fa 48 8b d9 48 85 c0 74 ? 80 78",
                            "48 89 5c 24 ? 56 48 83 ec ? 48 8b 81 ? ? ? ? 8b f2",
                            "48 89 5c 24 ? 57 48 83 ec ? 48 8b 81 ? ? ? ? 8b fa 48 8b d9 48 85 c0 74 ? 80 78",
                            "48 89 74 24 ? 57 48 83 ec ? 8b f2 48 8b f9 e8 ? ? ? ? 84 c0",
                            "48 89 5c 24 ? 56 48 83 ec ? 8b f2 48 8b d9 e8 ? ? ? ? 84 c0 0f 85"};
+#endif
     uintptr_t CallUpdateMethod = 0;
     for (auto pattern : patterns)
     {
-        if ((CallUpdateMethod = patternScan(pattern))) break;
+        if ((CallUpdateMethod = PatternScan("libunity.so", pattern))) break;
     }
     if (CallUpdateMethod)
     {
         Debug::Logger::LOGI("Method found, start hooking");
-        DobbyHook(&CallUpdateMethod, (dobby_dummy_func_t)detour_update, (dobby_dummy_func_t *)&orig_update);
+        DobbyHook((void *)CallUpdateMethod, (dobby_dummy_func_t)detour_update, (dobby_dummy_func_t *)&orig_update);
         detour_update = [](void *obj, int methodIndex)
         {
+            Debug::Logger::LOGI("{}", methodIndex);
             orig_update(obj, methodIndex);
             if (methodIndex == 0) UpdateFn();
         };

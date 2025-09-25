@@ -1,13 +1,13 @@
 #pragma once
 
 #include <spdlog/spdlog.h>
-#include <string_view>
 #ifdef __ANDROID__
 #include "spdlog/sinks/android_sink.h"
 #else
 #include "spdlog/sinks/basic_file_sink.h"
 #endif
 
+#include <string_view>
 #ifndef NDEBUG
 #include <csignal>
 #endif
@@ -50,27 +50,27 @@ namespace Debug
         template <typename... Args>
         inline static void LOGD(std::string_view fmt, Args &&...args)
         {
-            logger->debug(fmt::runtime(fmt), args...);
+            logger->debug(fmt::runtime(fmt), std::forward<Args>(args)...);
         }
         template <typename... Args>
         inline static void LOGI(std::string_view fmt, Args &&...args)
         {
-            logger->info(fmt::runtime(fmt), args...);
+            logger->info(fmt::runtime(fmt), std::forward<Args>(args)...);
         }
         template <typename... Args>
         inline static void LOGW(std::string_view fmt, Args &&...args)
         {
-            logger->warn(fmt::runtime(fmt), args...);
+            logger->warn(fmt::runtime(fmt), std::forward<Args>(args)...);
         }
         template <typename... Args>
         inline static void LOGE(std::string_view fmt, Args &&...args)
         {
-            logger->error(fmt::runtime(fmt), args...);
+            logger->error(fmt::runtime(fmt), std::forward<Args>(args)...);
         }
         template <typename... Args>
         inline static void LOGC(std::string_view fmt, Args &&...args)
         {
-            logger->critical(fmt::runtime(fmt), args...);
+            logger->critical(fmt::runtime(fmt), std::forward<Args>(args)...);
         }
 
     private:

@@ -49,7 +49,7 @@ static std::optional<ModuleInfo> GetModuleInfo(const char *const moduleName)
     return info;
 }
 
-static uintptr_t PatternScan(const char *moduleName, const char *signature)
+static uintptr_t PatternScan(const char *const moduleName, const char *const signature)
 {
     static auto patternToByte = [](const char *pattern)
     {
@@ -82,7 +82,7 @@ static uintptr_t PatternScan(const char *moduleName, const char *signature)
     // TODO:
 #endif
     const auto header = reinterpret_cast<uint8_t *>(module);
-    auto patternBytes = patternToByte(signature);
+    const auto patternBytes = patternToByte(signature);
     const auto scanBytes = reinterpret_cast<uint8_t *>(module);
 
     const auto s = patternBytes.size();

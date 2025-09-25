@@ -7,3 +7,6 @@
 [submodule "extern/Dobby"]
 	path = extern/Dobby
 	url = https://github.com/LSPosed/Dobby
+[submodule "extern/KittyMemory"]
+	path = extern/KittyMemory
+	url = https://github.com/MJx0/KittyMemory

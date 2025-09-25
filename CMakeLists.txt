@@ -33,5 +33,10 @@ endif()
 set(DOBBY_GENERATE_SHARED OFF CACHE INTERNAL "" FORCE)
 add_subdirectory(extern/Dobby)
 
+set(KITTYMEMORY_PATH extern/KittyMemory)
+file(GLOB KITTYMEMORY_SRC ${KITTYMEMORY_PATH}/KittyMemory/*.cpp)
+include_directories(${KITTYMEMORY_PATH})
+add_definitions(-DkNO_KEYSTONE)
+
 include_directories(include)
 add_subdirectory(src)

@@ -1,0 +1,7 @@
+UnityEngine.CoreModule.dll:
+  classes:
+    - class: Time
+      base_class: UTYPE::Time
+      static_properties:
+        - name: frameCount
+          type: int

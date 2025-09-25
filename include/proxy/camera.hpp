@@ -7,12 +7,9 @@ using UMethod = UnityResolve::Method;
 
 namespace FreeCam::Proxy
 {
-    class Camera : public UType::Camera
+    class Camera
     {
-        UType::Camera *camera;
         UTYPE::Transform *transform;
-
-        bool ui_layer = false;
 
         // Properties for Rotate
 #ifdef __ANDROID__
@@ -35,17 +32,20 @@ namespace FreeCam::Proxy
         const float zommSpeed = 10.f;
 
     public:
-        bool Enabled = false;
-
-        Camera(UType::Camera *);
-        auto Enable() -> void;
-        auto Disable() -> void;
-        auto Update() -> void;
+        Camera(UType::Camera *c)
+        {
+            transform = c->GetTransform();
+            position = transform->GetPosition();
+            const auto angles = transform->GetRotation().ToEuler();
+            yaw = angles.y;
+            pitch = angles.x;
+            roll = angles.z;
+        }
+        auto GetTransform() { return transform; }
         auto Rotate(UTYPE::Vector2) -> void;
         auto Move(UTYPE::Vector3, bool) -> void;
         auto ZoomIn(float) -> void;
         auto ZoomOut(float) -> void;
         auto ResetZoom() -> void;
-        static auto IsCurrentFreeCamera() -> bool;
     };
 }

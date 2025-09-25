@@ -2,18 +2,18 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE release CACHE STRING "Build Type" FORCE)
 endif()
 
-set(SOURCE_FILES
-    lib.cpp
-    bootstrap.cpp
-    core.cpp
-    proxy/camera.cpp
-    proxy/cursor.cpp
+file(GLOB FREECAM_SRC
+    *.cpp
+    proxy/*.cpp
+    feature/*.cpp
 )
+
 if(CMAKE_SYSTEM_NAME STREQUAL "Android")
-    list(APPEND SOURCE_FILES ${BY_OPEN_SRC})
+    list(APPEND FREECAM_SRC ${BY_OPEN_SRC})
+    list(APPEND FREECAM_SRC ${KITTYMEMORY_SRC})
 endif()
 
-add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES})
+add_library(${PROJECT_NAME} SHARED ${FREECAM_SRC})
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_20)
 

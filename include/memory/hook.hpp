@@ -1,3 +1,4 @@
+#pragma once
 #include "debug/logger.hpp"
 
 #ifdef __ANDROID__

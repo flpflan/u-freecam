@@ -13,5 +13,5 @@ private:
     static bool initializeUnity();
     static std::pair<uintptr_t, int> getUnityVersionMajor();
     template <auto UpdateFn>
-    static void attachToGameUpdate();
+    static bool attachToGameLoop();
 };

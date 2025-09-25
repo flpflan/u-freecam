@@ -3,6 +3,7 @@
 #include "debug/logger.hpp"
 #include "memory/hook.hpp"
 #include "memory/memory.hpp"
+#include "utype/time.hpp"
 
 #include <chrono>
 #include <thread>
@@ -22,7 +23,25 @@ void Bootstrap::Run()
     while (!initializeUnity())
         std::this_thread::sleep_for(std::chrono::seconds(2));
     Debug::Logger::LOGI("Unity initializing success");
-    attachToGameUpdate<FreeCam::Core::Update>();
+    Debug::Logger::LOGI("Try attach to internal loop");
+    if (!attachToGameLoop<FreeCam::Core::Update>())
+    {
+        Debug::Logger::LOGW("Failed to hook internal loop, fallback to mock loop");
+        FreeCam::Core::UseMockLoop = true;
+        std::thread(
+            []
+            {
+                Debug::Logger::LOGI("Main loop started");
+                UnityResolve::ThreadAttach();
+                do
+                {
+                    FreeCam::Core::Update();
+                    std::this_thread::sleep_for(std::chrono::microseconds((int)FreeCam::Core::DeltaTime_us));
+                } while (1);
+                UnityResolve::ThreadDetach();
+            })
+            .detach();
+    }
 }
 
 void Bootstrap::Shutdown() {}
@@ -79,18 +98,23 @@ static CallUpdateMethod_t orig_update;
 template <auto UpdateFn>
 static void detour_update(void *obj, int index)
 {
-    Debug::Logger::LOGI("methodIndex: {}", index);
     orig_update(obj, index);
-    if (index == 0) UpdateFn(); // 0 -> Update, 1 -> LateUpdate, 2 -> FixedUpdate
+
+    static int lastFrame = -1;
+    const int curFrame = UType::Time::frameCount;
+    if (curFrame == lastFrame || index != 0) return; // 0 -> Update, 1 -> LateUpdate, 2 -> FixedUpdate
+    UpdateFn();
+    lastFrame = curFrame;
 }
 
 template <auto UpdateFn>
-void Bootstrap::attachToGameUpdate()
+bool Bootstrap::attachToGameLoop()
 {
     Debug::Logger::LOGI("Searching for MonoBehaviour::CallUpdateMethod");
 #ifdef __ANDROID__
     constexpr auto module = "libunity.so";
     constexpr const char *patterns[] = {"FF C3 05 D1 FC A3 00 F9 F5 53 15 A9 F3 7B 16 A9 08 78 40 F9", "FF C3 05 D1 FC A3 00 F9 F5 53 15 A9 F3 7B 16 A9 08 88 40 F9"};
+    // constexpr const char *patterns[] = {"FF C3 06 D1 FC B3 00 F9 F9 63 17 A9 F7 5B 18 A9 F5 53 19 A9 F3 7B 1A A9 F3 03 00 AA"}; // ExecutePlayerLoop
 #else
     constexpr auto module = "UnityPlayer.dll";
     constexpr const char *patterns[] = {"48 89 5c 24 ? 57 48 83 ec ? 48 8b 41 ? 8b fa 48 8b d9 48 85 c0 74 ? 80 78",
@@ -110,24 +134,15 @@ void Bootstrap::attachToGameUpdate()
     {
         Debug::Logger::LOGI("Method found at {}, start hooking", (void *)CallUpdateMethod);
         const auto r = DoHook((void *)CallUpdateMethod, (void *)detour_update<UpdateFn>, (void **)&orig_update);
-        if (r) return Debug::Logger::LOGI("Hooking success");
+        if (r)
+        {
+            Debug::Logger::LOGI("Hooking success");
+            return true;
+        }
     }
     else
     {
         Debug::Logger::LOGW("Method not found");
     }
-
-    Debug::Logger::LOGW("Failed to hooking internal update, fallback to mock loop");
-    std::thread(
-        []
-        {
-            Debug::Logger::LOGI("Main loop started");
-            {
-                UpdateFn();
-                std::this_thread::sleep_for(std::chrono::microseconds((int)FreeCam::Core::DeltaTime_us));
-            }
-            while (1)
-                ;
-        })
-        .detach();
+    return false;
 }

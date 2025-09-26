@@ -8,7 +8,7 @@
 #endif
 
 #include <string_view>
-#ifndef NDEBUG
+#if defined(__ANDROID__) && defined(NDEBUG)
 #include <csignal>
 #endif
 
@@ -19,8 +19,8 @@ namespace Debug
     class Logger
     {
     private:
-        inline static constexpr auto TAG = "freecam";
 #ifdef __ANDROID__
+        inline static constexpr auto TAG = "freecam";
         inline static auto logger = spdlog::android_logger_mt("freecam_logger", TAG);
 #else
         inline static auto logger = spdlog::basic_logger_mt("freecam_logger", "logs/log.txt");
@@ -39,7 +39,7 @@ namespace Debug
             spdlog::set_pattern("[%Y-%m-%d %H:%M:%S.%e] [%l] %v");
             spdlog::flush_every(1s);
             spdlog::flush_on(spdlog::level::warn);
-#ifndef NDEBUG
+#if defined(__ANDROID__) && defined(NDEBUG)
             // Setup Crash Handler
             std::signal(SIGSEGV, crachHandler);
             std::signal(SIGABRT, crachHandler);
@@ -74,6 +74,7 @@ namespace Debug
         }
 
     private:
+#if defined(__ANDROID__) && defined(NDEBUG)
         inline static void crachHandler(int signal)
         {
             const char *signal_name = "";
@@ -113,5 +114,6 @@ namespace Debug
             spdlog::shutdown();
             std::exit(signal);
         }
+#endif
     };
 }

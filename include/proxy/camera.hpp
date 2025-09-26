@@ -28,15 +28,21 @@ namespace FreeCam::Proxy
         const float moveSpeedMultiplier = 5.f;
 
         // Properties for Zoom
-        inline static constexpr float defaultZoom = 0.f;
+        inline static constinit float defaultZoom;
         float currentZoom = defaultZoom;
-        const float zommSpeed = 10.f;
+#ifdef __ANDROID__
+        const float zoomSpeed = 20.f;
+#else
+        const float zoomSpeed = 6000.f;
+#endif
 
     public:
         Camera(UTYPE::Camera *c)
         {
             camera = static_cast<UType::Camera *>(c);
-            transform = c->GetTransform();
+            transform = camera->GetTransform();
+            defaultZoom = camera->GetFieldOfView();
+            currentZoom = defaultZoom;
             CopyState(c);
         }
         auto CopyState(UTYPE::Camera *c) -> void

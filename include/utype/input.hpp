@@ -51,6 +51,44 @@ namespace UType
         SHIFT_L = 304,
         Ctrl_L = 306,
     };
+    enum class TouchPhase
+    {
+        Began = 2,
+        Moved = 3,
+        Stationary = 4,
+        Ended = 5,
+        Canceled = 6
+    };
+    struct Touch
+    {
+        auto GetPhase() -> TouchPhase
+        {
+            static UMethod *method;
+            if (!method) method = GetUClass()->Get<UMethod>("get_phase");
+            return method->Invoke<TouchPhase>(this);
+        }
+        auto GetPosition() -> UTYPE::Vector2
+        {
+            static UMethod *method;
+            if (!method) method = GetUClass()->Get<UMethod>("get_position");
+            return method->Invoke<UTYPE::Vector2>(this);
+        }
+        auto GetDeltaPosition() -> UTYPE::Vector2
+        {
+            static UMethod *method;
+            if (!method) method = GetUClass()->Get<UMethod>("get_deltaPosition");
+            return method->Invoke<UTYPE::Vector2>(this);
+        }
+
+    public:
+        inline static auto GetUClass() -> UClass *
+        {
+            static UClass *klass;
+            if (!klass) klass = UnityResolve::Get("UnityEngine.InputLegacyModule.dll")->Get("Touch");
+            return klass;
+        }
+    };
+
     class Input
     {
     public:
@@ -78,6 +116,18 @@ namespace UType
             static UMethod *method;
             if (!method) method = GetUClass()->Get<UMethod>("GetMouseButtonDown");
             return method->Invoke<bool>(key);
+        }
+        inline static auto GetTouch(int v) -> Touch
+        {
+            static UMethod *method;
+            if (!method) method = GetUClass()->Get<UMethod>("get_touchCount");
+            return method->Invoke<Touch>(v);
+        }
+        inline static auto GetTouchCount() -> int
+        {
+            static UMethod *method;
+            if (!method) method = GetUClass()->Get<UMethod>("get_touchCount");
+            return method->Invoke<int>();
         }
 
     public:

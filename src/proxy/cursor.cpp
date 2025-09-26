@@ -7,14 +7,14 @@ namespace FreeCam::Proxy
     auto Cursor::EnableCursor() -> void
     {
         Debug::Logger::LOGI("Enable cursor");
-        UType::Cursor::SetLockState(true);
-        UType::Cursor::SetVisible(false);
+        UType::Cursor::SetLockState(false);
+        UType::Cursor::SetVisible(true);
     }
     auto Cursor::DisableCursor() -> void
     {
         Debug::Logger::LOGI("Disable cursor");
-        UType::Cursor::SetLockState(false);
-        UType::Cursor::SetVisible(true);
+        UType::Cursor::SetLockState(true);
+        UType::Cursor::SetVisible(false);
     }
     auto Cursor::ToggleCursor() -> void
     {

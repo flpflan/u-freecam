@@ -6,8 +6,44 @@
 #include "utype/input.hpp"
 #include <memory>
 
-using enum UType::KeyCode;
 using UTYPE = UnityResolve::UnityType;
+using enum UType::KeyCode;
+using UType::Input;
+
+// template <typename T>
+// T Abs(T n)
+// {
+//     return n >= 0 ? n : -n;
+// }
+// float getPinchDelta()
+// {
+//     static float pinchDelta = 0.f;
+//     static float lastDistance = 0.f;
+//     static int lastCount = 0;
+//     pinchDelta = 0.f;
+//     if (Input::GetTouchCount() != 2)
+//     {
+//         lastCount = 0;
+//         return pinchDelta;
+//     }
+//
+//     auto t0 = Input::GetTouch(0);
+//     auto t1 = Input::GetTouch(1);
+//
+//     float currentDistance = t0.GetPosition().Distance(t1.GetPosition());
+//
+//     if (lastCount != 2)
+//     {
+//         lastDistance = currentDistance;
+//     }
+//     else
+//     {
+//         pinchDelta = currentDistance - lastDistance;
+//         lastDistance = currentDistance;
+//     }
+//     lastCount = 2;
+//     return pinchDelta;
+// }
 
 namespace FreeCam::Feature
 {
@@ -40,15 +76,15 @@ namespace FreeCam::Feature
         backupOrigCamera();
 
         // Setup free camera
-        if (!freeCamera)
-        {
-            const auto go = UTYPE::GameObject::Create("UE_Freecam");
-            freeGObject = go;
-            UTYPE::GameObject::DontDestroyOnLoad(go);
+        // if (!freeCamera)
+        //{
+        const auto go = UTYPE::GameObject::Create("UE_Freecam");
+        freeGObject = go;
+        // UTYPE::GameObject::DontDestroyOnLoad(go);
 
-            const auto c = go->AddComponent<UType::Camera *>(UType::Camera::GetUClass());
-            freeCamera = std::make_unique<Proxy::Camera>(c);
-        }
+        const auto c = go->AddComponent<UType::Camera *>(UType::Camera::GetUClass());
+        freeCamera = std::make_unique<Proxy::Camera>(c);
+        //}
         freeCamera->CopyState(origCamera);
         freeGObject->SetTag("MainCamera");
         freeGObject->SetActive(true);
@@ -88,8 +124,6 @@ namespace FreeCam::Feature
     }
     auto FreeCamera::Update() -> void
     {
-        using UType::Input;
-        using enum UType::KeyCode;
         if (!ui_layer)
         {
             const bool toZoom = Input::GetKey(Z);
@@ -97,15 +131,22 @@ namespace FreeCam::Feature
             zoom_mode = toZoom;
             if (zoom_mode)
             {
+#ifdef __ANDROID__
+                // float delta = getPinchDelta();
+                // if (Abs(delta) > 0.01f) freeCamera->ZoomIn(delta);
+                if (Input::GetKey(X)) freeCamera->ZoomIn(1);
+                if (Input::GetKey(C)) freeCamera->ZoomOut(1);
+#else
                 const float mouseCenter = Input::GetAxis("Mouse ScrollWheel");
                 if (mouseCenter < 0)
                 {
-                    freeCamera->ZoomOut(mouseCenter);
+                    freeCamera->ZoomOut(-mouseCenter);
                 }
                 else
                 {
                     freeCamera->ZoomIn(mouseCenter);
                 };
+#endif
             }
 
             UTYPE::Vector3 toMove(0, 0, 0);
@@ -134,4 +175,5 @@ namespace FreeCam::Feature
             ui_layer = !ui_layer;
         }
     }
+
 }

@@ -46,7 +46,8 @@ namespace FreeCam::Proxy
     }
     auto Camera::ZoomIn(float am) -> void
     {
-        currentZoom -= am * zommSpeed * Time::GetDeltaTime_s();
+        Debug::Logger::LOGD("ZoomIn: {}", am);
+        currentZoom -= am * zoomSpeed * Time::GetDeltaTime_s();
         currentZoom = Clamp(currentZoom, 1.f, 179.f);
         camera->SetFieldOfView(currentZoom);
     }

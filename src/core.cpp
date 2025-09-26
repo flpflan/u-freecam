@@ -2,6 +2,7 @@
 #include "debug/logger.hpp"
 #include "proxy/camera.hpp"
 #include "utype/input.hpp"
+#include "utype/time.hpp"
 
 namespace FreeCam
 {
@@ -26,6 +27,7 @@ namespace FreeCam
             {
                 Debug::Logger::LOGI("Set timescale: 0");
                 UTYPE::Time::SetTimeScale(0);
+                Core::UseMockLoop = true; // A bit tricky, but this ensure camera can still move even when timescale is 0
             }
             std::this_thread::sleep_for(100ms);
         }
@@ -40,6 +42,7 @@ namespace FreeCam
             Debug::Logger::LOGI("Set timescale: -=1");
             UTYPE::Time::SetTimeScale(UTYPE::Time::GetTimeScale() - 1);
             std::this_thread::sleep_for(100ms);
+            if (UType::Time::GetTimeScale() <= 0) Core::UseMockLoop = true; // A bit tricky, but this ensure camera can still move even when timescale is 0
         }
         if (Input::GetKeyDown(Enter))
         {

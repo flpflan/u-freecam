@@ -11,28 +11,13 @@ namespace UType
     class Time : public UTYPE::Time
     {
     public:
-        template <typename T>
-        class Property_frameCount
+        inline static auto GetFrameCount() -> int
         {
-        public:
-            Property_frameCount() = default;
 
-            inline Property_frameCount &operator=(const T &v)
-            {
-                set(v);
-                return *this;
-            }
-            inline operator const T() { return get(); }
-
-        private:
-            auto get() -> const T
-            {
-                static UMethod *method;
-                if (!method) method = Time::GetUClass()->Get<UMethod>("get_frameCount");
-                return method->Invoke<T>();
-            }
-        };
-        inline static Property_frameCount<int> frameCount;
+            static UMethod *method;
+            if (!method) method = Time::GetUClass()->Get<UMethod>("get_frameCount");
+            return method->Invoke<int>();
+        }
 
     public:
         inline static auto GetUClass() -> UClass *

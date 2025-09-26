@@ -9,6 +9,7 @@ namespace FreeCam::Proxy
 {
     class Camera
     {
+        UType::Camera *camera;
         UTYPE::Transform *transform;
 
         // Properties for Rotate
@@ -32,16 +33,23 @@ namespace FreeCam::Proxy
         const float zommSpeed = 10.f;
 
     public:
-        Camera(UType::Camera *c)
+        Camera(UTYPE::Camera *c)
         {
+            camera = static_cast<UType::Camera *>(c);
             transform = c->GetTransform();
+            CopyState(c);
+        }
+        auto CopyState(UTYPE::Camera *c) -> void
+        {
+            const auto transform = c->GetTransform();
             position = transform->GetPosition();
             const auto angles = transform->GetRotation().ToEuler();
             yaw = angles.y;
             pitch = angles.x;
             roll = angles.z;
         }
-        auto GetTransform() { return transform; }
+        inline auto SetPosition(UTYPE::Vector3 v) -> void { transform->SetPosition(v); }
+        inline auto SetRotation(UTYPE::Quaternion v) -> void { transform->SetRotation(v); }
         auto Rotate(UTYPE::Vector2) -> void;
         auto Move(UTYPE::Vector3, bool) -> void;
         auto ZoomIn(float) -> void;

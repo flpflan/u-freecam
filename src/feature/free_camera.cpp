@@ -4,6 +4,7 @@
 #include "proxy/camera.hpp"
 #include "proxy/cursor.hpp"
 #include "utype/input.hpp"
+#include <memory>
 
 using enum UType::KeyCode;
 using UTYPE = UnityResolve::UnityType;
@@ -46,8 +47,9 @@ namespace FreeCam::Feature
             UTYPE::GameObject::DontDestroyOnLoad(go);
 
             const auto c = go->AddComponent<UType::Camera *>(UType::Camera::GetUClass());
-            freeCamera = new Proxy::Camera(c);
+            freeCamera = std::make_unique<Proxy::Camera>(c);
         }
+        freeCamera->CopyState(origCamera);
         freeGObject->SetTag("MainCamera");
         freeGObject->SetActive(true);
         freeGObject->GetTransform()->SetPosition(origPosition);
@@ -67,10 +69,9 @@ namespace FreeCam::Feature
         if (freeCamera)
         {
             freeGObject->SetActive(false);
-            const auto freeTransform = freeCamera->GetTransform();
-            freeTransform->SetPosition(origPosition);
-            freeTransform->SetRotation(origRotation);
             freeGObject->SetTag("Bulabula");
+            freeCamera->SetPosition(origPosition);
+            freeCamera->SetRotation(origRotation);
         }
         if (origGObject)
         {
@@ -91,21 +92,21 @@ namespace FreeCam::Feature
         using enum UType::KeyCode;
         if (!ui_layer)
         {
-            // const bool toZoom = Input::GetKey(Z);
-            // if (!toZoom && zoom_mode) camera.ResetZoom();
-            // zoom_mode = toZoom;
-            // if (zoom_mode)
-            // {
-            //     const float mouseCenter = Input::GetAxis("Mouse ScrollWheel");
-            //     if (mouseCenter < 0)
-            //     {
-            //         camera.ZoomOut(mouseCenter);
-            //     }
-            //     else
-            //     {
-            //         camera.ZoomIn(mouseCenter);
-            //     };
-            // }
+            const bool toZoom = Input::GetKey(Z);
+            if (!toZoom && zoom_mode) freeCamera->ResetZoom();
+            zoom_mode = toZoom;
+            if (zoom_mode)
+            {
+                const float mouseCenter = Input::GetAxis("Mouse ScrollWheel");
+                if (mouseCenter < 0)
+                {
+                    freeCamera->ZoomOut(mouseCenter);
+                }
+                else
+                {
+                    freeCamera->ZoomIn(mouseCenter);
+                };
+            }
 
             UTYPE::Vector3 toMove(0, 0, 0);
             // toMove.x = UnityApi::GetAxis("Horizontal");

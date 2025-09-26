@@ -4,7 +4,7 @@
 
 namespace FreeCam::Proxy
 {
-    class Cursor : public UType::Cursor
+    class Cursor
     {
     public:
         static void DisableCursor();

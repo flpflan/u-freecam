@@ -101,7 +101,7 @@ static void detour_update(void *obj, int index)
     orig_update(obj, index);
 
     static int lastFrame = -1;
-    const int curFrame = UType::Time::frameCount;
+    const int curFrame = UType::Time::GetFrameCount();
     if (curFrame == lastFrame || index != 0) return; // 0 -> Update, 1 -> LateUpdate, 2 -> FixedUpdate
     UpdateFn();
     lastFrame = curFrame;

@@ -1,23 +1,24 @@
 #include "proxy/cursor.hpp"
 #include "debug/logger.hpp"
+#include "utype/cursor.hpp"
 
 namespace FreeCam::Proxy
 {
     auto Cursor::EnableCursor() -> void
     {
         Debug::Logger::LOGI("Enable cursor");
-        visible = true;
-        lockState = 0;
+        UType::Cursor::SetLockState(true);
+        UType::Cursor::SetVisible(false);
     }
     auto Cursor::DisableCursor() -> void
     {
         Debug::Logger::LOGI("Disable cursor");
-        visible = false;
-        lockState = 1;
+        UType::Cursor::SetLockState(false);
+        UType::Cursor::SetVisible(true);
     }
     auto Cursor::ToggleCursor() -> void
     {
-        if (lockState == 0)
+        if (UType::Cursor::GetLockState() == 0)
         {
             DisableCursor();
         }

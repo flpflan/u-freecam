@@ -44,20 +44,20 @@ namespace FreeCam::Proxy
         position.x += move.x * speed * Time::GetDeltaTime_s();
         transform->SetPosition(position);
     }
-    // auto Camera::ZoomIn(float am) -> void
-    // {
-    //     currentZoom -= am * zommSpeed * Time::GetDeltaTime_s();
-    //     currentZoom = Clamp(currentZoom, 1.f, 179.f);
-    //     fieldOfView = currentZoom;
-    // }
-    // auto Camera::ZoomOut(float am) -> void
-    // {
-    //     if (fieldOfView > defaultZoom) return;
-    //     return ZoomIn(-am);
-    // }
-    // auto Camera::ResetZoom() -> void
-    // {
-    //     currentZoom = defaultZoom;
-    //     return ZoomIn(0);
-    // }
+    auto Camera::ZoomIn(float am) -> void
+    {
+        currentZoom -= am * zommSpeed * Time::GetDeltaTime_s();
+        currentZoom = Clamp(currentZoom, 1.f, 179.f);
+        camera->SetFieldOfView(currentZoom);
+    }
+    auto Camera::ZoomOut(float am) -> void
+    {
+        if (camera->GetFieldOfView() > defaultZoom) return;
+        return ZoomIn(-am);
+    }
+    auto Camera::ResetZoom() -> void
+    {
+        currentZoom = defaultZoom;
+        return ZoomIn(0);
+    }
 }

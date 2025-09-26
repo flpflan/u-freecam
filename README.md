@@ -31,7 +31,7 @@ For example, on Windows, you can use the DLL injection tool that comes with Chea
 |冻结速度 / 恢复正常速度 -> Backspace|freeze speed / resume speed -> Backspace|
 
 ## 已测试游戏 (Tested Game)
-- 蔚蓝档案 (PC端 / [移动端](https://www.bilibili.com/video/BV1XRpmz8EBW)) / Blue Archive (PC / [Mobile](https://www.bilibili.com/video/BV1XRpmz8EBW))
+- 蔚蓝档案 (PC端 / [移动端](https://www.bilibili.com/video/BV1XRpmz8EBW)) / Blue Archive (PC / [Mobile](https://youtu.be/40Od_dHH5oY))
 - 喵斯快跑 (PC端) / Muse Dash (PC)
 
 ## Special Thanks

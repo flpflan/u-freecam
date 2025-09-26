@@ -22,6 +22,7 @@ For example, on Windows, you can use the DLL injection tool that comes with Chea
 |移动 -> WASD、Ctrl、空格、左Shift(疾跑)|Movement -> WASD, Ctrl, Space, and Shift_L (sprint)|
 |旋转镜头 -> 鼠标 / 方向键 / 触屏（移动端）|Rotation -> Mouse / Arrow keys / Touch screen (moblie)|
 |切换鼠标(方便进行某些UI操作) -> 鼠标中键 / U|UI operation -> Mouse middle button / U|
+|镜头缩放 -> 按住Z + 鼠标滚轮/ X、C|Zoom -> Hold Z + Mouse Wheel / X or C|
 
 |变速|Speed Hack|
 | - | - |

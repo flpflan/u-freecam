@@ -29,19 +29,19 @@ namespace FreeCam
                 UTYPE::Time::SetTimeScale(0);
                 Core::UseMockLoop = true; // A bit tricky, but this ensure camera can still move even when timescale is 0
             }
-            std::this_thread::sleep_for(100ms);
+            std::this_thread::sleep_for(100ms); // For MockLoop use
         }
         if (Input::GetKeyDown(Plus))
         {
             Debug::Logger::LOGI("Set timescale: +=1");
             UTYPE::Time::SetTimeScale(UTYPE::Time::GetTimeScale() + 1);
-            std::this_thread::sleep_for(100ms);
+            std::this_thread::sleep_for(100ms);// For MockLoop use
         }
         if (Input::GetKeyDown(Minus))
         {
             Debug::Logger::LOGI("Set timescale: -=1");
             UTYPE::Time::SetTimeScale(UTYPE::Time::GetTimeScale() - 1);
-            std::this_thread::sleep_for(100ms);
+            std::this_thread::sleep_for(100ms);// For MockLoop use
             if (UType::Time::GetTimeScale() <= 0) Core::UseMockLoop = true; // A bit tricky, but this ensure camera can still move even when timescale is 0
         }
         if (Input::GetKeyDown(Enter))

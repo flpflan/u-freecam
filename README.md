@@ -7,12 +7,10 @@ It also comes with an in-game speed hack feature.
 
 ## 如何使用 (How to Use)
 通过任何手段, 将动态库注入目标进程/app即可。\
-举例来说，Windows 上可通过 CE 自带的 dll 注入工具进行注入，而 Android 上可以使用 [XInjector](https://github.com/WindySha/XInjector) 
-> 非 Root 环境可以用 [Android-Virtual-Inject](https://github.com/reveny/Android-Virtual-Inject/releases/latest)
+举例来说，Windows 上可通过 CE 自带的 dll 注入工具进行注入，而 Android 上可以使用 [XInjector](https://github.com/WindySha/XInjector) (非 Root 环境可以用 [Android-Virtual-Inject](https://github.com/reveny/Android-Virtual-Inject/releases/latest))
 
 By any means, inject this dynamic library into the target process or application. \
-For example, on Windows, you can use the DLL injection tool that comes with Cheat Engine (CE), while on Android, you can use [XInjector](https://github.com/WindySha/XInjector).
-> Non-root environments can use [Android-Virtual-Inject](https://github.com/reveny/Android-Virtual-Inject/releases/latest)
+For example, on Windows, you can use the DLL injection tool that comes with Cheat Engine (CE), while on Android, you can use [XInjector](https://github.com/WindySha/XInjector) (Non-root environments can use [Android-Virtual-Inject](https://github.com/reveny/Android-Virtual-Inject/releases/latest)).
 
 ## 按键 (Keybindings)
 > ** Android 上可使用外接键盘 ** \

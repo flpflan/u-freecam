@@ -8,7 +8,7 @@
 #endif
 
 #include <string_view>
-#if defined(__ANDROID__) && defined(NDEBUG)
+#if defined(__ANDROID__) && !defined(NDEBUG)
 #include <csignal>
 #endif
 
@@ -39,7 +39,7 @@ namespace Debug
             spdlog::set_pattern("[%Y-%m-%d %H:%M:%S.%e] [%l] %v");
             spdlog::flush_every(1s);
             spdlog::flush_on(spdlog::level::warn);
-#if defined(__ANDROID__) && defined(NDEBUG)
+#if defined(__ANDROID__) && !defined(NDEBUG)
             // Setup Crash Handler
             std::signal(SIGSEGV, crachHandler);
             std::signal(SIGABRT, crachHandler);
@@ -74,7 +74,7 @@ namespace Debug
         }
 
     private:
-#if defined(__ANDROID__) && defined(NDEBUG)
+#if defined(__ANDROID__) && !defined(NDEBUG)
         inline static void crachHandler(int signal)
         {
             const char *signal_name = "";

@@ -1,5 +1,5 @@
 if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE release CACHE STRING "Build Type" FORCE)
+    set(CMAKE_BUILD_TYPE Release CACHE STRING "Build Type" FORCE)
 endif()
 
 file(GLOB FREECAM_SRC

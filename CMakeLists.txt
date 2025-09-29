@@ -25,7 +25,7 @@ set(SPDLOG_BUILD_BENCH OFF CACHE BOOL "" FORCE)
 include_directories(extern/spdlog/include)
 add_subdirectory(extern/spdlog)
 
-if(${CMAKE_BUILD_TYPE} STREQUAL "debug")
+if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
     set(DOBBY_DEBUG ON CACHE INTERNAL "" FORCE)
 else()
     set(DOBBY_DEBUG OFF CACHE INTERNAL "" FORCE)

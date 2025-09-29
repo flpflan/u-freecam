@@ -6,7 +6,7 @@
 
 static auto DoHook(void *address, void *detour, void **orig) -> bool
 {
-#ifdef NDEBUG
+#ifndef NDEBUG
     log_set_level(0);
 #endif
     log_set_tag("freecam");

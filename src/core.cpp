@@ -14,7 +14,7 @@ namespace FreeCam
 
     auto Core::Update() -> void
     {
-        if (freeCam->Enabled && !freeCam->IsCurrentFreeCamera()) return freeCam->Disable();
+        if (freeCam.Enabled && !freeCam.IsCurrentFreeCamera()) return freeCam.Disable();
 
         if (Input::GetKeyDown(Backspace))
         {
@@ -35,20 +35,21 @@ namespace FreeCam
         {
             Debug::Logger::LOGI("Set timescale: +=1");
             UTYPE::Time::SetTimeScale(UTYPE::Time::GetTimeScale() + 1);
-            std::this_thread::sleep_for(100ms);// For MockLoop use
+            std::this_thread::sleep_for(100ms); // For MockLoop use
         }
         if (Input::GetKeyDown(Minus))
         {
             Debug::Logger::LOGI("Set timescale: -=1");
             UTYPE::Time::SetTimeScale(UTYPE::Time::GetTimeScale() - 1);
-            std::this_thread::sleep_for(100ms);// For MockLoop use
             if (UType::Time::GetTimeScale() <= 0) Core::UseMockLoop = true; // A bit tricky, but this ensure camera can still move even when timescale is 0
+
+            std::this_thread::sleep_for(100ms); // For MockLoop use
         }
         if (Input::GetKeyDown(Enter))
         {
-            return freeCam->Enabled ? freeCam->Disable() : freeCam->Enable();
+            return freeCam.Enabled ? freeCam.Disable() : freeCam.Enable();
         }
 
-        if (freeCam->Enabled) freeCam->Update();
+        if (freeCam.Enabled) freeCam.Update();
     }
 }

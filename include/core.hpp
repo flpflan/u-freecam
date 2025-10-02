@@ -12,7 +12,7 @@ namespace FreeCam
         inline static constexpr const float DeltaTime_us = DeltaTime_ms * 1000;
 
     private:
-        inline static auto freeCam = new Feature::FreeCamera();
+        inline static auto freeCam = Feature::FreeCamera();
 
     public:
         inline static bool UseMockLoop = false;

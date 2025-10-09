@@ -1,5 +1,4 @@
 #include "proxy/camera.hpp"
-#include "debug/logger.hpp"
 #include "proxy/time.hpp"
 
 template <typename T>

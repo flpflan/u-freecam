@@ -14,11 +14,7 @@ namespace FreeCam::Proxy
         // Properties for Zoom
         inline static constinit float defaultZoom;
         float currentZoom = defaultZoom;
-#ifdef __ANDROID__
         const float zoomSpeed = 20.f;
-#else
-        const float zoomSpeed = 6000.f;
-#endif
 
     public:
         Camera(UTYPE::Camera &c) : cam(static_cast<UType::Camera &>(c))

@@ -16,6 +16,7 @@ namespace FreeCam::Proxy
 #else
         constexpr static float rotationSpeed = 500.f;
 #endif
+        constexpr static float rollSpeed = 500.f;
         // Properties for Move
         const float moveSpeed = 1.f;
         const float moveSpeedMultiplier = 5.f;

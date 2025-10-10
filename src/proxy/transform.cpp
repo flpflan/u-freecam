@@ -47,7 +47,7 @@ namespace FreeCam::Proxy
     {
         const auto forward = trans.GetForward();
         auto [pitch, yaw, roll] = trans.GetRotation().ToEuler();
-        roll += toRoll * rotationSpeed * Time::GetDeltaTime_s();
+        roll += toRoll * rollSpeed * Time::GetDeltaTime_s();
         roll = Clamp(roll, -180.f, 180.f);
         const auto euler = UTYPE::Quaternion().Euler(pitch, yaw, roll);
         trans.SetRotation(euler);

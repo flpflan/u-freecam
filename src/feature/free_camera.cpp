@@ -136,22 +136,17 @@ namespace FreeCam::Feature
             zoom_mode = toZoom;
             if (zoom_mode)
             {
-#ifdef __ANDROID__
-                // float delta = getPinchDelta();
-                // if (Abs(delta) > 0.01f) freeCamera->ZoomIn(delta);
                 if (Input::GetKey(X)) freeCam->ZoomIn(1);
                 if (Input::GetKey(C)) freeCam->ZoomOut(1);
-#else
                 const float mouseCenter = Input::GetAxis("Mouse ScrollWheel");
                 if (mouseCenter < 0)
                 {
-                    freeCamera->ZoomOut(-mouseCenter);
+                    freeCam->ZoomOut(10);
                 }
-                else
+                else if (mouseCenter > 0)
                 {
-                    freeCamera->ZoomIn(mouseCenter);
+                    freeCam->ZoomIn(10);
                 };
-#endif
             }
 
             UTYPE::Vector3 toMove(0, 0, 0);

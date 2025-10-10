@@ -33,18 +33,23 @@ namespace FreeCam::Proxy
     {
         const auto speed = sprint ? moveSpeed * moveSpeedMultiplier : moveSpeed;
         const auto move = calculToMove(input, sprint);
+        auto position = trans.GetPosition();
         position.y += move.y * speed * Time::GetDeltaTime_s();
         position.z += move.z * speed * Time::GetDeltaTime_s();
         position.x += move.x * speed * Time::GetDeltaTime_s();
         trans.SetPosition(position);
     }
-    auto Transform::LocalMove(UTYPE::Vector3 input, bool sprint = true) -> void
+    auto Transform::Roll(float toRoll) -> void
     {
-        const auto speed = sprint ? moveSpeed * moveSpeedMultiplier : moveSpeed;
-        const auto move = calculToMove(input, sprint);
-        localPosition.y += move.y * speed * Time::GetDeltaTime_s();
-        localPosition.z += move.z * speed * Time::GetDeltaTime_s();
-        localPosition.x += move.x * speed * Time::GetDeltaTime_s();
-        trans.SetPosition(localPosition);
+        roll += toRoll * rotationSpeed * Time::GetDeltaTime_s();
+        roll = Clamp(roll, -180.f, 180.f);
+        const auto euler = UTYPE::Quaternion().Euler(pitch, yaw, roll);
+        trans.SetRotation(euler);
+    }
+    auto Transform::ResetRoll() -> void
+    {
+        roll = 0;
+        const auto euler = UTYPE::Quaternion().Euler(pitch, yaw, roll);
+        trans.SetRotation(euler);
     }
 }

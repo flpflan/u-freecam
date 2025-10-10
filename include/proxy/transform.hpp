@@ -24,8 +24,6 @@ namespace FreeCam::Proxy
         float localRoll;
 
         // Properties for Move
-        UTYPE::Vector3 position;
-        UTYPE::Vector3 localPosition;
         const float moveSpeed = 1.f;
         const float moveSpeedMultiplier = 5.f;
 
@@ -39,11 +37,7 @@ namespace FreeCam::Proxy
             SetLocalPosition(t.GetLocalPosition());
             SetLocalRotation(t.GetLocalRotation());
         }
-        inline auto SetPosition(const UTYPE::Vector3 &v) -> void
-        {
-            position = v;
-            trans.SetPosition(v);
-        }
+        inline auto SetPosition(const UTYPE::Vector3 &v) -> void { trans.SetPosition(v); }
         auto SetRotation(const UTYPE::Quaternion &v) -> void
         {
             const auto angles = v.ToEuler();
@@ -52,11 +46,7 @@ namespace FreeCam::Proxy
             roll = angles.z;
             trans.SetRotation(v);
         }
-        inline auto SetLocalPosition(const UTYPE::Vector3 &v) -> void
-        {
-            localPosition = v;
-            trans.SetLocalPosition(v);
-        }
+        inline auto SetLocalPosition(const UTYPE::Vector3 &v) -> void { trans.SetLocalPosition(v); }
         auto SetLocalRotation(const UTYPE::Quaternion &v) -> void
         {
             const auto angles = v.ToEuler();
@@ -67,7 +57,8 @@ namespace FreeCam::Proxy
         }
         auto Rotate(UTYPE::Vector2) -> void;
         auto Move(UTYPE::Vector3, bool) -> void;
-        auto LocalMove(UTYPE::Vector3, bool) -> void;
+        auto Roll(float) -> void;
+        auto ResetRoll() -> void;
         inline auto GetUTransform() -> UTYPE::Transform * { return &trans; }
 
     private:

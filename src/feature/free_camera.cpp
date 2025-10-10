@@ -1,9 +1,10 @@
 #include "feature/free_camera.hpp"
-#include "UnityResolve.hpp"
 #include "debug/logger.hpp"
 #include "proxy/camera.hpp"
 #include "proxy/cursor.hpp"
+#include "proxy/transform.hpp"
 #include "utype/input.hpp"
+#include "utype/transform.hpp"
 #include <memory>
 
 using UTYPE = UnityResolve::UnityType;
@@ -78,18 +79,23 @@ namespace FreeCam::Feature
         // Setup free camera
         // if (!freeCamera)
         //{
-        const auto go = UTYPE::GameObject::Create("UE_Freecam");
-        freeGObject = go;
+        anchorGO = UTYPE::GameObject::Create("UE_Freecam_Anchor");
+        anchorGO->SetActive(true);
+
+        freeGO = UTYPE::GameObject::Create("UE_Freecam");
+        static_cast<UType::Transform *>(freeGO->GetTransform())->SetParent(anchorGO->GetTransform());
+        freeGO->SetTag("MainCamera");
+        freeGO->SetActive(true);
         // UTYPE::GameObject::DontDestroyOnLoad(go);
 
-        const auto c = go->AddComponent<UType::Camera *>(UType::Camera::GetUClass());
-        freeCamera = std::make_unique<Proxy::Camera>(c);
+        anchorTrans = std::make_unique<Proxy::Transform>(anchorGO->GetTransform());
+        freeTrans = std::make_unique<Proxy::Transform>(freeGO->GetTransform());
+        freeCam = std::make_unique<Proxy::Camera>(freeGO->AddComponent<UType::Camera *>(UType::Camera::GetUClass()));
         //}
-        freeCamera->CopyState(origCamera);
-        freeGObject->SetTag("MainCamera");
-        freeGObject->SetActive(true);
-        freeGObject->GetTransform()->SetPosition(origPosition);
-        freeGObject->GetTransform()->SetRotation(origRotation);
+        anchorTrans->CopyState(*origGObject->GetTransform());
+        freeTrans->CopyState(*origGObject->GetTransform());
+        freeTrans->SetLocalPosition(UTYPE::Vector3(0, 0, 0));
+        freeTrans->SetLocalRotation(UTYPE::Quaternion(0, 0, 0, 0));
 
         // Set Cursor
         Proxy::Cursor::DisableCursor();
@@ -102,12 +108,12 @@ namespace FreeCam::Feature
         if (!Enabled) return;
         Enabled = false;
         Debug::Logger::LOGI("End freecam");
-        if (freeCamera)
+        if (freeCam)
         {
-            freeGObject->SetActive(false);
-            freeGObject->SetTag("Bulabula");
-            freeCamera->SetPosition(origPosition);
-            freeCamera->SetRotation(origRotation);
+            // freeGO->SetActive(false);
+            // freeGO->SetTag("Bulabula");
+            anchorGO->SetActive(false);
+            anchorTrans->CopyState(*origGObject->GetTransform());
         }
         if (origGObject)
         {
@@ -127,15 +133,15 @@ namespace FreeCam::Feature
         if (!ui_layer)
         {
             const bool toZoom = Input::GetKey(Z);
-            if (!toZoom && zoom_mode) freeCamera->ResetZoom();
+            if (!toZoom && zoom_mode) freeCam->ResetZoom();
             zoom_mode = toZoom;
             if (zoom_mode)
             {
 #ifdef __ANDROID__
                 // float delta = getPinchDelta();
                 // if (Abs(delta) > 0.01f) freeCamera->ZoomIn(delta);
-                if (Input::GetKey(X)) freeCamera->ZoomIn(1);
-                if (Input::GetKey(C)) freeCamera->ZoomOut(1);
+                if (Input::GetKey(X)) freeCam->ZoomIn(1);
+                if (Input::GetKey(C)) freeCam->ZoomOut(1);
 #else
                 const float mouseCenter = Input::GetAxis("Mouse ScrollWheel");
                 if (mouseCenter < 0)
@@ -158,7 +164,18 @@ namespace FreeCam::Feature
             if (Input::GetKey(S)) toMove.y = -1;
             if (Input::GetKey(A)) toMove.x = -1;
             if (Input::GetKey(D)) toMove.x = 1;
-            if (toMove.x || toMove.y || toMove.z) freeCamera->Move(toMove, Input::GetKey(SHIFT_L));
+            if (toMove.x || toMove.y || toMove.z)
+            {
+                if (Input::GetKey(M))
+                {
+                    freeTrans->Move(toMove, Input::GetKey(SHIFT_L));
+                }
+                else
+                {
+                    anchorTrans->Move(toMove, Input::GetKey(SHIFT_L));
+                }
+            }
+            if (Input::GetKeyDown(M) && Input::GetKey(SHIFT_L)) freeTrans->SetLocalPosition(UTYPE::Vector3(0, 0, 0));
 
             UTYPE::Vector2 toRotate(0, 0);
             toRotate.x = Input::GetAxis("Mouse X");
@@ -167,7 +184,7 @@ namespace FreeCam::Feature
             if (Input::GetKey(DownArrow)) toRotate.y = -1;
             if (Input::GetKey(RightArrow)) toRotate.x = 1;
             if (Input::GetKey(LeftArrow)) toRotate.x = -1;
-            if (toRotate.x || toRotate.y) freeCamera->Rotate(toRotate);
+            if (toRotate.x || toRotate.y) anchorTrans->Rotate(toRotate);
         }
         if (Input::GetMouseButtonDown(2) || Input::GetKeyDown(U))
         {

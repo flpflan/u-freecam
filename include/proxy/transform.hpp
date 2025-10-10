@@ -16,13 +16,6 @@ namespace FreeCam::Proxy
 #else
         constexpr static float rotationSpeed = 500.f;
 #endif
-        float yaw;
-        float pitch;
-        float roll;
-        float localYaw;
-        float localPitch;
-        float localRoll;
-
         // Properties for Move
         const float moveSpeed = 1.f;
         const float moveSpeedMultiplier = 5.f;
@@ -38,30 +31,17 @@ namespace FreeCam::Proxy
             SetLocalRotation(t.GetLocalRotation());
         }
         inline auto SetPosition(const UTYPE::Vector3 &v) -> void { trans.SetPosition(v); }
-        auto SetRotation(const UTYPE::Quaternion &v) -> void
-        {
-            const auto angles = v.ToEuler();
-            yaw = angles.y;
-            pitch = angles.x;
-            roll = angles.z;
-            trans.SetRotation(v);
-        }
+        inline auto SetRotation(const UTYPE::Quaternion &v) -> void { trans.SetRotation(v); }
         inline auto SetLocalPosition(const UTYPE::Vector3 &v) -> void { trans.SetLocalPosition(v); }
-        auto SetLocalRotation(const UTYPE::Quaternion &v) -> void
-        {
-            const auto angles = v.ToEuler();
-            localYaw = angles.y;
-            localPitch = angles.x;
-            localRoll = angles.z;
-            trans.SetLocalRotation(v);
-        }
-        auto Rotate(UTYPE::Vector2) -> void;
-        auto Move(UTYPE::Vector3, bool) -> void;
-        auto Roll(float) -> void;
+        inline auto SetLocalRotation(const UTYPE::Quaternion &v) -> void { trans.SetLocalRotation(v); }
+        auto Rotate(const UTYPE::Vector2) -> void;
+        auto Move(const UTYPE::Vector3, const bool) -> void;
+        auto Roll(const float) -> void;
         auto ResetRoll() -> void;
         inline auto GetUTransform() -> UTYPE::Transform * { return &trans; }
 
     private:
-        auto calculToMove(UTYPE::Vector3, bool) -> UTYPE::Vector3;
+        auto calculToMove(const UTYPE::Vector3, const bool) -> UTYPE::Vector3;
+        auto calculToRotate(const UTYPE::Vector2) -> UTYPE::Vector2;
     };
 }

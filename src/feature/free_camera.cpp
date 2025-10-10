@@ -117,7 +117,6 @@ namespace FreeCam::Feature
         }
         if (origGObject)
         {
-            const auto curCam = UTYPE::Camera::GetMain();
             if (FreeCamera::IsCurrentFreeCamera())
             {
                 origGObject->SetActive(true);
@@ -185,6 +184,10 @@ namespace FreeCam::Feature
             if (Input::GetKey(RightArrow)) toRotate.x = 1;
             if (Input::GetKey(LeftArrow)) toRotate.x = -1;
             if (toRotate.x || toRotate.y) anchorTrans->Rotate(toRotate);
+
+            if (Input::GetKey(Q)) anchorTrans->Roll(Input::GetKey(SHIFT_L) ? -2 : -1);
+            if (Input::GetKey(E)) anchorTrans->Roll(Input::GetKey(SHIFT_L) ? 2 : 1);
+            if (Input::GetKeyDown(R)) anchorTrans->ResetRoll();
         }
         if (Input::GetMouseButtonDown(2) || Input::GetKeyDown(U))
         {

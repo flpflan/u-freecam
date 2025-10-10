@@ -4,7 +4,7 @@
 
 namespace FreeCam::Proxy
 {
-    UTYPE::Vector3 Transform::calculToMove(UTYPE::Vector3 input, bool sprint)
+    UTYPE::Vector3 Transform::calculToMove(const UTYPE::Vector3 input, const bool sprint)
     {
         const auto forward = trans.GetForward();
         const auto right = trans.GetRight();
@@ -20,16 +20,20 @@ namespace FreeCam::Proxy
                               right.z * input.x + forward.z * input.y + up.z * input.z);
         // clang-format on
     }
-    auto Transform::Rotate(UTYPE::Vector2 input) -> void
+    auto Transform::calculToRotate(const UTYPE::Vector2 input) -> UTYPE::Vector2 { return input; }
+    auto Transform::Rotate(const UTYPE::Vector2 input) -> void
     {
-        yaw += input.x * rotationSpeed * Time::GetDeltaTime_s();
-        pitch -= input.y * rotationSpeed * Time::GetDeltaTime_s();
+        const auto rotate = calculToRotate(input);
+
+        auto [pitch, yaw, roll] = trans.GetRotation().ToEuler();
+        yaw += rotate.x * rotationSpeed * Time::GetDeltaTime_s();
+        pitch -= rotate.y * rotationSpeed * Time::GetDeltaTime_s();
 
         pitch = Clamp(pitch, -80.0f, 80.0f);
         const auto euler = UTYPE::Quaternion().Euler(pitch, yaw, roll);
         trans.SetRotation(euler);
     }
-    auto Transform::Move(UTYPE::Vector3 input, bool sprint = true) -> void
+    auto Transform::Move(const UTYPE::Vector3 input, const bool sprint = true) -> void
     {
         const auto speed = sprint ? moveSpeed * moveSpeedMultiplier : moveSpeed;
         const auto move = calculToMove(input, sprint);
@@ -39,8 +43,10 @@ namespace FreeCam::Proxy
         position.x += move.x * speed * Time::GetDeltaTime_s();
         trans.SetPosition(position);
     }
-    auto Transform::Roll(float toRoll) -> void
+    auto Transform::Roll(const float toRoll) -> void
     {
+        const auto forward = trans.GetForward();
+        auto [pitch, yaw, roll] = trans.GetRotation().ToEuler();
         roll += toRoll * rotationSpeed * Time::GetDeltaTime_s();
         roll = Clamp(roll, -180.f, 180.f);
         const auto euler = UTYPE::Quaternion().Euler(pitch, yaw, roll);
@@ -48,8 +54,8 @@ namespace FreeCam::Proxy
     }
     auto Transform::ResetRoll() -> void
     {
-        roll = 0;
-        const auto euler = UTYPE::Quaternion().Euler(pitch, yaw, roll);
+        const auto [pitch, yaw, _] = trans.GetRotation().ToEuler();
+        const auto euler = UTYPE::Quaternion().Euler(pitch, yaw, 0);
         trans.SetRotation(euler);
     }
 }

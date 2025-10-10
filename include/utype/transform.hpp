@@ -8,6 +8,11 @@ namespace UType
     using UMethod = UnityResolve::Method;
     using UTYPE = UnityResolve::UnityType;
 
+    enum class Space
+    {
+        World,
+        Self
+    };
     class Transform : public UTYPE::Transform
     {
     public:
@@ -24,6 +29,13 @@ namespace UType
             static UMethod *method;
             if (!method) method = GetUClass()->Get<UMethod>("SetParent");
             return method->Invoke<void>(this, parent);
+        }
+        inline auto Rotate(UTYPE::Vector3 axis, float angle, Space relativeTo) -> void
+        {
+
+            static UMethod *method;
+            if (!method) method = GetUClass()->Get<UMethod>("Rotate", {"UnityEngine.Vector3", "System.Single", "UnityEngine.Space"});
+            return method->Invoke<void>(this, axis, angle, relativeTo);
         }
 
     public:

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "proxy/camera.hpp"
+#include "proxy/transform.hpp"
 #include <memory>
 
 namespace FreeCam::Feature
@@ -10,8 +11,11 @@ namespace FreeCam::Feature
     private:
         bool ui_layer = false;
         bool zoom_mode = false;
-        std::unique_ptr<Proxy::Camera> freeCamera = nullptr;
-        UTYPE::GameObject *freeGObject = nullptr;
+        UTYPE::GameObject *freeGO = nullptr;
+        std::unique_ptr<Proxy::Camera> freeCam = nullptr;
+        std::unique_ptr<Proxy::Transform> freeTrans = nullptr;
+        UTYPE::GameObject *anchorGO = nullptr;
+        std::unique_ptr<Proxy::Transform> anchorTrans = nullptr;
 
     public:
         bool Enabled = false;

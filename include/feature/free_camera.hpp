@@ -11,6 +11,7 @@ namespace FreeCam::Feature
     private:
         bool ui_layer = false;
         bool zoom_mode = false;
+        bool attach_mode = false;
         UTYPE::GameObject *freeGO = nullptr;
         std::unique_ptr<Proxy::Camera> freeCam = nullptr;
         std::unique_ptr<Proxy::Transform> freeTrans = nullptr;

@@ -121,14 +121,13 @@ namespace FreeCam::Feature
         if (!Enabled) return;
         Enabled = false;
         Debug::Logger::LOGI("End freecam");
-        if (freeCam)
+        if (freeGO)
         {
             UTYPE::GameObject::Destroy(freeGO);
+        }
+        if (anchorGO)
+        {
             UTYPE::GameObject::Destroy(anchorGO);
-            // freeGO->SetActive(false);
-            // freeGO->SetTag("Bulabula");
-            anchorGO->SetActive(false);
-            anchorTrans->CopyState(*origGObject->GetTransform());
         }
         if (origGObject)
         {
@@ -181,7 +180,14 @@ namespace FreeCam::Feature
                 }
                 else
                 {
-                    anchorTrans->Move(toMove, Input::GetKey(SHIFT_L));
+                    if (!attach_mode)
+                    {
+                        anchorTrans->Move(toMove, Input::GetKey(SHIFT_L));
+                    }
+                    else
+                    {
+                        freeTrans->Move(toMove, Input::GetKey(SHIFT_L));
+                    }
                 }
             }
             if (Input::GetKeyDown(M) && Input::GetKey(SHIFT_L)) freeTrans->SetLocalPosition(UTYPE::Vector3(0, 0, 0));
@@ -199,9 +205,18 @@ namespace FreeCam::Feature
             if (Input::GetKey(E)) anchorTrans->Roll(Input::GetKey(SHIFT_L) ? 2 : 1);
             if (Input::GetKeyDown(R)) anchorTrans->ResetRoll();
 
+            if (attach_mode)
+            {
+                if (const auto parent = anchorTrans->GetParent(); !parent || !parent->GetGameObject())
+                {
+                    Debug::Logger::LOGD("Parent Destroyed");
+                    anchorTrans->SetParent(nullptr);
+                    attach_mode = false;
+                }
+            }
             if (Input::GetKeyDown(T))
             {
-                if (anchorTrans->GetParent() == nullptr)
+                if (!attach_mode && anchorTrans->GetParent() == nullptr)
                 {
                     const auto target = selectGameObject();
                     if (target)
@@ -214,6 +229,7 @@ namespace FreeCam::Feature
                         freeTrans->SetLocalRotation(UTYPE::Quaternion(0, 0, 0, 1));
                         freeTrans->SetLocalScale(UTYPE::Vector3(1, 1, 1));
                         Debug::Logger::LOGI("Anchor attached to GameObject: {}", target->GetName()->ToString());
+                        attach_mode = true;
                     }
                     else
                     {
@@ -224,7 +240,11 @@ namespace FreeCam::Feature
                 {
                     anchorTrans->SetParent(nullptr);
                     anchorTrans->SetLocalScale(UTYPE::Vector3(1, 1, 1));
+                    freeTrans->SetLocalPosition(UTYPE::Vector3(0, 0, 0));
+                    freeTrans->SetLocalRotation(UTYPE::Quaternion(0, 0, 0, 1));
+                    freeTrans->SetLocalScale(UTYPE::Vector3(1, 1, 1));
                     Debug::Logger::LOGI("Anchor detached");
+                    attach_mode = false;
                 }
             }
         }

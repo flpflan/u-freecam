@@ -1,6 +1,6 @@
 #pragma once
 
-#include "utype/camera.hpp"
+#include "utype/core.hpp"
 
 using UTYPE = UnityResolve::UnityType;
 using UMethod = UnityResolve::Method;

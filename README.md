@@ -26,14 +26,14 @@ For example, on Windows, you can use the DLL injection tool that comes with Chea
 |镜头滚动 -> Q/E|Roll Camera -> Q/E|
 |镜头复位 -> R|Reset Camera -> R|
 
-> 初始状态下，锚点与镜头重合。
-> 任何情况下，镜头始终随着锚点移动，绕着锚点旋转。
-> 在锚点固定时，通过移动可改变镜头与锚点相对位置。
-> 所谓依附模式，即是将目标物体设为锚点。(默认情况下将屏幕中心所对物体选为目标)
-> Initially, the Anchor coincides with the Camera.
-> In all cases, the Camera moves with and rotates around the Anchor.
-> With the Anchor fixed, the relative position between Camera and Anchor can be changed through movement.
-> Attach Mode sets the target object as Anchor. (By default, the object corresponding to the center of the screen is selected as the target.)
+> 初始状态下，锚点与镜头重合。\
+> 任何情况下，镜头始终随着锚点移动，绕着锚点旋转。\
+> 在锚点固定时，通过移动可改变镜头与锚点相对位置。\
+> 所谓依附模式，即是将目标物体设为锚点。(默认情况下将屏幕中心所对物体选为目标)\
+> Initially, the Anchor coincides with the Camera.\
+> In all cases, the Camera moves with and rotates around the Anchor.\
+> With the Anchor fixed, the relative position between Camera and Anchor can be changed through movement.\
+> Attach Mode sets the target object as Anchor. (By default, the object corresponding to the center of the screen is selected as the target.)\
 
 |锚点|Anchor|
 |固定锚点 -> 按住M|Pin Anchor -> Hold M|

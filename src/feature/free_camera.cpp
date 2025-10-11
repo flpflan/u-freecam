@@ -4,6 +4,7 @@
 #include "proxy/camera.hpp"
 #include "proxy/cursor.hpp"
 #include "proxy/transform.hpp"
+#include "utype/animation.hpp"
 #include "utype/input.hpp"
 #include "utype/physics.hpp"
 #include <memory>
@@ -58,11 +59,19 @@ namespace FreeCam::Feature
         if (UTYPE::Physics::Raycast(ray, &*hit, 100.f))
         {
             const auto target = hit->GetCollider()->GetGameObject();
+            // if (const auto animator = target->GetComponentInChildren<UType::Animator *>(UType::Animator::GetUClass()))
+            // {
+            //     Debug::Logger::LOGD("Found Animator");
+            //     if (const auto head = animator->GetBoneTransform(UTYPE::Animator::HumanBodyBones::Head))
+            //     {
+            //         Debug::Logger::LOGD("Found Head");
+            //         return head;
+            //     }
+            // }
             return target->GetTransform();
         }
         return nullptr;
     }
-    auto FreeCamera::resetState() -> void { ui_layer = false; }
     auto FreeCamera::backupOrigCamera() -> void
     {
         origCamera = UTYPE::Camera::GetMain();
@@ -112,9 +121,6 @@ namespace FreeCam::Feature
 
         // Set Cursor
         Proxy::Cursor::DisableCursor();
-
-        // Reset Self State
-        resetState();
     }
     auto FreeCamera::Disable() -> void
     {

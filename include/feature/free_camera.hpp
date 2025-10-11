@@ -35,7 +35,6 @@ namespace FreeCam::Feature
         UTYPE::Quaternion origRotation;
         UTYPE::GameObject *origGObject;
         auto backupOrigCamera() -> void;
-        auto resetState() -> void;
         auto selectGameObject() -> UTYPE::Transform *;
     };
 }

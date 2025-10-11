@@ -33,9 +33,10 @@ For example, on Windows, you can use the DLL injection tool that comes with Chea
 > Initially, the Anchor coincides with the Camera.\
 > In all cases, the Camera moves with and rotates around the Anchor.\
 > With the Anchor fixed, the relative position between Camera and Anchor can be changed through movement.\
-> Attach Mode sets the target object as Anchor. (By default, the object corresponding to the center of the screen is selected as the target.)\
+> Attach Mode sets the target object as Anchor. (By default, the object corresponding to the center of the screen is selected as the target.)
 
 |锚点|Anchor|
+| - | - |
 |固定锚点 -> 按住M|Pin Anchor -> Hold M|
 |复位到锚点 -> 左Shift + M|Reset to Anchor -> Shift_L + M|
 |切换依附模式 -> T|Toggle Attach Mode -> T|

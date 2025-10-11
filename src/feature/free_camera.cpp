@@ -4,6 +4,7 @@
 #include "proxy/cursor.hpp"
 #include "proxy/transform.hpp"
 #include "utype/input.hpp"
+#include "utype/physics.hpp"
 #include "utype/transform.hpp"
 #include <memory>
 
@@ -48,6 +49,19 @@ using UType::Input;
 
 namespace FreeCam::Feature
 {
+    auto FreeCamera::selectGameObject() -> UTYPE::Transform *
+    {
+        const auto screenCenter = UTYPE::Vector2(UTYPE::Screen::get_width() / 2.f, UTYPE::Screen::get_height() / 2.f);
+
+        const auto ray = UType::Camera::GetMain()->ScreenPointToRay(screenCenter);
+        const auto hit = std::make_unique<UType::RaycastHit>();
+        if (UTYPE::Physics::Raycast(ray, &*hit, 100.f))
+        {
+            const auto target = hit->GetCollider()->GetGameObject();
+            return target->GetTransform();
+        }
+        return nullptr;
+    }
     auto FreeCamera::resetState() -> void { ui_layer = false; }
     auto FreeCamera::backupOrigCamera() -> void
     {
@@ -93,9 +107,9 @@ namespace FreeCam::Feature
         freeCam = std::make_unique<Proxy::Camera>(freeGO->AddComponent<UType::Camera *>(UType::Camera::GetUClass()));
         //}
         anchorTrans->CopyState(*origGObject->GetTransform());
-        freeTrans->CopyState(*origGObject->GetTransform());
         freeTrans->SetLocalPosition(UTYPE::Vector3(0, 0, 0));
-        freeTrans->SetLocalRotation(UTYPE::Quaternion(0, 0, 0, 0));
+        freeTrans->SetLocalRotation(UTYPE::Quaternion(0, 0, 0, 1));
+        freeTrans->SetLocalScale(UTYPE::Vector3(1, 1, 1));
 
         // Set Cursor
         Proxy::Cursor::DisableCursor();
@@ -183,6 +197,35 @@ namespace FreeCam::Feature
             if (Input::GetKey(Q)) anchorTrans->Roll(Input::GetKey(SHIFT_L) ? -2 : -1);
             if (Input::GetKey(E)) anchorTrans->Roll(Input::GetKey(SHIFT_L) ? 2 : 1);
             if (Input::GetKeyDown(R)) anchorTrans->ResetRoll();
+
+            if (Input::GetKeyDown(T))
+            {
+                if (anchorTrans->GetParent() == nullptr)
+                {
+                    const auto target = selectGameObject();
+                    if (target)
+                    {
+                        anchorTrans->SetParent(target);
+                        anchorTrans->SetLocalPosition(UTYPE::Vector3(0, 0, 0));
+                        anchorTrans->SetLocalRotation(UTYPE::Quaternion(0, 0, 0, 1));
+                        anchorTrans->SetLocalScale(UTYPE::Vector3(1, 1, 1));
+                        freeTrans->SetLocalPosition(UTYPE::Vector3(0, 0, 0));
+                        freeTrans->SetLocalRotation(UTYPE::Quaternion(0, 0, 0, 1));
+                        freeTrans->SetLocalScale(UTYPE::Vector3(1, 1, 1));
+                        Debug::Logger::LOGI("Anchor attached to GameObject: {}", target->GetName()->ToString());
+                    }
+                    else
+                    {
+                        Debug::Logger::LOGI("Target not found");
+                    }
+                }
+                else
+                {
+                    anchorTrans->SetParent(nullptr);
+                    anchorTrans->SetLocalScale(UTYPE::Vector3(1, 1, 1));
+                    Debug::Logger::LOGI("Anchor detached");
+                }
+            }
         }
         if (Input::GetMouseButtonDown(2) || Input::GetKeyDown(U))
         {

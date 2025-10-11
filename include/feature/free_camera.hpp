@@ -35,5 +35,6 @@ namespace FreeCam::Feature
         UTYPE::GameObject *origGObject;
         auto backupOrigCamera() -> void;
         auto resetState() -> void;
+        auto selectGameObject() -> UTYPE::Transform *;
     };
 }

@@ -9,7 +9,7 @@ namespace FreeCam::Proxy
 {
     class Transform
     {
-        UTYPE::Transform &trans;
+        UType::Transform &trans;
         // Properties for Rotate
 #ifdef __ANDROID__
         constexpr static float rotationSpeed = 100.f;
@@ -23,7 +23,7 @@ namespace FreeCam::Proxy
 
     public:
         Transform(UTYPE::Transform *t) : Transform(*t) {}
-        Transform(UTYPE::Transform &t) : trans(t) { CopyState(trans); }
+        Transform(UTYPE::Transform &t) : trans(static_cast<UType::Transform &>(t)) { CopyState(trans); }
         auto CopyState(UTYPE::Transform &t) -> void
         {
             SetPosition(t.GetPosition());
@@ -35,6 +35,9 @@ namespace FreeCam::Proxy
         inline auto SetRotation(const UTYPE::Quaternion &v) -> void { trans.SetRotation(v); }
         inline auto SetLocalPosition(const UTYPE::Vector3 &v) -> void { trans.SetLocalPosition(v); }
         inline auto SetLocalRotation(const UTYPE::Quaternion &v) -> void { trans.SetLocalRotation(v); }
+        inline auto SetLocalScale(const UTYPE::Vector3 &v) -> void { trans.SetLocalScale(v); }
+        inline auto SetParent(UTYPE::Transform *v) -> void { trans.SetParent(v); }
+        inline auto GetParent() -> UTYPE::Transform * { return trans.GetParent(); }
         auto Rotate(const UTYPE::Vector2) -> void;
         auto Move(const UTYPE::Vector3, const bool) -> void;
         auto Roll(const float) -> void;

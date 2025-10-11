@@ -18,17 +18,33 @@ For example, on Windows, you can use the DLL injection tool that comes with Chea
 
 |自由镜头|Free Camera|
 | - | - |
-|打开/关闭自由镜头 -> Enter|Toggle free camera -> Enter|
-|移动 -> WASD、Ctrl、空格、左Shift(疾跑)|Movement -> WASD, Ctrl, Space, and Shift_L (sprint)|
-|旋转镜头 -> 鼠标 / 方向键 / 触屏（移动端）|Rotation -> Mouse / Arrow keys / Touch screen (moblie)|
-|切换鼠标(方便进行某些UI操作) -> 鼠标中键 / U|UI operation -> Mouse middle button / U|
+|打开/关闭自由镜头 -> Enter|Toggle FreeCam -> Enter|
+|移动 -> WASD、Ctrl、空格、左Shift(疾跑)|Movement -> WASD, Ctrl, Space, and Shift_L (Sprint)|
+|旋转镜头 -> 鼠标 / 方向键 / 触屏（移动端）|Rotation -> Mouse / Arrow keys / Touch screen (Moblie)|
+|UI模式 -> 鼠标中键 / U|UI Mode -> Mouse middle button / U|
 |镜头缩放 -> 按住Z + 鼠标滚轮/ X、C|Zoom -> Hold Z + Mouse Wheel / X or C|
+|镜头滚动 -> Q/E|Roll Camera -> Q/E|
+|镜头复位 -> R|Reset Camera -> R|
+
+> 初始状态下，锚点与镜头重合。
+> 任何情况下，镜头始终随着锚点移动，绕着锚点旋转。
+> 在锚点固定时，通过移动可改变镜头与锚点相对位置。
+> 所谓依附模式，即是将目标物体设为锚点。(默认情况下将屏幕中心所对物体选为目标)
+> Initially, the Anchor coincides with the Camera.
+> In all cases, the Camera moves with and rotates around the Anchor.
+> With the Anchor fixed, the relative position between Camera and Anchor can be changed through movement.
+> Attach Mode sets the target object as Anchor. (By default, the object corresponding to the center of the screen is selected as the target.)
+
+|锚点|Anchor|
+|固定锚点 -> 按住M|Pin Anchor -> Hold M|
+|复位到锚点 -> 左Shift + M|Reset to Anchor -> Shift_L + M|
+|切换依附模式 -> T|Toggle Attach Mode -> T|
 
 |变速|Speed Hack|
 | - | - |
 |加速 -> +|Speed up -> +|
 |减速 -> -|Speed down -> -|
-|冻结速度 / 恢复正常速度 -> Backspace|freeze speed / resume speed -> Backspace|
+|冻结速度 / 恢复正常速度 -> Backspace|Freeze speed / Resume speed -> Backspace|
 
 ## 已测试游戏 (Tested Game)
 - 蔚蓝档案 (PC端 / [移动端](https://www.bilibili.com/video/BV1XRpmz8EBW)) / Blue Archive (PC / [Mobile](https://youtu.be/40Od_dHH5oY))

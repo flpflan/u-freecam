@@ -91,21 +91,20 @@ namespace FreeCam::Feature
         backupOrigCamera();
 
         // Setup free camera
-        // if (!freeCamera)
-        //{
         anchorGO = UTYPE::GameObject::Create("UE_Freecam_Anchor");
         anchorGO->SetActive(true);
+        UTYPE::GameObject::DontDestroyOnLoad(anchorGO);
 
         freeGO = UTYPE::GameObject::Create("UE_Freecam");
+        UTYPE::GameObject::DontDestroyOnLoad(freeGO);
         static_cast<UType::Transform *>(freeGO->GetTransform())->SetParent(anchorGO->GetTransform());
         freeGO->SetTag("MainCamera");
         freeGO->SetActive(true);
-        // UTYPE::GameObject::DontDestroyOnLoad(go);
 
         anchorTrans = std::make_unique<Proxy::Transform>(anchorGO->GetTransform());
         freeTrans = std::make_unique<Proxy::Transform>(freeGO->GetTransform());
         freeCam = std::make_unique<Proxy::Camera>(freeGO->AddComponent<UType::Camera *>(UType::Camera::GetUClass()));
-        //}
+
         anchorTrans->CopyState(*origGObject->GetTransform());
         freeTrans->SetLocalPosition(UTYPE::Vector3(0, 0, 0));
         freeTrans->SetLocalRotation(UTYPE::Quaternion(0, 0, 0, 1));
@@ -124,6 +123,8 @@ namespace FreeCam::Feature
         Debug::Logger::LOGI("End freecam");
         if (freeCam)
         {
+            UTYPE::GameObject::Destroy(freeGO);
+            UTYPE::GameObject::Destroy(anchorGO);
             // freeGO->SetActive(false);
             // freeGO->SetTag("Bulabula");
             anchorGO->SetActive(false);

@@ -12,7 +12,7 @@ namespace FreeCam::Proxy
     }
     auto Camera::ZoomOut(float am) -> void
     {
-        if (cam.GetFieldOfView() > defaultZoom) return;
+        // if (cam.GetFieldOfView() > defaultZoom) return;
         return ZoomIn(-am);
     }
     auto Camera::ResetZoom() -> void

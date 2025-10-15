@@ -1,14 +1,14 @@
 #include "core.hpp"
 #include "debug/logger.hpp"
 #include "proxy/camera.hpp"
-#include "utype/input.hpp"
-#include "utype/time.hpp"
+#include "utype/unity_engine/input.hpp"
+#include "utype/unity_engine/time.hpp"
 
 namespace FreeCam
 {
     using FreeCamera = Proxy::Camera;
-    using UType::Input;
-    using enum UType::KeyCode;
+    using UTYPE::Input;
+    using enum UTYPE::KeyCode;
 
     using namespace std::chrono_literals;
 
@@ -41,7 +41,7 @@ namespace FreeCam
         {
             Debug::Logger::LOGI("Set timescale: -=1");
             UTYPE::Time::SetTimeScale(UTYPE::Time::GetTimeScale() - 1);
-            if (UType::Time::GetTimeScale() <= 0) Core::UseMockLoop = true; // A bit tricky, but this ensure camera can still move even when timescale is 0
+            if (UTYPE::Time::GetTimeScale() <= 0) Core::UseMockLoop = true; // A bit tricky, but this ensure camera can still move even when timescale is 0
 
             std::this_thread::sleep_for(100ms); // For MockLoop use
         }

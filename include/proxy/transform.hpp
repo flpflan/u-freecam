@@ -1,15 +1,12 @@
 #pragma once
 
-#include "utype/core.hpp"
-
-using UTYPE = UnityResolve::UnityType;
-using UMethod = UnityResolve::Method;
+#include "utype/unity_engine/core.hpp"
 
 namespace FreeCam::Proxy
 {
     class Transform
     {
-        UType::Transform &trans;
+        UTYPE::Transform &trans;
         // Properties for Rotate
 #ifdef __ANDROID__
         constexpr static float rotationSpeed = 100.f;
@@ -23,7 +20,7 @@ namespace FreeCam::Proxy
 
     public:
         Transform(UTYPE::Transform *t) : Transform(*t) {}
-        Transform(UTYPE::Transform &t) : trans(static_cast<UType::Transform &>(t)) { CopyState(trans); }
+        Transform(UTYPE::Transform &t) : trans(static_cast<UTYPE::Transform &>(t)) { CopyState(trans); }
         auto CopyState(UTYPE::Transform &t) -> void
         {
             SetPosition(t.GetPosition());

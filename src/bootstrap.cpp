@@ -3,7 +3,7 @@
 #include "debug/logger.hpp"
 #include "memory/hook.hpp"
 #include "memory/memory.hpp"
-#include "utype/time.hpp"
+#include "utype/unity_engine/time.hpp"
 
 #include <array>
 #include <chrono>
@@ -102,7 +102,7 @@ static void detour_update(void *obj, int index)
     orig_update(obj, index);
 
     static int lastFrame = -1;
-    const int curFrame = UType::Time::GetFrameCount();
+    const int curFrame = UTYPE::Time::get_frameCount();
     if (curFrame == lastFrame || index != 0) return; // 0 -> Update, 1 -> LateUpdate, 2 -> FixedUpdate
     UpdateFn();
     lastFrame = curFrame;

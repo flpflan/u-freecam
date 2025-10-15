@@ -1,7 +1,5 @@
 #pragma once
 
-#include "utype/cursor.hpp"
-
 namespace FreeCam::Proxy
 {
     class Cursor

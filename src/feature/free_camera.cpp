@@ -4,14 +4,14 @@
 #include "proxy/camera.hpp"
 #include "proxy/cursor.hpp"
 #include "proxy/transform.hpp"
-#include "utype/animation.hpp"
-#include "utype/input.hpp"
-#include "utype/physics.hpp"
+#include "utype/unity_engine/animation.hpp"
+#include "utype/unity_engine/core.hpp"
+#include "utype/unity_engine/input.hpp"
+#include "utype/unity_engine/physics.hpp"
 #include <memory>
 
-using UTYPE = UnityResolve::UnityType;
-using enum UType::KeyCode;
-using UType::Input;
+using enum UTYPE::KeyCode;
+using UTYPE::Input;
 
 // template <typename T>
 // T Abs(T n)
@@ -54,12 +54,12 @@ namespace FreeCam::Feature
     {
         const auto screenCenter = UTYPE::Vector2(UTYPE::Screen::get_width() / 2.f, UTYPE::Screen::get_height() / 2.f);
 
-        const auto ray = UType::Camera::GetMain()->ScreenPointToRay(screenCenter);
-        const auto hit = std::make_unique<UType::RaycastHit>();
+        const auto ray = UTYPE::Camera::GetMain()->ScreenPointToRay(screenCenter);
+        const auto hit = std::make_unique<UTYPE::RaycastHit>();
         if (UTYPE::Physics::Raycast(ray, &*hit, 100.f))
         {
-            const auto target = hit->GetCollider()->GetGameObject();
-            // if (const auto animator = target->GetComponentInChildren<UType::Animator *>(UType::Animator::GetUClass()))
+            const auto target = hit->get_collider()->GetGameObject();
+            // if (const auto animator = target->GetComponentInChildren<UTYPE::Animator *>(UTYPE::Animator::GetUClass()))
             // {
             //     Debug::Logger::LOGD("Found Animator");
             //     if (const auto head = animator->GetBoneTransform(UTYPE::Animator::HumanBodyBones::Head))
@@ -68,7 +68,7 @@ namespace FreeCam::Feature
             //         return head;
             //     }
             // }
-            return target->GetTransform();
+            return static_cast<UTYPE::Transform *>(target->GetTransform());
         }
         return nullptr;
     }
@@ -106,13 +106,13 @@ namespace FreeCam::Feature
 
         freeGO = UTYPE::GameObject::Create("UE_Freecam");
         UTYPE::GameObject::DontDestroyOnLoad(freeGO);
-        static_cast<UType::Transform *>(freeGO->GetTransform())->SetParent(anchorGO->GetTransform());
+        static_cast<UTYPE::Transform *>(freeGO->GetTransform())->SetParent(anchorGO->GetTransform());
         freeGO->SetTag("MainCamera");
         freeGO->SetActive(true);
 
         anchorTrans = std::make_unique<Proxy::Transform>(anchorGO->GetTransform());
         freeTrans = std::make_unique<Proxy::Transform>(freeGO->GetTransform());
-        freeCam = std::make_unique<Proxy::Camera>(freeGO->AddComponent<UType::Camera *>(UType::Camera::GetUClass()));
+        freeCam = std::make_unique<Proxy::Camera>(freeGO->AddComponent<UTYPE::Camera *>(UTYPE::Camera::GetUClass()));
 
         anchorTrans->CopyState(*origGObject->GetTransform());
         freeTrans->SetLocalPosition(UTYPE::Vector3(0, 0, 0));

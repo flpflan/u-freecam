@@ -8,7 +8,7 @@ namespace FreeCam::Proxy
     {
         currentZoom -= am * zoomSpeed * Time::GetDeltaTime_s();
         currentZoom = Clamp(currentZoom, 1.f, 150.f);
-        cam.SetFieldOfView(currentZoom);
+        cam.SetFoV(currentZoom);
     }
     auto Camera::ZoomOut(float am) -> void
     {

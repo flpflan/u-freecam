@@ -1,11 +1,10 @@
 #pragma once
 
 #include "logger.hpp"
-#include "utype/core.hpp"
+#include "utype/unity_engine/core.hpp"
 
 using UClass = UnityResolve::Class;
 using UMethod = UnityResolve::Method;
-using UTYPE = UnityResolve::UnityType;
 
 namespace Debug
 {
@@ -32,7 +31,7 @@ namespace Debug
             static UMethod *method;
             if (!method) method = UnityResolve::Get("mscorlib.dll")->Get("Type", "System", "MemberInfo")->Get<UMethod>("get_NameOrDefault");
 
-            const auto scripts = target->GetComponentsInChildren<UType::MonoBehavior *>(UType::MonoBehavior::GetUClass());
+            const auto scripts = target->GetComponentsInChildren<UTYPE::MonoBehaviour *>(UTYPE::MonoBehaviour::GetUClass());
             Debug::Logger::LOGD("Found {} MonoBehavior on GameObject {}", scripts.size(), target->GetName()->ToString());
             for (const auto script : scripts)
             {

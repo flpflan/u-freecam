@@ -1,15 +1,12 @@
 #pragma once
 
-#include "utype/core.hpp"
-
-using UTYPE = UnityResolve::UnityType;
-using UMethod = UnityResolve::Method;
+#include "utype/unity_engine/core.hpp"
 
 namespace FreeCam::Proxy
 {
     class Camera
     {
-        UType::Camera &cam;
+        UTYPE::Camera &cam;
 
         // Properties for Zoom
         inline static constinit float defaultZoom;
@@ -17,9 +14,9 @@ namespace FreeCam::Proxy
         const float zoomSpeed = 20.f;
 
     public:
-        Camera(UTYPE::Camera &c) : cam(static_cast<UType::Camera &>(c))
+        Camera(UTYPE::Camera &c) : cam(static_cast<UTYPE::Camera &>(c))
         {
-            defaultZoom = cam.GetFieldOfView();
+            defaultZoom = cam.GetFoV();
             currentZoom = defaultZoom;
         }
         Camera(UTYPE::Camera *c) : Camera(*c) {}

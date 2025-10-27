@@ -63,7 +63,7 @@ public:                                                                         
     {                                                                                                                                                                                                  \
         static UMethod *method;                                                                                                                                                                        \
         if (!method) method = GetUClass()->Get<UMethod>(#METHOD_NAME);                                                                                                                                 \
-        return method->Invoke<RET_TY>(this, #__VA_ARGS__);                                                                                                                                             \
+        return method->Invoke<RET_TY>(this __VA_OPT__(, ) __VA_ARGS__);                                                                                                                                \
     }
 #define UNITY_STATIC_METHOD(RET_TY, METHOD_NAME, PARAMS, ...)                                                                                                                                          \
 public:                                                                                                                                                                                                \
@@ -71,5 +71,5 @@ public:                                                                         
     {                                                                                                                                                                                                  \
         static UMethod *method;                                                                                                                                                                        \
         if (!method) method = GetUClass()->Get<UMethod>(#METHOD_NAME);                                                                                                                                 \
-        return method->Invoke<RET_TY>(#__VA_ARGS__);                                                                                                                                                   \
+        return method->Invoke<RET_TY>(__VA_ARGS__);                                                                                                                                                    \
     }

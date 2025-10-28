@@ -94,12 +94,10 @@ bool Bootstrap::initializeUnity()
 
 using CallUpdateMethod_t = void (*)(void *, int);
 
-static CallUpdateMethod_t orig_update;
-
-template <auto UpdateFn>
+template <auto UpdateFn, auto &&CALL_ORIGNAL>
 static void detour_update(void *obj, int index)
 {
-    orig_update(obj, index);
+    CALL_ORIGNAL(obj, index);
 
     static int lastFrame = -1;
     const int curFrame = UTYPE::Time::get_frameCount();
@@ -126,7 +124,7 @@ bool Bootstrap::attachToGameLoop()
                                          "48 89 5c 24 ? 56 48 83 ec ? 8b f2 48 8b d9 e8 ? ? ? ? 84 c0 0f 85"};
 #endif
 
-    CallUpdateMethod_t CallUpdateMethod = NULL;
+    CallUpdateMethod_t CallUpdateMethod = nullptr;
     for (const auto pattern : patterns)
     {
         if ((CallUpdateMethod = (CallUpdateMethod_t)PatternScan(module, pattern))) break;
@@ -134,8 +132,7 @@ bool Bootstrap::attachToGameLoop()
     if (CallUpdateMethod)
     {
         Debug::Logger::LOGI("Method found at {}, start hooking", (void *)CallUpdateMethod);
-        const auto r = DoHook((void *)CallUpdateMethod, (void *)detour_update<UpdateFn>, (void **)&orig_update);
-        if (r)
+        if (Hook(CallUpdateMethod, (detour_update<UpdateFn, CALL_ORIGNAL>)))
         {
             Debug::Logger::LOGI("Hooking success");
             return true;

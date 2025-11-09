@@ -1,6 +1,7 @@
 #include "debug/logger.hpp"
 #include "feature/free_camera.hpp"
 #include "utype/unity_engine/physics.hpp"
+#include "debug/test.hpp"
 
 namespace FreeCam::Feature
 {
@@ -34,25 +35,18 @@ namespace FreeCam::Feature
         origRotation = origTransform->GetRotation();
         origGObject = origCamera->GetGameObject();
         origGObject->SetActive(false);
-        origGObject->SetTag("");
+        origGObject->SetTag("Untagged");
     }
     bool FreeCamera::IsCurrentFreeCamera()
     {
-        int i = 0;
-        for (const auto cam : UTYPE::Camera::GetAllCamera())
-        {
-            Debug::Logger::LOGD("Cam Index: {}", i++);
-            Debug::Logger::LOGD("Name: {}", cam->GetName()->ToString());
-            Debug::Logger::LOGD("Tag: {}", cam->GetTag()->ToString());
-            Debug::Logger::LOGD("Active: {}", cam->GetGameObject()->GetActive());
-        }
         const auto curCam = UTYPE::Camera::GetMain();
         if (curCam == nullptr) return false;
         const auto curCamName = curCam->GetName()->ToString();
         if (curCamName == "UE_Freecam") return true;
 
         Debug::Logger::LOGD("Not UE_Freecam: {}", curCamName);
-        Debug::Logger::LOGD("Tag: {}", curCam->GetTag()->ToString());
+        // NOTE: This must be `Camera -> GameObject` -> Tag and not `Camera -> Tag`，otherwise wired bug can happen in some games.
+        Debug::Logger::LOGD("Tag: {}", curCam->GetGameObject()->GetTag()->ToString());
         return false;
     }
 }

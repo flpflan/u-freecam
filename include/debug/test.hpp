@@ -11,6 +11,17 @@ namespace Debug
     class Test
     {
     public:
+        inline static void TestAllCamera()
+        {
+            int i = 0;
+            for (const auto cam : UTYPE::Camera::GetAllCamera())
+            {
+                Debug::Logger::LOGD("Cam Index: {}", i++);
+                Debug::Logger::LOGD("Name: {}", cam->GetName()->ToString());
+                Debug::Logger::LOGD("Tag: {}", cam->GetGameObject()->GetTag()->ToString());
+                Debug::Logger::LOGD("ActiveSelf: {}", cam->GetGameObject()->GetActiveSelf());
+            }
+        }
         inline static void TestGameObject(UTYPE::Transform *const target)
         {
             TestHierarchy(target, "");

@@ -55,9 +55,10 @@ namespace FreeCam::Feature
         if (Input::GetKey(D)) toMove.x = 1;
         if (toMove.x || toMove.y || toMove.z)
         {
+            const float baseSpeed = Input::GetKey(SHIFT_L) ? baseMoveSpeed * 5 : baseMoveSpeed;
             const float t = Input::GetKey(SHIFT_L) ? AccelTimer.Tick() : AccelTimer.Reset();
             const auto curve = DualEase(t);
-            const float speed = Lerp(baseMoveSpeed, maxMoveSpeed, curve);
+            const float speed = Lerp(baseSpeed, maxMoveSpeed, curve);
             if (Input::GetKey(M))
             {
                 freeTrans->Move(toMove * speed);

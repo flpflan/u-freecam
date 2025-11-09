@@ -173,27 +173,27 @@ namespace FreeCam::Feature
             UTYPE::Vector3 toMove(0, 0, 0);
             // toMove.x = UnityApi::GetAxis("Horizontal");
             // toMove.y = UnityApi::GetAxis("Vertical");
-            if (Input::GetKey(Space)) toMove.z = 1;
-            if (Input::GetKey(Ctrl_L)) toMove.z = -1;
-            if (Input::GetKey(W)) toMove.y = 1;
-            if (Input::GetKey(S)) toMove.y = -1;
-            if (Input::GetKey(A)) toMove.x = -1;
-            if (Input::GetKey(D)) toMove.x = 1;
+            if (Input::GetKey(Space)) toMove.z = moveSpeed;
+            if (Input::GetKey(Ctrl_L)) toMove.z = -moveSpeed;
+            if (Input::GetKey(W)) toMove.y = moveSpeed;
+            if (Input::GetKey(S)) toMove.y = -moveSpeed;
+            if (Input::GetKey(A)) toMove.x = -moveSpeed;
+            if (Input::GetKey(D)) toMove.x = moveSpeed;
             if (toMove.x || toMove.y || toMove.z)
             {
                 if (Input::GetKey(M))
                 {
-                    freeTrans->Move(toMove, Input::GetKey(SHIFT_L));
+                    freeTrans->Move(Input::GetKey(SHIFT_L) ? toMove * moveSpeedMultiplier : toMove);
                 }
                 else
                 {
                     if (!attach_mode)
                     {
-                        anchorTrans->Move(toMove, Input::GetKey(SHIFT_L));
+                        anchorTrans->Move(Input::GetKey(SHIFT_L) ? toMove * moveSpeedMultiplier : toMove);
                     }
                     else
                     {
-                        freeTrans->Move(toMove, Input::GetKey(SHIFT_L));
+                        freeTrans->Move(Input::GetKey(SHIFT_L) ? toMove * moveSpeedMultiplier : toMove);
                     }
                 }
             }
@@ -202,14 +202,14 @@ namespace FreeCam::Feature
             UTYPE::Vector2 toRotate(0, 0);
             toRotate.x = Input::GetAxis("Mouse X");
             toRotate.y = Input::GetAxis("Mouse Y");
-            if (Input::GetKey(UpArrow)) toRotate.y = 1;
-            if (Input::GetKey(DownArrow)) toRotate.y = -1;
-            if (Input::GetKey(RightArrow)) toRotate.x = 1;
-            if (Input::GetKey(LeftArrow)) toRotate.x = -1;
+            if (Input::GetKey(UpArrow)) toRotate.y = rotationSpeed;
+            if (Input::GetKey(DownArrow)) toRotate.y = -rotationSpeed;
+            if (Input::GetKey(RightArrow)) toRotate.x = rotationSpeed;
+            if (Input::GetKey(LeftArrow)) toRotate.x = -rotationSpeed;
             if (toRotate.x || toRotate.y) anchorTrans->Rotate(toRotate);
 
-            if (Input::GetKey(Q)) anchorTrans->Roll(Input::GetKey(SHIFT_L) ? -2 : -1);
-            if (Input::GetKey(E)) anchorTrans->Roll(Input::GetKey(SHIFT_L) ? 2 : 1);
+            if (Input::GetKey(Q)) anchorTrans->Roll(Input::GetKey(SHIFT_L) ? -rollSpeed * 2 : -rollSpeed);
+            if (Input::GetKey(E)) anchorTrans->Roll(Input::GetKey(SHIFT_L) ? rollSpeed * 2 : rollSpeed);
             if (Input::GetKeyDown(R)) anchorTrans->ResetRoll();
 
             if (attach_mode)

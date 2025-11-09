@@ -18,6 +18,17 @@ namespace FreeCam::Feature
         UTYPE::GameObject *anchorGO = nullptr;
         std::unique_ptr<Proxy::Transform> anchorTrans = nullptr;
 
+        // Properties for Rotate
+#ifdef __ANDROID__
+        constexpr static float rotationSpeed = 100.f;
+#else
+        constexpr static float rotationSpeed = 500.f;
+#endif
+        constexpr static float rollSpeed = 100.f;
+        // Properties for Move
+        const float moveSpeed = 1.f;
+        const float moveSpeedMultiplier = 5.f;
+
     public:
         bool Enabled = false;
 

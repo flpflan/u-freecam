@@ -7,16 +7,6 @@ namespace FreeCam::Proxy
     class Transform
     {
         UTYPE::Transform &trans;
-        // Properties for Rotate
-#ifdef __ANDROID__
-        constexpr static float rotationSpeed = 100.f;
-#else
-        constexpr static float rotationSpeed = 500.f;
-#endif
-        constexpr static float rollSpeed = 100.f;
-        // Properties for Move
-        const float moveSpeed = 1.f;
-        const float moveSpeedMultiplier = 5.f;
 
     public:
         Transform(UTYPE::Transform *t) : Transform(*t) {}
@@ -36,13 +26,13 @@ namespace FreeCam::Proxy
         inline auto SetParent(UTYPE::Transform *v) -> void { trans.SetParent(v); }
         inline auto GetParent() -> UTYPE::Transform * { return trans.GetParent(); }
         auto Rotate(const UTYPE::Vector2) -> void;
-        auto Move(const UTYPE::Vector3, const bool) -> void;
+        auto Move(const UTYPE::Vector3) -> void;
         auto Roll(const float) -> void;
         auto ResetRoll() -> void;
         inline auto GetUTransform() -> UTYPE::Transform * { return &trans; }
 
     private:
-        auto calculToMove(const UTYPE::Vector3, const bool) -> UTYPE::Vector3;
+        auto calculToMove(const UTYPE::Vector3) -> UTYPE::Vector3;
         auto calculToRotate(const UTYPE::Vector2) -> UTYPE::Vector2;
     };
 }

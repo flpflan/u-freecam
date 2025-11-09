@@ -4,16 +4,11 @@
 
 namespace FreeCam::Proxy
 {
-    UTYPE::Vector3 Transform::calculToMove(const UTYPE::Vector3 input, const bool sprint)
+    UTYPE::Vector3 Transform::calculToMove(const UTYPE::Vector3 input)
     {
         const auto forward = trans.GetForward();
         const auto right = trans.GetRight();
         const auto up = trans.GetUp();
-        // forward.y = 0;
-        // right.y = 0;
-        // forward.Normalize();
-        // right.Normalize();
-
         // clang-format off
         return UTYPE::Vector3(right.x * input.x + forward.x * input.y + up.x * input.z,
                               right.y * input.x + forward.y * input.y + up.y * input.z,
@@ -23,31 +18,26 @@ namespace FreeCam::Proxy
     auto Transform::calculToRotate(const UTYPE::Vector2 input) -> UTYPE::Vector2 { return input; }
     auto Transform::Rotate(const UTYPE::Vector2 input) -> void
     {
-        const auto rotate = calculToRotate(input);
+        const auto rotateDelta = calculToRotate(input) * Time::GetDeltaTime_s();
 
         auto [pitch, yaw, roll] = trans.GetRotation().ToEuler();
-        yaw += rotate.x * rotationSpeed * Time::GetDeltaTime_s();
-        pitch -= rotate.y * rotationSpeed * Time::GetDeltaTime_s();
+        yaw += rotateDelta.x;
+        pitch -= rotateDelta.y;
 
         pitch = Clamp(pitch, -80.0f, 80.0f);
         const auto euler = UTYPE::Quaternion().Euler(pitch, yaw, roll);
         trans.SetRotation(euler);
     }
-    auto Transform::Move(const UTYPE::Vector3 input, const bool sprint = true) -> void
+    auto Transform::Move(const UTYPE::Vector3 input) -> void
     {
-        const auto speed = sprint ? moveSpeed * moveSpeedMultiplier : moveSpeed;
-        const auto move = calculToMove(input, sprint);
-        auto position = trans.GetPosition();
-        position.y += move.y * speed * Time::GetDeltaTime_s();
-        position.z += move.z * speed * Time::GetDeltaTime_s();
-        position.x += move.x * speed * Time::GetDeltaTime_s();
-        trans.SetPosition(position);
+        const auto moveDelta = calculToMove(input) * Time::GetDeltaTime_s();
+        trans.SetPosition(trans.GetPosition() + moveDelta);
     }
     auto Transform::Roll(const float toRoll) -> void
     {
         const auto forward = trans.GetForward();
         auto [pitch, yaw, roll] = trans.GetRotation().ToEuler();
-        roll += toRoll * rollSpeed * Time::GetDeltaTime_s();
+        roll += toRoll * Time::GetDeltaTime_s();
         roll = Clamp(roll, -180.f, 180.f);
         const auto euler = UTYPE::Quaternion().Euler(pitch, yaw, roll);
         trans.SetRotation(euler);

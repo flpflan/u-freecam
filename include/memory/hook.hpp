@@ -13,7 +13,7 @@ auto DoHook(RTYPE (*target)(ARGS...), RTYPE (*detour)(ARGS...), RTYPE (**orignal
     log_set_tag("freecam");
     dobby_enable_near_branch_trampoline();
     Debug::Logger::LOGI("Hooking {} with detour {}", (void *)target, (void *)detour);
-    const auto ok = DobbyHook(target, detour, orignal) == RS_SUCCESS ? true : false;
+    const auto ok = DobbyHook((void *)target, (dobby_dummy_func_t)detour, (dobby_dummy_func_t *)orignal) == RS_SUCCESS ? true : false;
     if (!ok) Debug::Logger::LOGW("Hooking failed");
     return ok;
 }

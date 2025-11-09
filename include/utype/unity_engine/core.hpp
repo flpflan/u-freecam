@@ -20,6 +20,7 @@ namespace UTYPE
     class Transform : public UTYPE::Transform
     {
         UNITY_CLASS_DECL("UnityEngine.CoreModule.dll", Transform)
+    public:
         UNITY_METHOD(Transform *, GetParent, (void))
         UNITY_METHOD(void, SetParent, (UTYPE::Transform *const parent), parent)
         inline auto GetChild(const int index) -> Transform * { return static_cast<Transform *>(UTYPE::Transform::GetChild(index)); }
@@ -37,8 +38,15 @@ namespace UTYPE
     class GameObject : public UTYPE::GameObject
     {
         UNITY_CLASS_DECL("UnityEngine.CoreModule.dll", GameObject)
+    public:
         inline static auto Create(const std::string &name) -> GameObject * { return static_cast<GameObject *>(UTYPE::GameObject::Create(name)); }
         inline auto GetTransform() -> Transform * { return static_cast<Transform *>(UTYPE::GameObject::GetTransform()); }
+        inline auto IsDestoryed() -> bool
+        {
+            static UMethod *method;
+            if (!method) method = UnityResolve::Get("UnityEngine.CoreModule.dll")->Get("Object")->Get<UMethod>("op_Equality");
+            return method->Invoke<bool>(this, nullptr);
+        }
     };
 
     class MonoBehaviour : public UTYPE::MonoBehaviour
@@ -49,6 +57,7 @@ namespace UTYPE
     class Camera : public UTYPE::Camera
     {
         UNITY_CLASS_DECL("UnityEngine.CoreModule.dll", Camera)
+    public:
         inline static auto GetMain() -> Camera * { return static_cast<Camera *>(UTYPE::Camera::GetMain()); }
         inline auto GetGameObject() -> GameObject * { return static_cast<GameObject *>(UTYPE::Camera::GetGameObject()); }
     };

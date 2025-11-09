@@ -127,23 +127,24 @@ namespace FreeCam::Feature
         if (!Enabled) return;
         Enabled = false;
         Debug::Logger::LOGI("End freecam");
-        if (freeGO)
+        if (!freeGO->IsDestoryed())
         {
             UTYPE::GameObject::Destroy(freeGO);
         }
-        if (anchorGO)
+        if (!anchorGO->IsDestoryed())
         {
             UTYPE::GameObject::Destroy(anchorGO);
         }
-        if (origGObject)
+        if (!origGObject->IsDestoryed())
         {
-            if (FreeCamera::IsCurrentFreeCamera())
-            {
+            // if (FreeCamera::IsCurrentFreeCamera())
+            // {
                 origGObject->SetActive(true);
+                origGObject->SetTag("MainCamera");
                 const auto originTransform = origCamera->GetTransform();
                 originTransform->SetPosition(origPosition);
                 originTransform->SetRotation(origRotation);
-            }
+            // }
         }
         Proxy::Cursor::EnableCursor();
     }

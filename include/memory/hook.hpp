@@ -19,14 +19,14 @@ auto DoHook(RTYPE (*target)(ARGS...), RTYPE (*detour)(ARGS...), RTYPE (**orignal
 }
 #else
 template <typename RTYPE, typename... ARGS>
-auto DoHook(RTYPE (*target)(ARGS...), RTYPE (*detour)(ARGS...), RTYPE (*orignal)(ARGS...)) -> bool
+auto DoHook(RTYPE (*target)(ARGS...), RTYPE (*detour)(ARGS...), RTYPE (**orignal)(ARGS...)) -> bool
 {
 #ifdef NDEBUG
     log_set_level(0);
 #endif
     dobby_enable_near_branch_trampoline();
     Debug::Logger::LOGI("Hooking {} with detour {}", (void *)target, (void *)detour);
-    const auto ok = DobbyHook(target, detour, orignal) == RS_SUCCESS ? true : false;
+    const auto ok = DobbyHook(target, detour, (void **)orignal) == RS_SUCCESS ? true : false;
     if (!ok) Debug::Logger::LOGW("Hooking failed");
     return ok;
 }
@@ -38,16 +38,19 @@ constexpr RTYPE (*__init_orig__(RTYPE (*)(ARGS...)))(ARGS...)
     return nullptr;
 }
 
+#ifndef _MSC_VER
 #define Hook(TARGET, DETOUR)                                                                                                                                                                           \
     ({                                                                                                                                                                                                 \
         static auto CALL_ORIGNAL = __init_orig__(TARGET);                                                                                                                                              \
         DoHook(TARGET, DETOUR, &CALL_ORIGNAL);                                                                                                                                                         \
     })
 
-// #define Hook(TARGET, DETOUR) \
-//     ( \
-//         [=] \
-//         { \
-//             static auto CALL_ORIGNAL = __init_orig__(TARGET); \
-//             return DoHook(TARGET, DETOUR, &CALL_ORIGNAL); \
-//         })()
+#else
+#define Hook(TARGET, DETOUR)                                                                                                                                                                           \
+    (                                                                                                                                                                                                  \
+        [=]                                                                                                                                                                                            \
+        {                                                                                                                                                                                              \
+            static auto CALL_ORIGNAL = __init_orig__(TARGET);                                                                                                                                          \
+            return DoHook(TARGET, DETOUR, &CALL_ORIGNAL);                                                                                                                                              \
+        })()
+#endif

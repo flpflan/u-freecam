@@ -25,7 +25,7 @@ if(UNIX AND NOT APPLE)
     target_compile_options(${PROJECT_NAME} PRIVATE -fPIC)
     target_link_options(${PROJECT_NAME} PRIVATE -fseh-exceptions -static-libstdc++)
 elseif(WIN32)
-    target_compile_options(${PROJECT_NAME} PRIVATE /MT)
+    target_compile_options(${PROJECT_NAME} PRIVATE /MT /Zc:preprocessor)
 endif()
 
 if(ANDROID)

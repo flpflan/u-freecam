@@ -5,7 +5,7 @@ endif()
 file(GLOB FREECAM_SRC
     *.cpp
     proxy/*.cpp
-    feature/*.cpp
+    free_camera/*.cpp
 )
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Android")

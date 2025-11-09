@@ -39,6 +39,11 @@ namespace FreeCam::Feature
 
         // Set Cursor
         Proxy::Cursor::DisableCursor();
+
+        // Init Status
+        ui_layer = false;
+        zoom_mode = false;
+        attach_mode = false;
     }
     auto FreeCamera::Disable() -> void
     {

@@ -58,6 +58,7 @@ namespace UTYPE
     struct Touch
     {
         UNITY_CLASS_DECL("UnityEngine.InputLegacyModule.dll", Touch)
+    public:
         UNITY_METHOD(TouchPhase, get_phase, (void))
         UNITY_METHOD(UTYPE::Vector2, get_position, (void))
         UNITY_METHOD(UTYPE::Vector2, get_deltaPosition, (void))
@@ -66,6 +67,7 @@ namespace UTYPE
     class Input
     {
         UNITY_CLASS_DECL("UnityEngine.InputLegacyModule.dll", Input)
+    public:
         UNITY_STATIC_METHOD(bool, GetKey, (const KeyCode key), key)
         UNITY_STATIC_METHOD(bool, GetKeyDown, (const KeyCode key), key)
         UNITY_STATIC_METHOD(float, GetAxis, (const UTYPE::String *const axis), axis)

@@ -9,38 +9,18 @@ namespace UTYPE
     using UTYPE = UnityResolve::UnityType;
 }
 
-// template <typename CLS, const bool IsStatic, typename RET, typename... ARGS>
-// struct UnityMethod;
-//
-// template <typename CLS, typename RET, typename... ARGS>
-// struct UnityMethod<CLS, false, RET, ARGS...>
-// {
-// private:
-//     UMethod *method;
-//     CLS &instance;
-//
-// public:
-//     inline RET Call(ARGS... args) const
-//     {
-//         if (!method) method = CLS::GetUClass()->template Get<UMethod>(NAME);
-//         method->Invoke<RET>(instance, args...);
-//     }
-//     inline RET operator()(ARGS... args) const { Call(args...); }
-// };
-// template <typename CLS, typename RET, typename... ARGS>
-// struct UnityMethod<CLS, true, RET, ARGS...>
-// {
-//     UMethod *method;
-//     inline RET Call(ARGS... args) { method->Invoke<RET>(args...); }
-//     inline RET operator()(ARGS... args) const { Call(args...); }
-// };
-
 #define UNITY_CLASS_DECL(MODULE, CLS)                                                                                                                                                                  \
 private:                                                                                                                                                                                               \
     inline static constexpr auto MODULE_NAME = MODULE;                                                                                                                                                 \
     inline static constexpr auto CLS_NAME = #CLS;                                                                                                                                                      \
                                                                                                                                                                                                        \
 public:                                                                                                                                                                                                \
+    inline static auto __ctor__(CLS *self) -> void                                                                                                                                                     \
+    {                                                                                                                                                                                                  \
+        static UMethod *method;                                                                                                                                                                        \
+        if (!method) method = GetUClass()->Get<UMethod>(".ctor");                                                                                                                                      \
+        return method->Invoke<void>(self);                                                                                                                                                             \
+    }                                                                                                                                                                                                  \
     inline static auto GetUClass() -> UClass *                                                                                                                                                         \
     {                                                                                                                                                                                                  \
         static UClass *klass;                                                                                                                                                                          \
@@ -49,7 +29,6 @@ public:                                                                         
     }
 
 // #define UNITY_FIELD(FIELD_TY, FIELD_NAME)                                                                                                                                                              \
-// public:                                                                                                                                                                                                \
 //     auto Get##FIELD_NAME() -> FIELD_TY                                                                                                                                                                 \
 //     {                                                                                                                                                                                                  \
 //         static UMethod *method;                                                                                                                                                                        \
@@ -58,7 +37,6 @@ public:                                                                         
 //     }
 
 #define UNITY_METHOD(RET_TY, METHOD_NAME, PARAMS, ...)                                                                                                                                                 \
-public:                                                                                                                                                                                                \
     auto METHOD_NAME PARAMS->RET_TY                                                                                                                                                                    \
     {                                                                                                                                                                                                  \
         static UMethod *method;                                                                                                                                                                        \
@@ -66,7 +44,6 @@ public:                                                                         
         return method->Invoke<RET_TY>(this __VA_OPT__(, ) __VA_ARGS__);                                                                                                                                \
     }
 #define UNITY_STATIC_METHOD(RET_TY, METHOD_NAME, PARAMS, ...)                                                                                                                                          \
-public:                                                                                                                                                                                                \
     inline static auto METHOD_NAME PARAMS->RET_TY                                                                                                                                                      \
     {                                                                                                                                                                                                  \
         static UMethod *method;                                                                                                                                                                        \

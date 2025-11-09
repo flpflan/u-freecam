@@ -15,6 +15,7 @@ namespace UTYPE
     struct RaycastHit : public UTYPE::RaycastHit
     {
         UNITY_CLASS_DECL("UnityEngine.PhysicsModule.dll", RaycastHit)
+    public:
         UNITY_METHOD(Collider *, get_collider, (void))
     };
 }

@@ -22,7 +22,7 @@ namespace FreeCam::Feature
 #ifdef __ANDROID__
         constexpr static float rotationSpeed = 100.f;
 #else
-        constexpr static float rotationSpeed = 500.f;
+        constexpr static float rotationSpeed = 300.f;
 #endif
         constexpr static float rollSpeed = 100.f;
         // Properties for Move

@@ -6,25 +6,39 @@
 using enum UTYPE::KeyCode;
 using UTYPE::Input;
 
-class AccelerationCurve
+class AccelerationTimer
 {
 private:
+    constexpr static float AccelTime = 10.f;
     float accelTimer = 0.f;
 
 public:
-    float Smoothstep()
+    float Tick()
     {
-        constexpr float accelTime = 5.f;
-        if (Input::GetKey(SHIFT_L))
-            accelTimer += FreeCam::Proxy::Time::GetDeltaTime_s();
-        else
-            accelTimer -= FreeCam::Proxy::Time::GetDeltaTime_s();
-        accelTimer = Clamp(accelTimer, 0.f, accelTime);
-        float t = accelTimer / accelTime;
-        float curve = 3 * t * t - 2 * t * t * t; // smoothstep
-        return curve;
+        accelTimer += FreeCam::Proxy::Time::GetDeltaTime_s();
+        accelTimer = Clamp(accelTimer, 0.f, AccelTime);
+        return accelTimer / AccelTime;
     }
-} AccelerationCurve;
+    constexpr float Reset() { return (accelTimer = 0.f); }
+} AccelTimer;
+
+constexpr static float Smoothstep(const float t) { return 3 * t * t - 2 * t * t * t; }
+
+constexpr static float EaseOutQuad(const float u) { return 1.f - (1.f - u) * (1.f - u); }
+constexpr static float EaseInQuad(const float u) { return u * u; }
+constexpr static float DualEase(const float t)
+{
+    if (t < 0.5f)
+    {
+        const float u = t / 0.5f;
+        return 0.5f * EaseOutQuad(u);
+    }
+    else
+    {
+        const float u = (t - 0.5f) / 0.5f;
+        return 0.5f + 0.5f * EaseInQuad(u);
+    }
+}
 
 namespace FreeCam::Feature
 {
@@ -41,25 +55,27 @@ namespace FreeCam::Feature
         if (Input::GetKey(D)) toMove.x = 1;
         if (toMove.x || toMove.y || toMove.z)
         {
-            const auto curve = AccelerationCurve.Smoothstep();
+            const float t = Input::GetKey(SHIFT_L) ? AccelTimer.Tick() : AccelTimer.Reset();
+            const auto curve = DualEase(t);
             const float speed = Lerp(baseMoveSpeed, maxMoveSpeed, curve);
-            toMove = toMove * speed;
             if (Input::GetKey(M))
             {
-                freeTrans->Move(toMove);
+                freeTrans->Move(toMove * speed);
             }
             else
             {
                 if (!attach_mode)
                 {
-                    anchorTrans->Move(toMove);
+                    anchorTrans->Move(toMove * speed);
                 }
                 else
                 {
-                    freeTrans->Move(toMove);
+                    freeTrans->Move(toMove * speed);
                 }
             }
         }
+        else
+            AccelTimer.Reset();
         if (Input::GetKeyDown(M) && Input::GetKey(SHIFT_L)) freeTrans->SetLocalPosition(UTYPE::Vector3(0, 0, 0));
     }
 }

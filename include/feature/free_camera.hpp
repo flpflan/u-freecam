@@ -26,8 +26,8 @@ namespace FreeCam::Feature
 #endif
         constexpr static float rollSpeed = 100.f;
         // Properties for Move
-        const float moveSpeed = 1.f;
-        const float moveSpeedMultiplier = 5.f;
+        constexpr static float baseMoveSpeed = 1.f;
+        constexpr static float maxMoveSpeed = 25.f;
 
     public:
         bool Enabled = false;
@@ -47,5 +47,11 @@ namespace FreeCam::Feature
         UTYPE::GameObject *origGObject;
         auto backupOrigCamera() -> void;
         auto selectGameObject() -> UTYPE::Transform *;
+
+        auto updateMove() -> void;
+        auto updateRotate() -> void;
+        auto updateRoll() -> void;
+        auto updateZoom() -> void;
+        auto updateAttachMode() -> void;
     };
 }

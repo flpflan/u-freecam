@@ -19,7 +19,7 @@ For example, on Windows, you can use the DLL injection tool that comes with Chea
 |自由镜头|Free Camera|
 | - | - |
 |打开/关闭自由镜头 -> Enter|Toggle FreeCam -> Enter|
-|移动 -> WASD、Ctrl、空格、左Shift(疾跑)|Movement -> WASD, Ctrl, Space, and Shift_L (Sprint)|
+|移动 -> WASD、Ctrl、空格、左Shift(加速)|Movement -> WASD, Ctrl, Space, and Shift_L (Sprint)|
 |旋转镜头 -> 鼠标 / 方向键 / 触屏（移动端）|Rotation -> Mouse / Arrow keys / Touch screen (Moblie)|
 |UI模式 -> 鼠标中键 / U|UI Mode -> Mouse middle button / U|
 |镜头缩放 -> 按住Z + 鼠标滚轮/ X、C|Zoom -> Hold Z + Mouse Wheel / X or C|
@@ -49,7 +49,8 @@ For example, on Windows, you can use the DLL injection tool that comes with Chea
 
 ## 已测试游戏 (Tested Game)
 - 蔚蓝档案 (PC端 / [移动端](https://www.bilibili.com/video/BV1XRpmz8EBW)) / Blue Archive (PC / [Mobile](https://youtu.be/40Od_dHH5oY))
-- 喵斯快跑 (PC端) / Muse Dash (PC)
+- 喵斯快跑 (PC端 / 移动端) / Muse Dash (PC / Mobile)
+- 托兰异世录 (移动端) / Toram Online (Moblie)
 
 ## Special Thanks
 - [UnityResolve.hpp](https://github.com/issuimo/UnityResolve.hpp)

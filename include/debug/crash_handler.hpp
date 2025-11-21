@@ -45,7 +45,7 @@ namespace Debug
                 break;
             }
             Logger::Critical("===== [Program Crashed:{}] =====", signal_name);
-#ifndef NDEBUG
+// #ifndef NDEBUG
 /*
     INFO:
     We use backward-cpp, which relys on `backtrace_symbols` on Android, for stack trace.
@@ -65,7 +65,7 @@ namespace Debug
             p.print(st, oss);
             Logger::Critical(oss.str());
 #endif
-#endif
+// #endif
             Logger::ShutDown();
             std::exit(signal);
         }

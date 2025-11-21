@@ -18,7 +18,7 @@ static auto PatternScan(const char *const moduleName, const char *const signatur
     if (r.empty()) return 0;
     for (const auto p : r)
     {
-        Debug::Logger::LOGD("pattern found at: {}", p);
+        Debug::Logger::Debug("pattern found at: {}", p);
     }
     return r.back();
 }

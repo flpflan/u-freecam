@@ -16,10 +16,10 @@ namespace FreeCam::Feature
             const auto target = hit->get_collider()->GetGameObject();
             // if (const auto animator = target->GetComponentInChildren<UTYPE::Animator *>(UTYPE::Animator::GetUClass()))
             // {
-            //     Debug::Logger::LOGD("Found Animator");
+            //     Debug::Logger::Debug("Found Animator");
             //     if (const auto head = animator->GetBoneTransform(UTYPE::Animator::HumanBodyBones::Head))
             //     {
-            //         Debug::Logger::LOGD("Found Head");
+            //         Debug::Logger::Debug("Found Head");
             //         return head;
             //     }
             // }
@@ -44,9 +44,9 @@ namespace FreeCam::Feature
         const auto curCamName = curCam->GetName()->ToString();
         if (curCamName == "UE_Freecam") return true;
 
-        Debug::Logger::LOGD("Not UE_Freecam: {}", curCamName);
+        Debug::Logger::Debug("Not UE_Freecam: {}", curCamName);
         // NOTE: This must be `Camera -> GameObject` -> Tag and not `Camera -> Tag`，otherwise wired bug can happen in some games.
-        Debug::Logger::LOGD("Tag: {}", curCam->GetGameObject()->GetTag()->ToString());
+        Debug::Logger::Debug("Tag: {}", curCam->GetGameObject()->GetTag()->ToString());
         return false;
     }
 }

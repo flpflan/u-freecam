@@ -7,7 +7,7 @@ namespace FreeCam::Proxy
     auto Cursor::EnableCursor() -> void
     {
 #ifndef __ANDROID__
-        Debug::Logger::LOGI("Enable cursor");
+        Debug::Logger::Info("Enable cursor");
         UTYPE::Cursor::set_lockState(false);
         UTYPE::Cursor::set_visible(true);
 #endif
@@ -15,7 +15,7 @@ namespace FreeCam::Proxy
     auto Cursor::DisableCursor() -> void
     {
 #ifndef __ANDROID__
-        Debug::Logger::LOGI("Disable cursor");
+        Debug::Logger::Info("Disable cursor");
         UTYPE::Cursor::set_lockState(true);
         UTYPE::Cursor::set_visible(false);
 #endif

@@ -10,3 +10,6 @@
 [submodule "extern/KittyMemory"]
 	path = extern/KittyMemory
 	url = https://github.com/MJx0/KittyMemory
+[submodule "extern/backward-cpp"]
+	path = extern/backward-cpp
+	url = https://github.com/bombela/backward-cpp

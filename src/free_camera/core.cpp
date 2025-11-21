@@ -12,7 +12,7 @@ namespace FreeCam::Feature
     {
         if (Enabled) return;
         Enabled = true;
-        Debug::Logger::LOGI("Start freecam");
+        Debug::Logger::Info("Start freecam");
 
         // Backup
         backupOrigCamera();
@@ -49,7 +49,7 @@ namespace FreeCam::Feature
     {
         if (!Enabled) return;
         Enabled = false;
-        Debug::Logger::LOGI("End freecam");
+        Debug::Logger::Info("End freecam");
         if (!freeGO->IsDestoryed())
         {
             UTYPE::GameObject::Destroy(freeGO);

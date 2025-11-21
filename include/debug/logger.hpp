@@ -48,34 +48,52 @@ namespace Debug
 #endif
         }
         template <typename... Args>
-        inline static void LOGD(std::string_view fmt, Args &&...args)
+        inline static void Debug(const fmt::format_string<Args...> &fmt, Args &&...args)
         {
-            logger->debug(fmt::runtime(fmt), std::forward<Args>(args)...);
+            logger->debug(fmt, std::forward<Args>(args)...);
+        }
+        template <typename T>
+        inline static void Debug(const T &fmt)
+        {
+            logger->debug(fmt);
         }
         template <typename... Args>
-        inline static void LOGI(std::string_view fmt, Args &&...args)
+        inline static void Info(const fmt::format_string<Args...> &fmt, Args &&...args)
         {
-            logger->info(fmt::runtime(fmt), std::forward<Args>(args)...);
+            logger->info(fmt, std::forward<Args>(args)...);
+        }
+        template <typename T>
+        inline static void Info(const T &fmt)
+        {
+            logger->info(fmt);
         }
         template <typename... Args>
-        inline static void LOGW(std::string_view fmt, Args &&...args)
+        inline static void Warn(const fmt::format_string<Args...> &fmt, Args &&...args)
         {
-            logger->warn(fmt::runtime(fmt), std::forward<Args>(args)...);
+            logger->warn(fmt, std::forward<Args>(args)...);
+        }
+        template <typename T>
+        inline static void Warn(const T &fmt)
+        {
+            logger->warn(fmt);
         }
         template <typename... Args>
-        inline static void LOGE(std::string_view fmt, Args &&...args)
+        inline static void Error(const fmt::format_string<Args...> &fmt, Args &&...args)
         {
-            logger->error(fmt::runtime(fmt), std::forward<Args>(args)...);
+            logger->error(fmt, std::forward<Args>(args)...);
+        }
+        template <typename T>
+        inline static void Error(const T &fmt)
+        {
+            logger->error(fmt);
         }
         template <typename... Args>
-        inline static void LOGC(std::string_view fmt, Args &&...args)
+        inline static void Critical(const fmt::format_string<Args...> &fmt, Args &&...args)
         {
-            logger->critical(fmt::runtime(fmt), std::forward<Args>(args)...);
+            logger->critical(fmt, std::forward<Args>(args)...);
         }
-
-    private:
-#if defined(__ANDROID__) && !defined(NDEBUG)
-        inline static void crachHandler(int signal)
+        template <typename T>
+        inline static void Critical(const T &fmt)
         {
             const char *signal_name = "";
             switch (signal)

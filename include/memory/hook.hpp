@@ -12,9 +12,9 @@ auto DoHook(RTYPE (*target)(ARGS...), RTYPE (*detour)(ARGS...), RTYPE (**orignal
 #endif
     log_set_tag("freecam");
     dobby_enable_near_branch_trampoline();
-    Debug::Logger::LOGI("Hooking {} with detour {}", (void *)target, (void *)detour);
+    Debug::Logger::Info("Hooking {} with detour {}", (void *)target, (void *)detour);
     const auto ok = DobbyHook((void *)target, (dobby_dummy_func_t)detour, (dobby_dummy_func_t *)orignal) == RS_SUCCESS ? true : false;
-    if (!ok) Debug::Logger::LOGW("Hooking failed");
+    if (!ok) Debug::Logger::Warn("Hooking failed");
     return ok;
 }
 #else
@@ -25,9 +25,9 @@ auto DoHook(RTYPE (*target)(ARGS...), RTYPE (*detour)(ARGS...), RTYPE (**orignal
     log_set_level(0);
 #endif
     dobby_enable_near_branch_trampoline();
-    Debug::Logger::LOGI("Hooking {} with detour {}", (void *)target, (void *)detour);
+    Debug::Logger::Info("Hooking {} with detour {}", (void *)target, (void *)detour);
     const auto ok = DobbyHook(target, detour, (void **)orignal) == RS_SUCCESS ? true : false;
-    if (!ok) Debug::Logger::LOGW("Hooking failed");
+    if (!ok) Debug::Logger::Warn("Hooking failed");
     return ok;
 }
 #endif

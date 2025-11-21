@@ -19,20 +19,20 @@ void Bootstrap::Run()
 {
     std::this_thread::sleep_for(std::chrono::seconds(5));
     Debug::Logger::Init();
-    Debug::Logger::LOGI("======= Begin FreeCam =======");
-    Debug::Logger::LOGI("Waiting for Unity initializing");
+    Debug::Logger::Info("======= Begin FreeCam =======");
+    Debug::Logger::Info("Waiting for Unity initializing");
     while (!initializeUnity())
         std::this_thread::sleep_for(std::chrono::seconds(2));
-    Debug::Logger::LOGI("Unity initializing success");
-    Debug::Logger::LOGI("Try attach to internal loop");
+    Debug::Logger::Info("Unity initializing success");
+    Debug::Logger::Info("Try attach to internal loop");
     if (!attachToGameLoop<FreeCam::Core::Update>())
     {
-        Debug::Logger::LOGW("Failed to hook internal loop, fallback to mock loop");
+        Debug::Logger::Warn("Failed to hook internal loop, fallback to mock loop");
         FreeCam::Core::UseMockLoop = true;
         std::thread(
             []
             {
-                Debug::Logger::LOGI("Main loop started");
+                Debug::Logger::Info("Main loop started");
                 UnityResolve::ThreadAttach();
                 do
                 {
@@ -56,7 +56,7 @@ std::pair<void *, UnityResolve::Mode> Bootstrap::getUnityBackend()
 #endif
     if (assembly)
     {
-        Debug::Logger::LOGI("Found Il2Cpp backend");
+        Debug::Logger::Info("Found Il2Cpp backend");
         return {assembly, UnityResolve::Mode::Il2Cpp};
     }
 
@@ -71,11 +71,11 @@ std::pair<void *, UnityResolve::Mode> Bootstrap::getUnityBackend()
 #endif
         if (monoHandle)
         {
-            Debug::Logger::LOGI("Found Mono backend: {}", monoModule);
+            Debug::Logger::Info("Found Mono backend: {}", monoModule);
             return {monoHandle, UnityResolve::Mode::Mono};
         }
     }
-    Debug::Logger::LOGE("Failed to find Unity backend");
+    Debug::Logger::Error("Failed to find Unity backend");
     return {nullptr, UnityResolve::Mode::Mono};
 }
 
@@ -109,13 +109,13 @@ static void detour_update(void *obj, int index)
 template <auto UpdateFn>
 bool Bootstrap::attachToGameLoop()
 {
-    Debug::Logger::LOGI("Searching for MonoBehaviour::CallUpdateMethod");
+    Debug::Logger::Info("Searching for MonoBehaviour::CallUpdateMethod");
 #ifdef __ANDROID__
     constexpr auto module = "libunity.so";
     constexpr auto patterns = std::array{
         "FF C3 05 D1 FC A3 00 F9 F5 53 15 A9 F3 7B 16 A9 08 78 40 F9", // 2021.3.x
         "FF C3 05 D1 FC A3 00 F9 F5 53 15 A9 F3 7B 16 A9 08 88 40 F9", // 2021.3.x
-        "FF C3 05 D1 FD A3 00 F9 FE 57 15 A9 F4 4F 16 A9 F4 03 01 2A",  // 2022.3.33f1
+        "FF C3 05 D1 FD A3 00 F9 FE 57 15 A9 F4 4F 16 A9 F4 03 01 2A", // 2022.3.33f1
     };
     // constexpr auto patterns = std::array{"FF C3 06 D1 FC B3 00 F9 F9 63 17 A9 F7 5B 18 A9 F5 53 19 A9 F3 7B 1A A9 F3 03 00 AA"}; // ExecutePlayerLoop
 #else
@@ -135,16 +135,16 @@ bool Bootstrap::attachToGameLoop()
     }
     if (CallUpdateMethod)
     {
-        Debug::Logger::LOGI("Method found at {}, start hooking", (void *)CallUpdateMethod);
+        Debug::Logger::Info("Method found at {}, start hooking", (void *)CallUpdateMethod);
         if (Hook(CallUpdateMethod, (detour_update<UpdateFn, CALL_ORIGNAL>)))
         {
-            Debug::Logger::LOGI("Hooking success");
+            Debug::Logger::Info("Hooking success");
             return true;
         }
     }
     else
     {
-        Debug::Logger::LOGW("Method not found");
+        Debug::Logger::Warn("Method not found");
     }
     return false;
 }

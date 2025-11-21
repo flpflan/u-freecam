@@ -38,5 +38,10 @@ file(GLOB KITTYMEMORY_SRC ${KITTYMEMORY_PATH}/KittyMemory/*.cpp)
 include_directories(${KITTYMEMORY_PATH})
 add_definitions(-DkNO_KEYSTONE)
 
+if(NOT (${CMAKE_SYSTEM_NAME} STREQUAL "Android" AND ${CMAKE_SYSTEM_VERSION} LESS 33))
+    add_subdirectory(extern/backward-cpp)
+    include_directories(extern/backward-cpp)
+endif()
+
 include_directories(include)
 add_subdirectory(src)

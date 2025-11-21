@@ -1,6 +1,7 @@
 ﻿#include "bootstrap.hpp"
 #include "core.hpp"
 #include "debug/logger.hpp"
+#include "debug/crash_handler.hpp"
 #include "memory/hook.hpp"
 #include "memory/memory.hpp"
 #include "utype/unity_engine/time.hpp"
@@ -18,6 +19,7 @@
 void Bootstrap::Run()
 {
     std::this_thread::sleep_for(std::chrono::seconds(5));
+    Debug::CrashHandler::Init();
     Debug::Logger::Init();
     Debug::Logger::Info("======= Begin FreeCam =======");
     Debug::Logger::Info("Waiting for Unity initializing");

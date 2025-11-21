@@ -7,11 +7,6 @@
 #include "spdlog/sinks/basic_file_sink.h"
 #endif
 
-#include <string_view>
-#if defined(__ANDROID__) && !defined(NDEBUG)
-#include <csignal>
-#endif
-
 using namespace std::chrono_literals;
 
 namespace Debug
@@ -39,14 +34,8 @@ namespace Debug
             spdlog::set_pattern("[%Y-%m-%d %H:%M:%S.%e] [%l] %v");
             spdlog::flush_every(1s);
             spdlog::flush_on(spdlog::level::warn);
-#if defined(__ANDROID__) && !defined(NDEBUG)
-            // Setup Crash Handler
-            std::signal(SIGSEGV, crachHandler);
-            std::signal(SIGABRT, crachHandler);
-            std::signal(SIGFPE, crachHandler);
-            std::signal(SIGILL, crachHandler);
-#endif
         }
+        inline static void ShutDown() { spdlog::shutdown(); }
         template <typename... Args>
         inline static void Debug(const fmt::format_string<Args...> &fmt, Args &&...args)
         {
@@ -95,43 +84,7 @@ namespace Debug
         template <typename T>
         inline static void Critical(const T &fmt)
         {
-            const char *signal_name = "";
-            switch (signal)
-            {
-            case SIGSEGV:
-                signal_name = "SIGABRT";
-                break;
-            case SIGABRT:
-                signal_name = "SIGABRT";
-                break;
-            case SIGFPE:
-                signal_name = "SIGFPE";
-                break;
-            case SIGILL:
-                signal_name = "SIGILL";
-                break;
-            default:
-                signal_name = "UNKNOWN";
-                break;
-            }
-            logger->critical("=== Program Crashed ===");
-            logger->critical("Signal: {}", signal_name);
-            logger->critical("Stack Trace:");
-            // TODO:
-            // backward::StackTrace st;
-            // st.load_here(32);
-            //
-            // backward::Printer p;
-            // p.address = true;
-            // p.object = true;
-            //
-            // std::ostringstream oss;
-            // p.print(st, oss);
-            // logger->critical(oss.str());
-
-            spdlog::shutdown();
-            std::exit(signal);
+            logger->critical(fmt);
         }
-#endif
     };
 }

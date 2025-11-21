@@ -8,7 +8,7 @@ file(GLOB FREECAM_SRC
     free_camera/*.cpp
 )
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Android")
+if(${CMAKE_SYSTEM_NAME} STREQUAL "Android")
     list(APPEND FREECAM_SRC ${BY_OPEN_SRC})
     list(APPEND FREECAM_SRC ${KITTYMEMORY_SRC})
 endif()
@@ -18,6 +18,9 @@ add_library(${PROJECT_NAME} SHARED ${FREECAM_SRC})
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_20)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE spdlog::spdlog_header_only)
+if(NOT (${CMAKE_SYSTEM_NAME} STREQUAL "Android" AND ${CMAKE_SYSTEM_VERSION} LESS 33))
+    target_link_libraries(${PROJECT_NAME} PRIVATE Backward::Interface)
+endif()
 target_link_libraries(${PROJECT_NAME} PRIVATE dobby)
 
 if(UNIX AND NOT APPLE)
@@ -44,7 +47,7 @@ if(${CMAKE_BUILD_TYPE} STREQUAL "Release")
     if(UNIX AND NOT APPLE)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden")
         # rtti / lto
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti")           
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti")
         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -flto")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -flto")
         set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -O3 -flto")

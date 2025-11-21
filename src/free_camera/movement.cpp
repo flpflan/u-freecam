@@ -59,21 +59,11 @@ namespace FreeCam::Feature
             const float t = Input::GetKey(SHIFT_L) ? AccelTimer.Tick() : AccelTimer.Reset();
             const auto curve = DualEase(t);
             const float speed = Lerp(baseSpeed, maxMoveSpeed, curve);
-            if (Input::GetKey(M))
-            {
+
+            if (Input::GetKey(M) || attach_mode)
                 freeTrans->Move(toMove * speed);
-            }
             else
-            {
-                if (!attach_mode)
-                {
-                    anchorTrans->Move(toMove * speed);
-                }
-                else
-                {
-                    freeTrans->Move(toMove * speed);
-                }
-            }
+                anchorTrans->Move(toMove * speed);
         }
         else
             AccelTimer.Reset();

@@ -1,9 +1,9 @@
 ## 这是什么 (What's This)
-如其名所示，这是一个针对基于 Unity 引擎制作的游戏的自由镜头作弊程序。\
+如其名所示，这是一个针对基于 Unity 引擎制作的游戏的自由镜头工具。\
 此外，还附带了游戏内变速功能。
 
-As the name suggests, this a free camera cheat/tool for games built on the Unity engine. \
-It also comes with an in-game speed hack feature.
+As the name suggests, this a free camera tool for games built on the Unity engine. \
+It also comes with an in-game speed change feature.
 
 ## 如何使用 (How to Use)
 通过任何手段, 将动态库注入目标进程/app即可。\

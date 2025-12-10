@@ -5,7 +5,7 @@
 #ifdef __ANDROID__
 
 template <typename RTYPE, typename... ARGS>
-auto DoHook(RTYPE (*target)(ARGS...), RTYPE (*detour)(ARGS...), RTYPE (**orignal)(ARGS...)) -> bool
+auto DoHook(RTYPE (*target)(ARGS...), RTYPE (*detour)(ARGS...), RTYPE (*const *orignal)(ARGS...)) -> bool
 {
 #ifndef NDEBUG
     log_set_level(0);
@@ -19,7 +19,7 @@ auto DoHook(RTYPE (*target)(ARGS...), RTYPE (*detour)(ARGS...), RTYPE (**orignal
 }
 #else
 template <typename RTYPE, typename... ARGS>
-auto DoHook(RTYPE (*target)(ARGS...), RTYPE (*detour)(ARGS...), RTYPE (**orignal)(ARGS...)) -> bool
+auto DoHook(RTYPE (*target)(ARGS...), RTYPE (*detour)(ARGS...), RTYPE (*const *orignal)(ARGS...)) -> bool
 {
 #ifdef NDEBUG
     log_set_level(0);
@@ -38,10 +38,21 @@ constexpr RTYPE (*__init_orig__(RTYPE (*)(ARGS...)))(ARGS...)
     return nullptr;
 }
 
+/*
+ * Usage(1):
+ * bool target(int x) { print(x); return x == 1; }
+ * const bool hook_success = Hook(target, +[](int x){ CALL_ORIGNAL(x); return true; })
+ *
+ * Usage(2):
+ * bool target(int x) { return x == 1; }
+ * template <auto CALL_ORIGNAL>
+ * bool detour(int x) { CALL_ORIGNAL(x); return true; }
+ * const bool hook_success = Hook(target, detour<CALL_ORIGNAL>);
+ */
 #ifndef _MSC_VER
 #define Hook(TARGET, DETOUR)                                                                                                                                                                           \
     ({                                                                                                                                                                                                 \
-        static auto CALL_ORIGNAL = __init_orig__(TARGET);                                                                                                                                              \
+        const static auto CALL_ORIGNAL = __init_orig__(TARGET);                                                                                                                                        \
         DoHook(TARGET, DETOUR, &CALL_ORIGNAL);                                                                                                                                                         \
     })
 
@@ -54,3 +65,11 @@ constexpr RTYPE (*__init_orig__(RTYPE (*)(ARGS...)))(ARGS...)
             return DoHook(TARGET, DETOUR, &CALL_ORIGNAL);                                                                                                                                              \
         })()
 #endif
+
+template <typename RTYPE, typename... ARGS>
+auto DestoryHook(RTYPE (*target)(ARGS...)) -> bool
+{
+    return DobbyDestroy(target) == RS_SUCCESS ? true : false;
+}
+
+#define UnHook(TARGET) DestoryHook(TARGET)

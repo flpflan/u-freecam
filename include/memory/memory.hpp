@@ -11,7 +11,7 @@
 #include "KittyMemory/KittyInclude.hpp"
 #include "KittyMemory/KittyScanner.hpp"
 
-static auto PatternScan(const char *const moduleName, const char *const signature) -> uintptr_t
+inline auto PatternScan(const char *const moduleName, const char *const signature) -> uintptr_t
 {
     const auto unityELF = ElfScanner::findElf(moduleName);
     const auto r = KittyScanner::findIdaPatternAll(unityELF.baseSegment().startAddress, unityELF.baseSegment().endAddress, signature);
@@ -24,7 +24,7 @@ static auto PatternScan(const char *const moduleName, const char *const signatur
 }
 #else
 // Reference: https://github.com/Taiga74164/BA-Cheeto
-static auto PatternScan(const char *const moduleName, const char *const signature) -> uintptr_t
+inline auto PatternScan(const char *const moduleName, const char *const signature) -> uintptr_t
  {
      static auto patternToByte = [](const char *pattern)
      {
@@ -84,7 +84,7 @@ static auto PatternScan(const char *const moduleName, const char *const signatur
 //     size_t size;
 // };
 //
-// static std::optional<ModuleInfo> GetModuleInfo(const char *const moduleName)
+// inline std::optional<ModuleInfo> GetModuleInfo(const char *const moduleName)
 // {
 //     std::ifstream maps("/proc/self/maps");
 //     std::string line;
@@ -121,7 +121,7 @@ static auto PatternScan(const char *const moduleName, const char *const signatur
 //     return info;
 // }
 
-// static uintptr_t PatternScan(const char *const moduleName, const char *const signature)
+// inline uintptr_t PatternScan(const char *const moduleName, const char *const signature)
 // {
 //     static auto patternToByte = [](const char *pattern)
 //     {

@@ -10,12 +10,12 @@
 
 namespace Debug
 {
-    class CrashHandler
+    class CrashHandler final
     {
     public:
-        inline static void Init()
+        // Setup Crash Handler
+        static void Setup()
         {
-            // Setup Crash Handler
             std::signal(SIGSEGV, crachHandler);
             std::signal(SIGABRT, crachHandler);
             std::signal(SIGFPE, crachHandler);
@@ -23,7 +23,7 @@ namespace Debug
         }
 
     private:
-        inline static void crachHandler(int signal)
+        static void crachHandler(int signal)
         {
             const char *signal_name = "";
             switch (signal)
@@ -65,8 +65,7 @@ namespace Debug
             p.print(st, oss);
             Logger::Critical(oss.str());
 #endif
-// #endif
-            Logger::ShutDown();
+            // #endif
             std::exit(signal);
         }
     };

@@ -1,4 +1,5 @@
 #include "bootstrap.hpp"
+#include "debug/crash_handler.hpp"
 #include <thread>
 
 #ifdef __ANDROID__
@@ -11,6 +12,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD reason, LPVOID lpReserved)
     switch (reason)
     {
     case DLL_PROCESS_ATTACH:
+        Debug::CrashHandler::Setup();
         DisableThreadLibraryCalls(hModule);
         std::thread(Bootstrap::Run).detach();
         break;

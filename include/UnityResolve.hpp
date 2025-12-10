@@ -3024,7 +3024,7 @@ class UnityResolve final {
                     method = Get("UnityEngine.CoreModule.dll") ->Get("GameObject") ->Get<Method>("set_tag");
                 return method->Invoke<void>(this, name);
             }
-            inline auto SetTag(const std::string &name) -> void {
+            auto SetTag(const std::string &name) -> void {
                 return SetTag(String::New(name));
             }
         };

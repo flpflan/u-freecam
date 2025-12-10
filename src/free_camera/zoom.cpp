@@ -4,11 +4,6 @@
 using enum UTYPE::KeyCode;
 using UTYPE::Input;
 
-// template <typename T>
-// T Abs(T n)
-// {
-//     return n >= 0 ? n : -n;
-// }
 // float getPinchDelta()
 // {
 //     static float pinchDelta = 0.f;

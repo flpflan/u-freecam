@@ -9,16 +9,12 @@ namespace FreeCam::Proxy
         UTYPE::Camera &cam;
 
         // Properties for Zoom
-        inline static constinit float defaultZoom;
+        const float defaultZoom;
         float currentZoom = defaultZoom;
         const float zoomSpeed = 20.f;
 
     public:
-        Camera(UTYPE::Camera &c) : cam(static_cast<UTYPE::Camera &>(c))
-        {
-            defaultZoom = cam.GetFoV();
-            currentZoom = defaultZoom;
-        }
+        Camera(UTYPE::Camera &c) : cam(static_cast<UTYPE::Camera &>(c)), defaultZoom(cam.GetFoV()) {}
         Camera(UTYPE::Camera *c) : Camera(*c) {}
         auto ZoomIn(float) -> void;
         auto ZoomOut(float) -> void;

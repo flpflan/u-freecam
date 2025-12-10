@@ -18,7 +18,6 @@
 void Bootstrap::Run()
 {
     std::this_thread::sleep_for(std::chrono::seconds(5));
-    Debug::Logger::Init();
     Debug::Logger::Info("======= Begin FreeCam =======");
     Debug::Logger::Info("Waiting for Unity initializing");
     while (!initializeUnity())

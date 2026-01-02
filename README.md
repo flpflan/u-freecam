@@ -6,7 +6,7 @@ As the name suggests, this a free camera tool for games built on the Unity engin
 It also comes with an in-game speed change feature.
 
 ## 如何使用 (How to Use)
-通过任何手段, 将动态库注入目标进程/app即可。\
+通过任何手段, 将动态库注入目标进程/app即可[^1]。\
 举例来说，Windows 上可通过 CE 自带的 dll 注入工具进行注入，而 Android 上可以使用 [XInjector](https://github.com/WindySha/XInjector) (非 Root 环境可以用 [Android-Virtual-Inject](https://github.com/reveny/Android-Virtual-Inject/releases/latest))
 
 By any means, inject this dynamic library into the target process or application. \
@@ -54,3 +54,5 @@ For example, on Windows, you can use the DLL injection tool that comes with Chea
 
 ## Special Thanks
 - [UnityResolve.hpp](https://github.com/issuimo/UnityResolve.hpp)
+
+[^1]: 对于部分魔改/加固的引擎，须在游戏启动时即刻注入。

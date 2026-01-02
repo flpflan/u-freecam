@@ -17,6 +17,7 @@
 
 void Bootstrap::Run()
 {
+    bypassHardenedIL2CPP();
     std::this_thread::sleep_for(std::chrono::seconds(5));
     Debug::Logger::Info("======= Begin FreeCam =======");
     Debug::Logger::Info("Waiting for Unity initializing");
@@ -46,10 +47,34 @@ void Bootstrap::Run()
 
 void Bootstrap::Shutdown() {}
 
+void Bootstrap::bypassHardenedIL2CPP()
+{
+#ifdef __ANDROID__
+    const auto handle = dlopen("libdl.so", RTLD_NOW);
+    const static auto fn_dlsym = dlsym(handle, "dlsym");
+    static void *CALL_ORIGNAL;
+    DoHook(
+        fn_dlsym,
+        (void *)+[](void *handle, const char *symbol)
+        {
+            Debug::Logger::Debug("dlsym {}: {}", handle, symbol);
+            const auto module = reinterpret_cast<void *(*)(void *, const char *)>(CALL_ORIGNAL)(handle, symbol);
+            if (0 == strcmp(symbol, "il2cpp_init"))
+            {
+                IL2CPP_LIB_HANDLE = handle;
+                UnHook(fn_dlsym);
+            }
+            return module;
+        },
+        &CALL_ORIGNAL);
+    dlclose(handle);
+#endif
+}
+
 std::pair<void *, UnityResolve::Mode> Bootstrap::getUnityBackend()
 {
 #ifdef __ANDROID__
-    const auto assembly = by_dlopen("libil2cpp.so", RTLD_NOW);
+    const auto assembly = IL2CPP_LIB_HANDLE ?: by_dlopen("libil2cpp.so", RTLD_NOW);
 #else
     const auto assembly = GetModuleHandleA("GameAssembly.dll");
 #endif

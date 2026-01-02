@@ -11,31 +11,28 @@ using namespace std::chrono_literals;
 
 namespace Debug::Logger
 {
-    inline namespace
+    // Setup Logger (Thread Safe)
+    inline auto logger()
     {
-        // Setup Logger (Thread Safe)
-        inline auto logger()
+        const static auto _logger = []
         {
-            const static auto _logger = []
-            {
 #ifdef __ANDROID__
-                const auto _logger = spdlog::android_logger_mt("freecam_logger", "freecam");
+            const auto _logger = spdlog::android_logger_mt("freecam_logger", "freecam");
 #else
-                const auto _logger = spdlog::basic_logger_mt("freecam_logger", "logs/log.txt");
+            const auto _logger = spdlog::basic_logger_mt("freecam_logger", "logs/log.txt");
 #endif
 #ifdef NDEBUG
-                _logger->set_level(spdlog::level::info);
+            _logger->set_level(spdlog::level::info);
 #else
-                _logger->set_level(spdlog::level::debug);
+            _logger->set_level(spdlog::level::debug);
 #endif
-                spdlog::set_default_logger(_logger);
-                spdlog::set_pattern("[%Y-%m-%d %H:%M:%S.%e] [%l] %v");
-                spdlog::flush_every(1s);
-                spdlog::flush_on(spdlog::level::warn);
-                return _logger;
-            }();
+            spdlog::set_default_logger(_logger);
+            spdlog::set_pattern("[%Y-%m-%d %H:%M:%S.%e] [%l] %v");
+            spdlog::flush_every(1s);
+            spdlog::flush_on(spdlog::level::warn);
             return _logger;
-        }
+        }();
+        return _logger;
     }
     inline void ShutDown() { spdlog::shutdown(); }
     template <typename... Args>

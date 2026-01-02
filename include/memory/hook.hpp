@@ -3,35 +3,35 @@
 #include "dobby.h"
 
 #ifdef __ANDROID__
+#define FN_PTR void (*)()
+#define FN_PTR_PTR void (**)()
+#else
+#define FN_PTR void *
+#define FN_PTR_PTR void **
+#endif
 
-template <typename RTYPE, typename... ARGS>
-auto DoHook(RTYPE (*target)(ARGS...), RTYPE (*detour)(ARGS...), RTYPE (*const *orignal)(ARGS...)) -> bool
+inline auto DoHook(void *target, void *detour, void **orignal) -> bool
 {
 #ifndef NDEBUG
     log_set_level(0);
 #endif
     log_set_tag("freecam");
     dobby_enable_near_branch_trampoline();
-    Debug::Logger::Info("Hooking {} with detour {}", (void *)target, (void *)detour);
-    const auto ok = DobbyHook((void *)target, (dobby_dummy_func_t)detour, (dobby_dummy_func_t *)orignal) == RS_SUCCESS ? true : false;
+    Debug::Logger::Info("Hooking {} with detour {}", target, detour);
+    const auto ok = DobbyHook(target, (FN_PTR)detour, (FN_PTR_PTR)orignal) == RS_SUCCESS ? true : false;
     if (!ok) Debug::Logger::Warn("Hooking failed");
     return ok;
 }
-#else
+#undef FN_PTR
+#undef FN_PTR_PTR
+
 template <typename RTYPE, typename... ARGS>
 auto DoHook(RTYPE (*target)(ARGS...), RTYPE (*detour)(ARGS...), RTYPE (*const *orignal)(ARGS...)) -> bool
 {
-#ifdef NDEBUG
-    log_set_level(0);
-#endif
-    dobby_enable_near_branch_trampoline();
-    Debug::Logger::Info("Hooking {} with detour {}", (void *)target, (void *)detour);
-    const auto ok = DobbyHook(target, detour, (void **)orignal) == RS_SUCCESS ? true : false;
-    if (!ok) Debug::Logger::Warn("Hooking failed");
-    return ok;
+    return DoHook((void *)target, (void *)detour, (void **)orignal);
 }
-#endif
 
+constexpr void(*__init_orig__(void *)) { return nullptr; }
 template <typename RTYPE, typename... ARGS>
 constexpr RTYPE (*__init_orig__(RTYPE (*)(ARGS...)))(ARGS...)
 {
@@ -66,10 +66,12 @@ constexpr RTYPE (*__init_orig__(RTYPE (*)(ARGS...)))(ARGS...)
         })()
 #endif
 
+inline auto DestoryHook(void *target) -> bool { return DobbyDestroy(target) == RS_SUCCESS; }
+
 template <typename RTYPE, typename... ARGS>
-auto DestoryHook(RTYPE (*target)(ARGS...)) -> bool
+inline auto DestoryHook(RTYPE (*target)(ARGS...)) -> bool
 {
-    return DobbyDestroy(target) == RS_SUCCESS ? true : false;
+    return DestoryHook((void *)target);
 }
 
 #define UnHook(TARGET) DestoryHook(TARGET)

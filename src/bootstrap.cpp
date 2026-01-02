@@ -50,23 +50,22 @@ void Bootstrap::Shutdown() {}
 void Bootstrap::bypassHardenedIL2CPP()
 {
 #ifdef __ANDROID__
+    using dlsym_t = void *(*)(void *, const char *);
     const auto handle = dlopen("libdl.so", RTLD_NOW);
-    const static auto fn_dlsym = dlsym(handle, "dlsym");
-    static void *CALL_ORIGNAL;
-    DoHook(
+    const static auto fn_dlsym = (dlsym_t)dlsym(handle, "dlsym");
+    Hook(
         fn_dlsym,
-        (void *)+[](void *handle, const char *symbol)
+        +[](void *handle, const char *symbol)
         {
             Debug::Logger::Debug("dlsym {}: {}", handle, symbol);
-            const auto module = reinterpret_cast<void *(*)(void *, const char *)>(CALL_ORIGNAL)(handle, symbol);
+            const auto module = CALL_ORIGNAL(handle, symbol);
             if (0 == strcmp(symbol, "il2cpp_init"))
             {
                 IL2CPP_LIB_HANDLE = handle;
                 UnHook(fn_dlsym);
             }
             return module;
-        },
-        &CALL_ORIGNAL);
+        });
     dlclose(handle);
 #endif
 }

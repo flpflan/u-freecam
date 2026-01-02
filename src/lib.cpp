@@ -3,7 +3,11 @@
 #include <thread>
 
 #ifdef __ANDROID__
-__attribute__((constructor)) void on_load() { std::thread(Bootstrap::Run).detach(); }
+__attribute__((constructor)) void on_load()
+{
+    Debug::CrashHandler::Setup();
+    std::thread(Bootstrap::Run).detach();
+}
 
 __attribute__((destructor)) void on_unload() { Bootstrap::Shutdown(); }
 #else

@@ -3,6 +3,7 @@ project(freecam LANGUAGES C CXX)
 
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Android")
     set(CMAKE_TOOLCHAIN_FILE ${CMAKE_ANDROID_NDK}/build/cmake/android.toolchain.cmake)
+    set(ANDROID_ABI ${CMAKE_ANDROID_ARCH_ABI})
     add_definitions(-DWINDOWS_MODE=0 -DANDROID_MODE=1 -DLINUX_MODE=0)
 elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
     add_definitions(-DWINDOWS_MODE=1 -DANDROID_MODE=0 -DLINUX_MODE=0)
@@ -42,6 +43,9 @@ if(NOT (${CMAKE_SYSTEM_NAME} STREQUAL "Android" AND ${CMAKE_SYSTEM_VERSION} LESS
     add_subdirectory(extern/backward-cpp)
     include_directories(extern/backward-cpp)
 endif()
+
+# add_subdirectory(/home/flpflan/myproject/u-freecam/extern/xDL/xdl/src/main/cpp)
+include(cmake/xDL.cmake)
 
 include_directories(include)
 add_subdirectory(src)

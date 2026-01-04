@@ -13,3 +13,6 @@
 [submodule "extern/backward-cpp"]
 	path = extern/backward-cpp
 	url = https://github.com/bombela/backward-cpp
+[submodule "extern/xDL"]
+	path = extern/xDL
+	url = https://github.com/hexhacking/xDL

@@ -17,7 +17,10 @@ add_library(${PROJECT_NAME} SHARED ${FREECAM_SRC})
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_20)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE spdlog::spdlog_header_only)
+target_link_libraries(${PROJECT_NAME} PRIVATE spdlog::spdlog_header_only dobby)
+if(${CMAKE_SYSTEM_NAME} STREQUAL "Android")
+    target_link_libraries(${PROJECT_NAME} PRIVATE xdl)
+endif()
 if(NOT (${CMAKE_SYSTEM_NAME} STREQUAL "Android" AND ${CMAKE_SYSTEM_VERSION} LESS 33))
     target_link_libraries(${PROJECT_NAME} PRIVATE Backward::Interface)
 endif()

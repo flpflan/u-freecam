@@ -10,7 +10,7 @@
 #include <thread>
 
 #ifdef __ANDROID__
-#include "byopen.h"
+#include "platform/android.hpp"
 #else
 #include "Windows.h"
 #endif
@@ -50,30 +50,45 @@ void Bootstrap::Shutdown() {}
 void Bootstrap::bypassHardenedIL2CPP()
 {
 #ifdef __ANDROID__
+    const auto handle = A_dlopen("libdl.so", RTLD_NOW);
+    // if (!handle) return Debug::Logger::Debug("dlerror {}", dlerror());
+
     using dlsym_t = void *(*)(void *, const char *);
-    const auto handle = dlopen("libdl.so", RTLD_NOW);
-    const static auto fn_dlsym = (dlsym_t)dlsym(handle, "dlsym");
+    using JNI_OnLoad_t = jint (*)(JavaVM *, void *);
+    const auto fn_dlsym = (dlsym_t)A_dlsym(handle, "dlsym");
     Hook(
         fn_dlsym,
-        +[](void *handle, const char *symbol)
+        +[](void *handle, const char *sym_name)
         {
-            Debug::Logger::Debug("dlsym {}: {}", handle, symbol);
-            const auto module = CALL_ORIGNAL(handle, symbol);
-            if (0 == strcmp(symbol, "il2cpp_init"))
+            Debug::Logger::Debug("dlsym {}: {}", handle, sym_name);
+            const auto symbol = CALL_ORIGNAL(handle, sym_name);
+            // if (0 == strcmp(sym_name, "JNI_OnLoad"))
+            // {
+            //     // Hijack JavaVM
+            //     if (!sJavaVM) Hook((JNI_OnLoad_t)symbol, (_Hook_JNI_OnLoad<CALL_ORIGNAL>));
+            // }
+            if (0 == strcmp(sym_name, "il2cpp_init"))
             {
+                // Hijack libil2cpp.so handle
                 IL2CPP_LIB_HANDLE = handle;
-                UnHook(fn_dlsym);
+                // UnHook(fn_dlsym);
             }
-            return module;
+            return symbol;
         });
-    dlclose(handle);
+    std::thread(
+        [=]
+        {
+            std::this_thread::sleep_for(450ms);
+            UnHook(fn_dlsym);
+        })
+        .detach();
 #endif
 }
 
 std::pair<void *, UnityResolve::Mode> Bootstrap::getUnityBackend()
 {
 #ifdef __ANDROID__
-    const auto assembly = IL2CPP_LIB_HANDLE ?: by_dlopen("libil2cpp.so", RTLD_NOW);
+    const auto assembly = IL2CPP_LIB_HANDLE ?: A_dlopen("libil2cpp.so", RTLD_NOW);
 #else
     const auto assembly = GetModuleHandleA("GameAssembly.dll");
 #endif
@@ -88,7 +103,7 @@ std::pair<void *, UnityResolve::Mode> Bootstrap::getUnityBackend()
     for (const auto &monoModule : monoModules)
     {
 #ifdef __ANDROID__
-        const auto monoHandle = by_dlopen(monoModule, RTLD_NOW);
+        const auto monoHandle = A_dlopen(monoModule, RTLD_NOW);
 #else
         const auto monoHandle = GetModuleHandleA(monoModule);
 #endif

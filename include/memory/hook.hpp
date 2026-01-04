@@ -45,7 +45,7 @@ constexpr RTYPE (*__init_orig__(RTYPE (*)(ARGS...)))(ARGS...)
  *
  * Usage(2):
  * bool target(int x) { return x == 1; }
- * template <auto CALL_ORIGNAL>
+ * template <auto&& CALL_ORIGNAL>
  * bool detour(int x) { CALL_ORIGNAL(x); return true; }
  * const bool hook_success = Hook(target, detour<CALL_ORIGNAL>);
  */

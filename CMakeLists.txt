@@ -16,7 +16,6 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON CACHE BOOL "" FORCE)
 
 # ===== Deps =====
 include(cmake/deps/xDL.cmake)
-include(cmake/deps/byOpen.cmake)
 include(cmake/deps/spdlog.cmake)
 include(cmake/deps/Dobby.cmake)
 include(cmake/deps/KittyMemory.cmake)
@@ -39,7 +38,7 @@ target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_20)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE spdlog::spdlog_header_only dobby)
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Android")
-    target_link_libraries(${PROJECT_NAME} PRIVATE xdl by_open KittyMemory)
+    target_link_libraries(${PROJECT_NAME} PRIVATE xdl KittyMemory)
 endif()
 if(NOT (${CMAKE_SYSTEM_NAME} STREQUAL "Android" AND ${CMAKE_SYSTEM_VERSION} LESS 33))
     target_link_libraries(${PROJECT_NAME} PRIVATE Backward::Interface)

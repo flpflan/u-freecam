@@ -88,7 +88,7 @@ void Bootstrap::bypassHardenedIL2CPP()
 std::pair<void *, UnityResolve::Mode> Bootstrap::getUnityBackend()
 {
 #ifdef __ANDROID__
-    const auto assembly = IL2CPP_LIB_HANDLE ?: A_dlopen("libil2cpp.so", RTLD_NOW);
+    const auto assembly = IL2CPP_LIB_HANDLE ?: GetMoudleFromSymbol("il2cpp_init") ?: A_dlopen("libil2cpp.so", RTLD_NOW);
 #else
     const auto assembly = GetModuleHandleA("GameAssembly.dll");
 #endif

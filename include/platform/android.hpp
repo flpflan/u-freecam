@@ -26,9 +26,20 @@ inline void *A_dlsym(void *handle, const char *sym_name)
 
 inline JavaVM *sJavaVM;
 
-template <auto&& CALL_ORIGNAL>
+template <auto &&CALL_ORIGNAL>
 inline jint _Hook_JNI_OnLoad(JavaVM *vm, void *reserved)
 {
     sJavaVM = vm;
     return CALL_ORIGNAL(vm, reserved);
+}
+
+inline void *GetMoudleFromSymbol(const char *sym_name)
+{
+    for (auto &it : ElfScanner::findSymbolAll(sym_name, EScanElfType::Any, EScanElfFilter::App))
+    {
+        if (it.second.dynamic())
+        {
+            return (void *)it.first;
+        }
+    }
 }

@@ -17,8 +17,8 @@
 
 void Bootstrap::Run()
 {
-    bypassHardenedIL2CPP();
-    std::this_thread::sleep_for(std::chrono::seconds(5));
+    if (Hardened) bypassHardenedIL2CPP();
+    std::this_thread::sleep_for(std::chrono::seconds(SecondsBeforeInit));
     Debug::Logger::Info("======= Begin FreeCam =======");
     Debug::Logger::Info("Waiting for Unity initializing");
     while (!initializeUnity())
@@ -78,7 +78,7 @@ void Bootstrap::bypassHardenedIL2CPP()
     std::thread(
         [=]
         {
-            std::this_thread::sleep_for(450ms);
+            std::this_thread::sleep_for(std::chrono::milliseconds(SecondsBeforeInit * 1000 - 500));
             UnHook(fn_dlsym);
         })
         .detach();

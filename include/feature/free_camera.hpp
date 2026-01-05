@@ -12,11 +12,11 @@ namespace FreeCam::Feature
         bool ui_layer = false;
         bool zoom_mode = false;
         bool attach_mode = false;
-        UTYPE::GameObject *freeGO = nullptr;
-        std::unique_ptr<Proxy::Camera> freeCam = nullptr;
-        std::unique_ptr<Proxy::Transform> freeTrans = nullptr;
-        UTYPE::GameObject *anchorGO = nullptr;
-        std::unique_ptr<Proxy::Transform> anchorTrans = nullptr;
+        UTYPE::GameObject *freeGO{};
+        std::unique_ptr<Proxy::Camera> freeCam{};
+        std::unique_ptr<Proxy::Transform> freeTrans{};
+        UTYPE::GameObject *anchorGO{};
+        std::unique_ptr<Proxy::Transform> anchorTrans{};
 
         // Properties for Rotate
 #ifdef __ANDROID__
@@ -41,10 +41,11 @@ namespace FreeCam::Feature
         bool IsCurrentFreeCamera();
 
     private:
-        UTYPE::Camera *origCamera;
-        UTYPE::Vector3 origPosition;
-        UTYPE::Quaternion origRotation;
-        UTYPE::GameObject *origGObject;
+        UTYPE::Camera *origCamera{};
+        UTYPE::Vector3 origPosition{};
+        UTYPE::Quaternion origRotation{};
+        UTYPE::GameObject *origGObject{};
+        UTYPE::GameObject *origParent{};
         auto backupOrigCamera() -> void;
         auto selectGameObject() -> UTYPE::Transform *;
 

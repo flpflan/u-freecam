@@ -25,17 +25,25 @@ namespace FreeCam::Feature
         freeGO = UTYPE::GameObject::Create("UE_Freecam");
         UTYPE::GameObject::DontDestroyOnLoad(freeGO);
         static_cast<UTYPE::Transform *>(freeGO->GetTransform())->SetParent(anchorGO->GetTransform());
-        freeGO->SetTag("MainCamera");
+        // freeGO->SetTag("MainCamera");
         freeGO->SetActive(true);
 
         anchorTrans = std::make_unique<Proxy::Transform>(anchorGO->GetTransform());
         freeTrans = std::make_unique<Proxy::Transform>(freeGO->GetTransform());
         freeCam = std::make_unique<Proxy::Camera>(freeGO->AddComponent<UTYPE::Camera *>(UTYPE::Camera::GetUClass()));
 
-        anchorTrans->CopyState(*origGObject->GetTransform());
+        if (origGObject) anchorTrans->CopyState(*origGObject->GetTransform());
         freeTrans->SetLocalPosition(UTYPE::Vector3(0, 0, 0));
         freeTrans->SetLocalRotation(UTYPE::Quaternion(0, 0, 0, 1));
         freeTrans->SetLocalScale(UTYPE::Vector3(1, 1, 1));
+
+        if (Mode == Mode::Depth)
+            freeCam->GetUCamera()->SetDepth(999);
+        else
+            freeGO->SetTag("MainCamera");
+
+        // Attach orignal camera to free camera
+        // origGObject->GetTransform()->SetParent(freeGO->GetTransform());
 
         // Set Cursor
         Proxy::Cursor::DisableCursor();
@@ -62,8 +70,9 @@ namespace FreeCam::Feature
         {
             // if (FreeCamera::IsCurrentFreeCamera())
             // {
+            if (origParent && !origParent->IsDestoryed()) origGObject->GetTransform()->SetParent(origParent->GetTransform());
             origGObject->SetActive(true);
-            origGObject->SetTag("MainCamera");
+            // origGObject->SetTag("MainCamera");
             const auto originTransform = origCamera->GetTransform();
             originTransform->SetPosition(origPosition);
             originTransform->SetRotation(origRotation);

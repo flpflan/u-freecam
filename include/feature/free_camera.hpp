@@ -30,6 +30,12 @@ namespace FreeCam::Feature
         constexpr static float maxMoveSpeed = 25.f;
 
     public:
+        enum class Mode
+        {
+            Depth,
+            MainCamera
+        };
+        Mode Mode{Mode::Depth};
         bool Enabled = false;
 
     public:
@@ -46,6 +52,7 @@ namespace FreeCam::Feature
         UTYPE::Quaternion origRotation{};
         UTYPE::GameObject *origGObject{};
         UTYPE::GameObject *origParent{};
+        auto getMaxDepthCamera() -> UTYPE::Camera *;
         auto backupOrigCamera() -> void;
         auto selectGameObject() -> UTYPE::Transform *;
 

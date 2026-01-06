@@ -1,7 +1,6 @@
 #include "debug/logger.hpp"
 #include "feature/free_camera.hpp"
 #include "utype/unity_engine/physics.hpp"
-#include "debug/test.hpp"
 
 namespace FreeCam::Feature
 {
@@ -27,19 +26,34 @@ namespace FreeCam::Feature
         }
         return nullptr;
     }
+
+    auto FreeCamera::getMaxDepthCamera() -> UTYPE::Camera *
+    {
+        UTYPE::Camera *max{};
+        for (const auto cam : UTYPE::Camera::GetAllCamera())
+        {
+            if (!max)
+                max = static_cast<UTYPE::Camera *>(cam);
+            else if (max->GetDepth() < cam->GetDepth())
+                max = static_cast<UTYPE::Camera *>(cam);
+        }
+        return max;
+    }
     auto FreeCamera::backupOrigCamera() -> void
     {
-        origCamera = UTYPE::Camera::GetMain();
+        origCamera = getMaxDepthCamera();
+        if (!origCamera) return;
         const auto origTransform = origCamera->GetTransform();
+        origParent = static_cast<UTYPE::GameObject *>(origTransform->GetParent()->GetGameObject());
         origPosition = origTransform->GetPosition();
         origRotation = origTransform->GetRotation();
         origGObject = origCamera->GetGameObject();
         origGObject->SetActive(false);
-        origGObject->SetTag("Untagged");
+        if (Mode == Mode::MainCamera) origGObject->SetTag("Untagged");
     }
     bool FreeCamera::IsCurrentFreeCamera()
     {
-        const auto curCam = UTYPE::Camera::GetMain();
+        const auto curCam = Mode == Mode::Depth ? getMaxDepthCamera() : UTYPE::Camera::GetMain();
         if (curCam == nullptr) return false;
         const auto curCamName = curCam->GetName()->ToString();
         if (curCamName == "UE_Freecam") return true;

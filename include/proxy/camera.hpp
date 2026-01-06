@@ -19,5 +19,6 @@ namespace FreeCam::Proxy
         auto ZoomIn(float) -> void;
         auto ZoomOut(float) -> void;
         auto ResetZoom() -> void;
+        auto GetUCamera() -> UTYPE::Camera * { return &cam; }
     };
 }

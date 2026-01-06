@@ -47,6 +47,8 @@ void Bootstrap::Run()
 
 void Bootstrap::Shutdown() {}
 
+static std::shared_ptr<Handle> IL2CPP_LIB_HANDLE;
+
 void Bootstrap::bypassHardenedIL2CPP()
 {
 #ifdef __ANDROID__
@@ -55,7 +57,7 @@ void Bootstrap::bypassHardenedIL2CPP()
 
     using dlsym_t = void *(*)(void *, const char *);
     using JNI_OnLoad_t = jint (*)(JavaVM *, void *);
-    const auto fn_dlsym = (dlsym_t)A_dlsym(handle, "dlsym");
+    const auto fn_dlsym = (dlsym_t)A_dlsym(handle.get(), "dlsym");
     Hook(
         fn_dlsym,
         +[](void *handle, const char *sym_name)
@@ -70,7 +72,7 @@ void Bootstrap::bypassHardenedIL2CPP()
             if (0 == strcmp(sym_name, "il2cpp_init"))
             {
                 // Hijack libil2cpp.so handle
-                IL2CPP_LIB_HANDLE = handle;
+                IL2CPP_LIB_HANDLE = std::make_unique<Handle>(Handle{handle, Handle::Hijacked});
                 // UnHook(fn_dlsym);
             }
             return symbol;
@@ -78,7 +80,10 @@ void Bootstrap::bypassHardenedIL2CPP()
     std::thread(
         [=]
         {
-            std::this_thread::sleep_for(std::chrono::milliseconds(SecondsBeforeInit * 1000 - 500));
+            while (!IL2CPP_LIB_HANDLE)
+            {
+                std::this_thread::sleep_for(100ms);
+            }
             UnHook(fn_dlsym);
         })
         .detach();
@@ -88,7 +93,7 @@ void Bootstrap::bypassHardenedIL2CPP()
 std::pair<void *, UnityResolve::Mode> Bootstrap::getUnityBackend()
 {
 #ifdef __ANDROID__
-    const auto assembly = IL2CPP_LIB_HANDLE ?: GetMoudleFromSymbol("il2cpp_init") ?: A_dlopen("libil2cpp.so", RTLD_NOW);
+    const auto assembly = IL2CPP_LIB_HANDLE.get() ?: (GetMoudleFromSymbol("il2cpp_init") ?: A_dlopen("libil2cpp.so", RTLD_NOW)).release();
 #else
     const auto assembly = GetModuleHandleA("GameAssembly.dll");
 #endif
@@ -103,7 +108,7 @@ std::pair<void *, UnityResolve::Mode> Bootstrap::getUnityBackend()
     for (const auto &monoModule : monoModules)
     {
 #ifdef __ANDROID__
-        const auto monoHandle = A_dlopen(monoModule, RTLD_NOW);
+        const auto monoHandle = A_dlopen(monoModule, RTLD_NOW).release();
 #else
         const auto monoHandle = GetModuleHandleA(monoModule);
 #endif

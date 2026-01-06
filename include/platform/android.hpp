@@ -3,23 +3,55 @@
 #include "KittyMemory/KittyInclude.hpp"
 #include "xdl.h"
 #include <dlfcn.h>
+#include <memory>
+#include <variant>
 
-inline void *A_dlopen(const char *path, int flags)
+struct Handle
 {
-    void *handle;
+    enum TYPE
+    {
+        Hijacked,
+        Emulated,
+        Native,
+        Base,
+        XDL,
+    };
+    std::variant<void *, ElfScanner> handle;
+    TYPE ty;
+};
+
+inline std::unique_ptr<Handle> A_dlopen(const char *path, int flags)
+{
+    void *handle{};
     // Emulator
-    if ((handle = NativeBridgeLinker::dlopen(path, flags))) return handle;
+    if ((handle = NativeBridgeLinker::dlopen(path, flags))) return std::make_unique<Handle>(Handle{handle, Handle::Emulated});
     // Real device
-    if ((handle = xdl_open(path, XDL_DEFAULT))) return handle;
+    if ((handle = xdl_open(path, XDL_DEFAULT))) return std::make_unique<Handle>(Handle{handle, Handle::XDL});
+    if ((handle = dlopen(path, flags))) return std::make_unique<Handle>(Handle{handle, Handle::Native});
 }
 
-inline void *A_dlsym(void *handle, const char *sym_name)
+inline void *A_dlsym(Handle *handle, const char *sym_name)
 {
-    void *symbol;
-    // Emulator
-    if ((symbol = NativeBridgeLinker::dlsym(handle, sym_name))) return symbol;
-    // Real device
-    if ((symbol = xdl_sym(handle, sym_name, NULL))) return symbol;
+    void *symbol{};
+    if (!handle || !sym_name) return nullptr;
+    switch (handle->ty)
+    {
+    case Handle::Hijacked:
+        if ((symbol = dlsym(std::get<void *>(handle->handle), sym_name))) return symbol;
+        break;
+    case Handle::Emulated:
+        if ((symbol = NativeBridgeLinker::dlsym(std::get<void *>(handle->handle), sym_name))) return symbol;
+        break;
+    case Handle::Native:
+        if ((symbol = dlsym(std::get<void *>(handle->handle), sym_name))) return symbol;
+        break;
+    case Handle::Base:
+        if ((symbol = (void *)std::get<ElfScanner>(handle->handle).findSymbol(sym_name))) return symbol;
+        break;
+    case Handle::XDL:
+        if ((symbol = xdl_sym(std::get<void *>(handle->handle), sym_name, NULL))) return symbol;
+        break;
+    }
 }
 
 #include <jni.h>
@@ -33,13 +65,13 @@ inline jint _Hook_JNI_OnLoad(JavaVM *vm, void *reserved)
     return CALL_ORIGNAL(vm, reserved);
 }
 
-inline void *GetMoudleFromSymbol(const char *sym_name)
+inline std::unique_ptr<Handle> GetMoudleFromSymbol(const char *sym_name)
 {
     for (auto &it : ElfScanner::findSymbolAll(sym_name, EScanElfType::Any, EScanElfFilter::App))
     {
         if (it.second.dynamic())
         {
-            return (void *)it.first;
+            return std::make_unique<Handle>(Handle{it.second, Handle::Base});
         }
     }
 }

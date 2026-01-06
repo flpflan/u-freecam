@@ -20,17 +20,17 @@ struct Handle
     TYPE ty;
 };
 
-inline std::unique_ptr<Handle> A_dlopen(const char *path, int flags)
+inline std::unique_ptr<Handle> A_get_handle(const char *path)
 {
     void *handle{};
     // Emulator
-    if ((handle = NativeBridgeLinker::dlopen(path, flags))) return std::make_unique<Handle>(Handle{handle, Handle::Emulated});
+    if ((handle = NativeBridgeLinker::dlopen(path, RTLD_NOW))) return std::make_unique<Handle>(Handle{handle, Handle::Emulated});
     // Real device
     if ((handle = xdl_open(path, XDL_DEFAULT))) return std::make_unique<Handle>(Handle{handle, Handle::XDL});
-    if ((handle = dlopen(path, flags))) return std::make_unique<Handle>(Handle{handle, Handle::Native});
+    if ((handle = dlopen(path, RTLD_NOW))) return std::make_unique<Handle>(Handle{handle, Handle::Native});
 }
 
-inline void *A_dlsym(Handle *handle, const char *sym_name)
+inline void *A_symbol_resolve(Handle *handle, const char *sym_name)
 {
     void *symbol{};
     if (!handle || !sym_name) return nullptr;

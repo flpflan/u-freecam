@@ -52,12 +52,12 @@ static std::shared_ptr<Handle> IL2CPP_LIB_HANDLE;
 void Bootstrap::bypassHardenedIL2CPP()
 {
 #ifdef __ANDROID__
-    const auto handle = A_dlopen("libdl.so", RTLD_NOW);
+    const auto handle = A_get_handle("libdl.so");
     // if (!handle) return Debug::Logger::Debug("dlerror {}", dlerror());
 
     using dlsym_t = void *(*)(void *, const char *);
     using JNI_OnLoad_t = jint (*)(JavaVM *, void *);
-    const auto fn_dlsym = (dlsym_t)A_dlsym(handle.get(), "dlsym");
+    const auto fn_dlsym = (dlsym_t)A_symbol_resolve(handle.get(), "dlsym");
     Hook(
         fn_dlsym,
         +[](void *handle, const char *sym_name)
@@ -93,7 +93,7 @@ void Bootstrap::bypassHardenedIL2CPP()
 std::pair<void *, UnityResolve::Mode> Bootstrap::getUnityBackend()
 {
 #ifdef __ANDROID__
-    IL2CPP_LIB_HANDLE = IL2CPP_LIB_HANDLE ?: GetMoudleFromSymbol("il2cpp_init") ?: A_dlopen("libil2cpp.so", RTLD_NOW);
+    IL2CPP_LIB_HANDLE = IL2CPP_LIB_HANDLE ?: GetMoudleFromSymbol("il2cpp_init") ?: A_get_handle("libil2cpp.so");
     const auto assembly = IL2CPP_LIB_HANDLE.get();
 #else
     const auto assembly = GetModuleHandleA("GameAssembly.dll");
@@ -109,7 +109,7 @@ std::pair<void *, UnityResolve::Mode> Bootstrap::getUnityBackend()
     for (const auto &monoModule : monoModules)
     {
 #ifdef __ANDROID__
-        const auto monoHandle = A_dlopen(monoModule, RTLD_NOW).release();
+        const auto monoHandle = A_get_handle(monoModule).release();
 #else
         const auto monoHandle = GetModuleHandleA(monoModule);
 #endif

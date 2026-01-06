@@ -61,5 +61,8 @@ namespace FreeCam::Feature
         auto updateRoll() -> void;
         auto updateZoom() -> void;
         auto updateAttachMode() -> void;
+
+        auto enterAttachMode(UTYPE::Transform *target) -> void;
+        auto exitAttachMode() -> void;
     };
 }

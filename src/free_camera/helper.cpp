@@ -7,8 +7,9 @@ namespace FreeCam::Feature
     auto FreeCamera::selectGameObject() -> UTYPE::Transform *
     {
         const auto screenCenter = UTYPE::Vector2(UTYPE::Screen::get_width() / 2.f, UTYPE::Screen::get_height() / 2.f);
+        const auto cam = freeCam->GetUCamera();
 
-        const auto ray = UTYPE::Camera::GetMain()->ScreenPointToRay(screenCenter);
+        const auto ray = cam->ScreenPointToRay(screenCenter);
         const auto hit = std::make_unique<UTYPE::RaycastHit>();
         if (UTYPE::Physics::Raycast(ray, &*hit, 100.f))
         {

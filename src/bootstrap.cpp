@@ -157,10 +157,9 @@ bool Bootstrap::attachToGameLoop()
 #if defined(__ANDROID__) && defined(__aarch64__)
     constexpr auto module = "libunity.so";
     constexpr auto patterns = std::array{
-        "FF C3 05 D1 FC A3 00 F9 F5 53 15 A9 F3 7B 16 A9 08 78 40 F9", // 2021.3.x
-        "FF C3 05 D1 FC A3 00 F9 F5 53 15 A9 F3 7B 16 A9 08 88 40 F9", // 2021.3.x
-        "FF C3 05 D1 FD A3 00 F9 FE 57 15 A9 F4 4F 16 A9 F4 03 01 2A", // 2022.3.33f1
-        "FF C3 05 D1 FD A3 00 F9 FE 57 15 A9 F4 4F 16 A9 F3 03 01 2A", // 2022.3.51f1
+        "FF C3 05 D1 FC A3 00 F9 F5 53 15 A9 F3 7B 16 A9 08 78 40 F9 F3 03 00 AA F4 03 01 2A", // 2021.3.56f2
+        "FF C3 05 D1 FC A3 00 F9 F5 53 15 A9 F3 7B 16 A9 08 88 40 F9",                         // 2021.3.x
+        "FF C3 05 D1 FD A3 00 F9 FE 57 15 A9 F4 4F 16 A9 F4 03 01 2A F3 03 00 AA ? FD FF 97",  // 2022.3.33f1 / 2022.3.62f2 / 2022.3.51f1
     };
     // constexpr auto patterns = std::array{"FF C3 06 D1 FC B3 00 F9 F9 63 17 A9 F7 5B 18 A9 F5 53 19 A9 F3 7B 1A A9 F3 03 00 AA"}; // ExecutePlayerLoop
 #else
@@ -176,6 +175,7 @@ bool Bootstrap::attachToGameLoop()
     CallUpdateMethod_t CallUpdateMethod = nullptr;
     for (const auto pattern : patterns)
     {
+        Debug::Logger::Info("Using pattern: {}", pattern);
         if ((CallUpdateMethod = (CallUpdateMethod_t)PatternScan(module, pattern))) break;
     }
     if (CallUpdateMethod)

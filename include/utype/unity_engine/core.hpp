@@ -49,6 +49,11 @@ namespace UTYPE
         }
     };
 
+    class Component : public UTYPE::Component
+    {
+        UNITY_CLASS_DECL("UnityEngine.CoreModule.dll", Component)
+    };
+
     class MonoBehaviour : public UTYPE::MonoBehaviour
     {
         UNITY_CLASS_DECL("UnityEngine.CoreModule.dll", MonoBehaviour)
@@ -58,8 +63,18 @@ namespace UTYPE
     {
         UNITY_CLASS_DECL("UnityEngine.CoreModule.dll", Camera)
     public:
+        enum class CameraClearFlags
+        {
+            Skybox = 1,
+            Color,
+            SolidColor = 2,
+            Depth,
+            Nothing
+        };
         inline static auto GetMain() -> Camera * { return static_cast<Camera *>(UTYPE::Camera::GetMain()); }
         inline auto GetGameObject() -> GameObject * { return static_cast<GameObject *>(UTYPE::Camera::GetGameObject()); }
+        UNITY_METHOD(CameraClearFlags, get_clearFlags, ())
+        UNITY_METHOD(void, set_clearFlags, (CameraClearFlags flags), flags)
     };
 
     // struct Quaternion : public UTYPE::Quaternion

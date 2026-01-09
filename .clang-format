@@ -9,7 +9,8 @@ UseTab: Never
 BreakBeforeBraces: Allman
 AllowShortIfStatementsOnASingleLine: WithoutElse
 IndentCaseLabels: false
-ColumnLimit: 200
+ColumnLimit: 120
+ReflowComments: false
 AccessModifierOffset: -4
 NamespaceIndentation: All
 FixNamespaceComments: false

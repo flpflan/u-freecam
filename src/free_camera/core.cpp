@@ -33,9 +33,9 @@ namespace FreeCam::Feature
         freeCam = std::make_unique<Proxy::Camera>(freeGO->AddComponent<UTYPE::Camera *>(UTYPE::Camera::GetUClass()));
 
         if (origGObject) anchorTrans->CopyState(*origGObject->GetTransform());
-        freeTrans->SetLocalPosition(UTYPE::Vector3(0, 0, 0));
-        freeTrans->SetLocalRotation(UTYPE::Quaternion(0, 0, 0, 1));
-        freeTrans->SetLocalScale(UTYPE::Vector3(1, 1, 1));
+        freeTrans->SetLocalPosition({0, 0, 0});
+        freeTrans->SetLocalRotation({0, 0, 0, 1});
+        freeTrans->SetLocalScale({1, 1, 1});
 
         if (Mode == Mode::Depth)
             freeCam->GetUCamera()->SetDepth(999);

@@ -24,7 +24,7 @@ if(NOT (${CMAKE_SYSTEM_NAME} STREQUAL "Android" AND ${CMAKE_SYSTEM_VERSION} LESS
 endif()
 
 # ===== Taget Freecam Definition =====
-file(GLOB FREECAM_SRC
+file(GLOB_RECURSE FREECAM_SRC CONFIGURE_DEPENDS
     src/*.cpp
     src/proxy/*.cpp
     src/free_camera/*.cpp
@@ -32,7 +32,7 @@ file(GLOB FREECAM_SRC
 
 add_library(${PROJECT_NAME} SHARED ${FREECAM_SRC})
 
-target_include_directories(${PROJECT_NAME} PRIVATE include)
+target_include_directories(${PROJECT_NAME} PUBLIC include)
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_20)
 
@@ -49,6 +49,7 @@ if(UNIX AND NOT APPLE)
     target_compile_options(${PROJECT_NAME} PRIVATE -fPIC -fdeclspec)
     target_link_options(${PROJECT_NAME} PRIVATE
         -fseh-exceptions
+        -Wl,--icf=all
         -Wl,-z,max-page-size=16384)
 elseif(WIN32)
     target_compile_options(${PROJECT_NAME} PRIVATE /MT /Zc:preprocessor)

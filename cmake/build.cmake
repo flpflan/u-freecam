@@ -14,5 +14,7 @@ unset(ARCH_SUFFIX)
 # Profile
 if(${CMAKE_BUILD_TYPE} STREQUAL "Release")
     include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/profile/release.cmake)
+else()
+    include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/profile/debug.cmake)
 endif()
 

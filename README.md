@@ -48,11 +48,12 @@ For example, on Windows, you can use the DLL injection tool that comes with Chea
 |冻结速度 / 恢复正常速度 -> Backspace|Freeze speed / Resume speed -> Backspace|
 
 ## 已测试游戏 (Tested Game)
-- 蔚蓝档案 (PC端 / [移动端](https://www.bilibili.com/video/BV1XRpmz8EBW)) / Blue Archive (PC / [Mobile](https://youtu.be/40Od_dHH5oY))
-- 喵斯快跑 (PC端 / 移动端) / Muse Dash (PC / Mobile)
+- [蔚蓝档案](https://www.bilibili.com/video/BV1XRpmz8EBW) / [Blue Archive](https://youtu.be/40Od_dHH5oY)
+- 喵斯快跑 / Muse Dash
 - 托兰异世录 (移动端) / Toram Online (Moblie)
+- 明日方舟：终末地 / Arknights: Endfield
 
 ## Special Thanks
 - [UnityResolve.hpp](https://github.com/issuimo/UnityResolve.hpp)
 
-[^1]: 对于部分魔改/加固的引擎，须在游戏启动时即刻注入。
+[^1]: 对于部分魔改/加固的引擎，需要在游戏启动时一并注入。

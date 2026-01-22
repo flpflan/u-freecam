@@ -7,75 +7,80 @@
 #include <vector>
 
 #ifdef __ANDROID__
-#include <unistd.h>
 #include "KittyMemory/KittyInclude.hpp"
 #include "KittyMemory/KittyScanner.hpp"
 
 inline auto PatternScan(const char *const moduleName, const char *const signature) -> uintptr_t
 {
+    Debug::Logger::Debug("PatternScan {} with pattern {}", moduleName, signature);
     const auto unityELF = ElfScanner::findElf(moduleName);
-    const auto r = KittyScanner::findIdaPatternAll(unityELF.baseSegment().startAddress, unityELF.baseSegment().endAddress, signature);
-    if (r.empty()) return 0;
-    for (const auto p : r)
+    for (const auto segment : unityELF.segments())
     {
-        Debug::Logger::Debug("pattern found at: {}", p);
+        if (!segment.readable) continue;
+        Debug::Logger::Debug("Using segment {} - ", segment.startAddress, segment.endAddress);
+        if (const auto found = KittyScanner::findIdaPatternFirst(segment.startAddress, segment.endAddress, signature))
+        {
+            Debug::Logger::Debug("pattern found at: {}", found);
+            return found;
+        }
     }
-    return r.back();
+    return 0;
 }
 #else
 // Reference: https://github.com/Taiga74164/BA-Cheeto
 inline auto PatternScan(const char *const moduleName, const char *const signature) -> uintptr_t
- {
-     static auto patternToByte = [](const char *pattern)
-     {
-         auto bytes = std::vector<int>{};
-         const auto start = const_cast<char *>(pattern);
-         const auto end = const_cast<char *>(pattern) + strlen(pattern);
+{
+    static auto patternToByte = [](const char *pattern)
+    {
+        auto bytes = std::vector<int>{};
+        const auto start = const_cast<char *>(pattern);
+        const auto end = const_cast<char *>(pattern) + strlen(pattern);
 
-         for (auto current = start; current < end; ++current)
-         {
-             if (*current == '?')
-             {
-                 ++current;
-                 if (*current == '?' && current < end) ++current;
-                 bytes.push_back(-1);
-             }
-             else
-             {
-                 bytes.push_back(strtoul(current, &current, 16));
-             }
-         }
-         return bytes;
-     };
-     const auto module = reinterpret_cast<uintptr_t>(GetModuleHandleA(moduleName));
-     const auto dosHeader = reinterpret_cast<PIMAGE_DOS_HEADER>(module);
-     const auto ntHeaders = reinterpret_cast<PIMAGE_NT_HEADERS>(reinterpret_cast<uint8_t *>(module) + dosHeader->e_lfanew);
+        for (auto current = start; current < end; ++current)
+        {
+            if (*current == '?')
+            {
+                ++current;
+                if (*current == '?' && current < end) ++current;
+                bytes.push_back(-1);
+            }
+            else
+            {
+                bytes.push_back(strtoul(current, &current, 16));
+            }
+        }
+        return bytes;
+    };
+    const auto module = reinterpret_cast<uintptr_t>(GetModuleHandleA(moduleName));
+    const auto dosHeader = reinterpret_cast<PIMAGE_DOS_HEADER>(module);
+    const auto ntHeaders =
+        reinterpret_cast<PIMAGE_NT_HEADERS>(reinterpret_cast<uint8_t *>(module) + dosHeader->e_lfanew);
 
-     const auto sizeOfImage = ntHeaders->OptionalHeader.SizeOfImage;
-     auto patternBytes = patternToByte(signature);
-     const auto scanBytes = reinterpret_cast<uint8_t *>(module);
+    const auto sizeOfImage = ntHeaders->OptionalHeader.SizeOfImage;
+    auto patternBytes = patternToByte(signature);
+    const auto scanBytes = reinterpret_cast<uint8_t *>(module);
 
-     const auto s = patternBytes.size();
-     const auto d = patternBytes.data();
+    const auto s = patternBytes.size();
+    const auto d = patternBytes.data();
 
-     for (auto i = 0ul; i < sizeOfImage - s; ++i)
-     {
-         bool found = true;
-         for (auto j = 0ul; j < s; ++j)
-         {
-             if (scanBytes[i + j] != d[j] && d[j] != -1)
-             {
-                 found = false;
-                 break;
-             }
-         }
-         if (found)
-         {
-             return module + i;
-         }
-     }
-     return 0;
- }
+    for (auto i = 0ul; i < sizeOfImage - s; ++i)
+    {
+        bool found = true;
+        for (auto j = 0ul; j < s; ++j)
+        {
+            if (scanBytes[i + j] != d[j] && d[j] != -1)
+            {
+                found = false;
+                break;
+            }
+        }
+        if (found)
+        {
+            return module + i;
+        }
+    }
+    return 0;
+}
 #endif
 
 // struct ModuleInfo

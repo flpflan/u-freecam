@@ -17,7 +17,7 @@ inline auto PatternScan(const char *const moduleName, const char *const signatur
     for (const auto segment : unityELF.segments())
     {
         if (!segment.readable) continue;
-        Debug::Logger::Debug("Using segment {} - ", segment.startAddress, segment.endAddress);
+        Debug::Logger::Debug("Using segment {} - {}", segment.startAddress, segment.endAddress);
         if (const auto found = KittyScanner::findIdaPatternFirst(segment.startAddress, segment.endAddress, signature))
         {
             Debug::Logger::Debug("pattern found at: {}", found);

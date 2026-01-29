@@ -1,0 +1,6 @@
+if(${CMAKE_SYSTEM_NAME} STREQUAL "Android")
+    add_definitions(-DWINDOWS_MODE=0 -DANDROID_MODE=1 -DLINUX_MODE=0)
+elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
+    add_definitions(-DWINDOWS_MODE=1 -DANDROID_MODE=0 -DLINUX_MODE=0)
+endif()
+

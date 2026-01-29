@@ -1,0 +1,64 @@
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+    env:
+      DEBUG_ANDROID_API_LEVEL: 33
+      GENERATOR: "Ninja"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Ninja
+        uses: ashutoshvarma/setup-ninja@master
+
+      - name: Setup Android NDK
+        uses: nttld/setup-ndk@v1
+        with:
+          ndk-version: r27
+          add-to-path: true
+
+      - name: Export ANDROID_NDK
+        run: echo "ANDROID_NDK=$ANDROID_NDK_HOME" >> $GITHUB_ENV
+
+      - name: Build Android debug
+        run: make debug-all
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: android-debug
+          path: |
+            build/**/*.so
+
+  build-windows:
+    runs-on: windows-latest
+
+    strategy:
+      matrix:
+        build_type: [Debug]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure CMake
+        run: >
+          cmake -S . -B build
+          -G "Visual Studio 17 2022"
+          -A x64
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+
+      - name: Build
+        run: >
+          cmake --build build
+          --config ${{ matrix.build_type }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-debug
+          path: |
+            build/**/*.dll

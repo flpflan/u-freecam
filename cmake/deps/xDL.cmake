@@ -11,6 +11,6 @@ target_include_directories(xdl PUBLIC ${XDL_BASE}/include ${XDL_BASE})
 # target_compile_options(xdl PRIVATE -Os -ffunction-sections -fdata-sections)
 # target_link_options(xdl PRIVATE -Os -Wl,--exclude-libs,ALL -Wl,--gc-sections)
 
-if((${ANDROID_ABI} STREQUAL "arm64-v8a") OR (${ANDROID_ABI} STREQUAL "x86_64"))
+if((${CMAKE_ANDROID_ARCH_ABI} STREQUAL "arm64-v8a") OR (${CMAKE_ANDROID_ARCH_ABI} STREQUAL "x86_64"))
     target_link_options(xdl PUBLIC "-Wl,-z,max-page-size=16384")
 endif()

@@ -4,7 +4,6 @@
 // #include <fstream>
 // #include <optional>
 // #include <sstream>
-#include <vector>
 
 #ifdef __ANDROID__
 #include "KittyMemory/KittyInclude.hpp"

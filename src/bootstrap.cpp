@@ -2,7 +2,7 @@
 #include "core.hpp"
 #include "debug/logger.hpp"
 #include "memory/hook.hpp"
-#include "memory/memory.hpp"
+#include "memory/scanner.hpp"
 #include "utype/unity_engine/time.hpp"
 
 #include <array>
@@ -14,6 +14,8 @@
 #else
 #include "Windows.h"
 #endif
+
+using namespace std::chrono_literals;
 
 void Bootstrap::Run()
 {
@@ -159,17 +161,18 @@ bool Bootstrap::attachToGameLoop()
     constexpr auto patterns = std::array{
         "FF C3 05 D1 FC A3 00 F9 F5 53 15 A9 F3 7B 16 A9 08 78 40 F9 F3 03 00 AA F4 03 01 2A", // 2021.3.56f2
         "FF C3 05 D1 FC A3 00 F9 F5 53 15 A9 F3 7B 16 A9 08 88 40 F9",                         // 2021.3.x
-        "FF C3 05 D1 FD A3 00 F9 FE 57 15 A9 F4 4F 16 A9 F4 03 01 2A F3 03 00 AA ? FD FF 97",  // 2022.3.33f1 / 2022.3.62f2 / 2022.3.51f1
+        "FF C3 05 D1 FD A3 00 F9 FE 57 15 A9 F4 4F 16 A9 F4 03 01 2A F3 03 00 AA ? FD FF 97", // 2022.3.33f1 / 2022.3.62f2 / 2022.3.51f1
     };
     // constexpr auto patterns = std::array{"FF C3 06 D1 FC B3 00 F9 F9 63 17 A9 F7 5B 18 A9 F5 53 19 A9 F3 7B 1A A9 F3 03 00 AA"}; // ExecutePlayerLoop
 #else
     constexpr auto module = "UnityPlayer.dll";
-    constexpr auto patterns = std::array{"48 89 5c 24 ? 57 48 83 ec ? 48 8b 41 ? 8b fa 48 8b d9 48 85 c0 74 ? 80 78",       // 2017
-                                         "48 89 5c 24 ? 57 48 83 ec ? 48 8b 81 ? ? ? ? 8b fa 48 8b d9 48 85 c0 74 ? 80 78", // 2018
-                                         "48 89 5c 24 ? 56 48 83 ec ? 48 8b 81 ? ? ? ? 8b f2",                              // 2019
-                                         "48 89 5c 24 ? 57 48 83 ec ? 48 8b 81 ? ? ? ? 8b fa 48 8b d9 48 85 c0 74 ? 80 78", // 2021
-                                         "48 89 74 24 ? 57 48 83 ec ? 8b f2 48 8b f9 e8 ? ? ? ? 84 c0",                     // 2022
-                                         "48 89 5c 24 ? 56 48 83 ec ? 8b f2 48 8b d9 e8 ? ? ? ? 84 c0 0f 85"};              // 6000
+    constexpr auto patterns =
+        std::array{"48 89 5c 24 ? 57 48 83 ec ? 48 8b 41 ? 8b fa 48 8b d9 48 85 c0 74 ? 80 78",       // 2017
+                   "48 89 5c 24 ? 57 48 83 ec ? 48 8b 81 ? ? ? ? 8b fa 48 8b d9 48 85 c0 74 ? 80 78", // 2018
+                   "48 89 5c 24 ? 56 48 83 ec ? 48 8b 81 ? ? ? ? 8b f2",                              // 2019
+                   "48 89 5c 24 ? 57 48 83 ec ? 48 8b 81 ? ? ? ? 8b fa 48 8b d9 48 85 c0 74 ? 80 78", // 2021
+                   "48 89 74 24 ? 57 48 83 ec ? 8b f2 48 8b f9 e8 ? ? ? ? 84 c0",                     // 2022
+                   "48 89 5c 24 ? 56 48 83 ec ? 8b f2 48 8b d9 e8 ? ? ? ? 84 c0 0f 85"};              // 6000
 #endif
 
     CallUpdateMethod_t CallUpdateMethod = nullptr;

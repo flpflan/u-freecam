@@ -7,10 +7,10 @@
 #include "spdlog/sinks/basic_file_sink.h"
 #endif
 
-using namespace std::chrono_literals;
-
 namespace Debug::Logger
 {
+    using spdlog::format_string_t;
+
     // Setup Logger (Thread Safe)
     inline auto logger()
     {
@@ -24,11 +24,11 @@ namespace Debug::Logger
 #ifdef NDEBUG
             _logger->set_level(spdlog::level::info);
 #else
-            _logger->set_level(spdlog::level::debug);
+            _logger->set_level(spdlog::level::trace);
 #endif
             spdlog::set_default_logger(_logger);
             spdlog::set_pattern("[%Y-%m-%d %H:%M:%S.%e] [%l] %v");
-            spdlog::flush_every(1s);
+            spdlog::flush_every(std::chrono::seconds(1));
             spdlog::flush_on(spdlog::level::warn);
             return _logger;
         }();
@@ -36,7 +36,17 @@ namespace Debug::Logger
     }
     inline void ShutDown() { spdlog::shutdown(); }
     template <typename... Args>
-    void Debug(const fmt::format_string<Args...> &fmt, Args &&...args)
+    void Trace(const format_string_t<Args...> &fmt, Args &&...args)
+    {
+        logger()->trace(fmt, std::forward<Args>(args)...);
+    }
+    template <typename T>
+    void Trace(const T &fmt)
+    {
+        logger()->trace(fmt);
+    }
+    template <typename... Args>
+    void Debug(const format_string_t<Args...> &fmt, Args &&...args)
     {
         logger()->debug(fmt, std::forward<Args>(args)...);
     }
@@ -46,7 +56,7 @@ namespace Debug::Logger
         logger()->debug(fmt);
     }
     template <typename... Args>
-    void Info(const fmt::format_string<Args...> &fmt, Args &&...args)
+    void Info(const format_string_t<Args...> &fmt, Args &&...args)
     {
         logger()->info(fmt, std::forward<Args>(args)...);
     }
@@ -56,7 +66,7 @@ namespace Debug::Logger
         logger()->info(fmt);
     }
     template <typename... Args>
-    void Warn(const fmt::format_string<Args...> &fmt, Args &&...args)
+    void Warn(const format_string_t<Args...> &fmt, Args &&...args)
     {
         logger()->warn(fmt, std::forward<Args>(args)...);
     }
@@ -66,7 +76,7 @@ namespace Debug::Logger
         logger()->warn(fmt);
     }
     template <typename... Args>
-    void Error(const fmt::format_string<Args...> &fmt, Args &&...args)
+    void Error(const format_string_t<Args...> &fmt, Args &&...args)
     {
         logger()->error(fmt, std::forward<Args>(args)...);
     }
@@ -76,7 +86,7 @@ namespace Debug::Logger
         logger()->error(fmt);
     }
     template <typename... Args>
-    void Critical(const fmt::format_string<Args...> &fmt, Args &&...args)
+    void Critical(const format_string_t<Args...> &fmt, Args &&...args)
     {
         logger()->critical(fmt, std::forward<Args>(args)...);
     }

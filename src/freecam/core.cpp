@@ -22,7 +22,8 @@ namespace FreeCam::Feature
         anchorGO->SetActive(true);
         UTYPE::GameObject::DontDestroyOnLoad(anchorGO);
 
-        freeGO = UTYPE::GameObject::Create("UE_Freecam");
+        // freeGO = UTYPE::GameObject::Create("UE_Freecam");
+        freeGO = static_cast<UTYPE::GameObject *>(UTYPE::GameObject::Instantiate(origGObject));
         UTYPE::GameObject::DontDestroyOnLoad(freeGO);
         static_cast<UTYPE::Transform *>(freeGO->GetTransform())->SetParent(anchorGO->GetTransform());
         // freeGO->SetTag("MainCamera");
@@ -30,7 +31,8 @@ namespace FreeCam::Feature
 
         anchorTrans = std::make_unique<Proxy::Transform>(anchorGO->GetTransform());
         freeTrans = std::make_unique<Proxy::Transform>(freeGO->GetTransform());
-        freeCam = std::make_unique<Proxy::Camera>(freeGO->AddComponent<UTYPE::Camera *>(UTYPE::Camera::GetUClass()));
+        // freeCam = std::make_unique<Proxy::Camera>(freeGO->AddComponent<UTYPE::Camera *>(UTYPE::Camera::GetUClass()));
+        freeCam = std::make_unique<Proxy::Camera>(freeGO->GetComponent<UTYPE::Camera *>(UTYPE::Camera::GetUClass()));
 
         if (origGObject) anchorTrans->CopyState(*origGObject->GetTransform());
         freeTrans->SetLocalPosition({0, 0, 0});
@@ -70,18 +72,28 @@ namespace FreeCam::Feature
         {
             // if (FreeCamera::IsCurrentFreeCamera())
             // {
-            if (origParent && !origParent->IsDestoryed()) origGObject->GetTransform()->SetParent(origParent->GetTransform());
-            origGObject->SetActive(true);
+            if (origParent && !origParent->IsDestoryed())
+                origGObject->GetTransform()->SetParent(origParent->GetTransform());
+            if (DisableOrigCam) origGObject->SetActive(true);
+            // if (Mode == Mode::MainCamera)
+            // {
             // origGObject->SetTag("MainCamera");
-            const auto originTransform = origCamera->GetTransform();
-            originTransform->SetPosition(origPosition);
-            originTransform->SetRotation(origRotation);
+            // const auto originTransform = origCamera->GetTransform();
+            // originTransform->SetPosition(origPosition);
+            // originTransform->SetRotation(origRotation);
+            // }
             // }
         }
         Proxy::Cursor::EnableCursor();
     }
     auto FreeCamera::Update() -> void
     {
+        // TODO: Disabled by guard
+        // if (Input::GetKeyDown(F))
+        //     suspend();
+        // else if (Input::GetKeyUp(F)) // FIXME: GetKeyUp / GetKey may crash
+        //     resume();
+
         if (!ui_layer)
         {
             updateZoom();
@@ -94,6 +106,45 @@ namespace FreeCam::Feature
         {
             Proxy::Cursor::ToggleCursor();
             ui_layer = !ui_layer;
+        }
+    }
+    // TODO: merge enable/resume, disable/suspend
+    auto FreeCamera::suspend() -> void
+    {
+        if (!freeGO->IsDestoryed())
+        {
+            freeGO->SetActive(false);
+            if (Mode == Mode::MainCamera)
+            {
+                freeGO->SetTag("Untagged");
+            }
+        }
+        if (!origGObject->IsDestoryed())
+        {
+            origGObject->SetActive(true);
+            if (Mode == Mode::MainCamera)
+            {
+                origGObject->SetTag("MainCamera");
+            }
+        }
+    }
+    auto FreeCamera::resume() -> void
+    {
+        if (!freeGO->IsDestoryed())
+        {
+            freeGO->SetActive(true);
+            if (Mode == Mode::MainCamera)
+            {
+                freeGO->SetTag("MainCamera");
+            }
+            if (!origGObject->IsDestoryed())
+            {
+                origGObject->SetActive(false);
+                if (Mode == Mode::MainCamera)
+                {
+                    origGObject->SetTag("Untagged");
+                }
+            }
         }
     }
 }

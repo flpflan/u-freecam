@@ -82,7 +82,8 @@
 #elif ANDROID_MODE || LINUX_MODE || IOS_MODE || HARMONYOS_MODE
 #include <dlfcn.h>
 #include <locale>
-#include "platform/android.hpp"
+#include "freecam/platform/android.hpp"
+using namespace platform::android;
 #define UNITY_CALLING_CONVENTION
 #endif
 
@@ -669,7 +670,7 @@ class UnityResolve final {
             address_[funcName] = static_cast<void *>(GetProcAddress(static_cast<HMODULE>(hmodule_), funcName.c_str()));
 #elif ANDROID_MODE || LINUX_MODE || IOS_MODE || HARMONYOS_MODE
         if (address_.find(funcName) == address_.end() || !address_[funcName]) {
-            address_[funcName] = A_symbol_resolve((Handle*)hmodule_, funcName.c_str());
+            address_[funcName] = ASymbolQuery::resolve(*(ASymbolQuery*)hmodule_, funcName);
         }
 #endif
 

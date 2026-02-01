@@ -57,7 +57,7 @@ namespace FreeCam::Feature
         {
             if (!attach_mode && anchorTrans->GetParent() == nullptr)
             {
-                if (const auto target = selectGameObject())
+                if (const auto target = SelectGameObject())
                     enterAttachMode(target);
                 else
                     Debug::Logger::Info("Target not found");

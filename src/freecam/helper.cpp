@@ -4,10 +4,10 @@
 
 namespace FreeCam::Feature
 {
-    auto FreeCamera::selectGameObject() -> UTYPE::Transform *
+    auto FreeCamera::SelectGameObject() -> UTYPE::Transform *
     {
         const auto screenCenter = UTYPE::Vector2(UTYPE::Screen::get_width() / 2.f, UTYPE::Screen::get_height() / 2.f);
-        const auto cam = freeCam->GetUCamera();
+        const auto cam = GetMaxDepthCamera();
 
         const auto ray = cam->ScreenPointToRay(screenCenter);
         const auto hit = std::make_unique<UTYPE::RaycastHit>();
@@ -28,7 +28,7 @@ namespace FreeCam::Feature
         return nullptr;
     }
 
-    auto FreeCamera::getMaxDepthCamera() -> UTYPE::Camera *
+    auto FreeCamera::GetMaxDepthCamera() -> UTYPE::Camera *
     {
         UTYPE::Camera *max{};
         for (const auto cam : UTYPE::Camera::GetAllCamera())
@@ -42,19 +42,26 @@ namespace FreeCam::Feature
     }
     auto FreeCamera::backupOrigCamera() -> void
     {
-        origCamera = getMaxDepthCamera();
-        if (!origCamera) return;
+        // Get original camera or return
+        do
+        {
+            if ((origCamera = UTYPE::Camera::GetMain())) break;
+            if ((origCamera = GetMaxDepthCamera())) break;
+            if (!origCamera) return;
+        } while (0);
+
         const auto origTransform = origCamera->GetTransform();
-        origParent = static_cast<UTYPE::GameObject *>(origTransform->GetParent()->GetGameObject());
+        if (const auto parent = origTransform->GetParent())
+            origParent = static_cast<UTYPE::GameObject *>(parent->GetGameObject());
         origPosition = origTransform->GetPosition();
         origRotation = origTransform->GetRotation();
         origGObject = origCamera->GetGameObject();
-        origGObject->SetActive(false);
-        if (Mode == Mode::MainCamera) origGObject->SetTag("Untagged");
+        // if (Mode == Mode::MainCamera) origGObject->SetTag("Untagged");
+        if (DisableOrigCam) origGObject->SetActive(false);
     }
     bool FreeCamera::IsCurrentFreeCamera()
     {
-        const auto curCam = Mode == Mode::Depth ? getMaxDepthCamera() : UTYPE::Camera::GetMain();
+        const auto curCam = Mode == Mode::Depth ? GetMaxDepthCamera() : UTYPE::Camera::GetMain();
         if (curCam == nullptr) return false;
         const auto curCamName = curCam->GetName()->ToString();
         if (curCamName == "UE_Freecam") return true;

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "utype/utype.hpp"
+#include "freecam/utype/utype.hpp"
 
 namespace UTYPE
 {

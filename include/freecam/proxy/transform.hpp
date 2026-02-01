@@ -15,8 +15,6 @@ namespace FreeCam::Proxy
         {
             SetPosition(t.GetPosition());
             SetRotation(t.GetRotation());
-            SetLocalPosition(t.GetLocalPosition());
-            SetLocalRotation(t.GetLocalRotation());
         }
         inline auto SetPosition(const UTYPE::Vector3 &v) -> void { trans.SetPosition(v); }
         inline auto SetRotation(const UTYPE::Quaternion &v) -> void { trans.SetRotation(v); }

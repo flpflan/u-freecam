@@ -70,6 +70,7 @@ namespace UTYPE
     public:
         UNITY_STATIC_METHOD(bool, GetKey, (const KeyCode key), key)
         UNITY_STATIC_METHOD(bool, GetKeyDown, (const KeyCode key), key)
+        UNITY_STATIC_METHOD(bool, GetKeyUp, (const KeyCode key), key)
         UNITY_STATIC_METHOD(float, GetAxis, (const UTYPE::String *const axis), axis)
         inline static auto GetAxis(const std::string &axis) -> float { return GetAxis(UTYPE::String::New(axis)); }
         UNITY_STATIC_METHOD(bool, GetMouseButtonDown, (const int key), key)

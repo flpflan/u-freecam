@@ -10,7 +10,7 @@
 #define FN_PTR_PTR void **
 #endif
 
-inline auto DoHook(void *target, void *detour, void **orignal) -> bool
+inline auto DoHook(void *target, void *detour, void *const * orignal) -> bool
 {
 #ifndef NDEBUG
     log_set_level(0);

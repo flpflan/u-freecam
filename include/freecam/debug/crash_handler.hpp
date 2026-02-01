@@ -1,9 +1,8 @@
 #pragma once
 
-#if defined(__ANDROID__) && (__ANDROID_API__ < 33)
-#else
+#if defined(__ANDROID__) && (__ANDROID_API__ >= 33)
 #include "backward.hpp"
-#endif
+
 #include <csignal>
 
 #include "logger.hpp"
@@ -70,3 +69,4 @@ namespace Debug
         }
     };
 }
+#endif

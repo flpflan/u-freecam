@@ -1476,14 +1476,10 @@ class UnityResolve final {
         struct Color {
             float r, g, b, a;
 
-            Color() { r = g = b = a = 0.f; }
+            Color() : Color(0.f, 0.f, 0.f) {}
 
-            explicit Color(const float fRed = 0.f, const float fGreen = 0.f, const float fBlue = 0.f, const float fAlpha = 1.f) {
-                r = fRed;
-                g = fGreen;
-                b = fBlue;
-                a = fAlpha;
-            }
+            explicit Color(const float r, const float g, const float b, const float a = 1.f)
+                : r(r), g(g), b(b), a(a) {}
         };
 
 #ifndef USE_GLM
@@ -2441,151 +2437,6 @@ class UnityResolve final {
             }
         };
 
-        struct Camera : Component {
-            enum class Eye : int { Left, Right, Mono };
-
-            static auto GetMain() -> Camera * {
-                static Method *method;
-                if (!method)
-                    method = Get("UnityEngine.CoreModule.dll")->Get("Camera")->Get<Method>("get_main");
-                if (method)
-                    return method->Invoke<Camera *>();
-                return nullptr;
-            }
-
-            static auto GetCurrent() -> Camera * {
-                static Method *method;
-                if (!method)
-                    method = Get("UnityEngine.CoreModule.dll")->Get("Camera")->Get<Method>("get_current");
-                if (method)
-                    return method->Invoke<Camera *>();
-                return nullptr;
-            }
-
-            static auto GetAllCount() -> int {
-                static Method *method;
-                if (!method)
-                    method = Get("UnityEngine.CoreModule.dll")->Get("Camera")->Get<Method>("get_allCamerasCount");
-                if (method)
-                    return method->Invoke<int>();
-                return 0;
-            }
-
-            static auto GetAllCamera() -> std::vector<Camera *> {
-                static Method *method;
-                static Class *klass;
-
-                if (!method || !klass) {
-                    method = Get("UnityEngine.CoreModule.dll")->Get("Camera")->Get<Method>("GetAllCameras", {"*"});
-                    klass = Get("UnityEngine.CoreModule.dll")->Get("Camera");
-                }
-
-                if (method && klass) {
-                    if (const int count = GetAllCount(); count != 0) {
-                        const auto array = Array<Camera *>::New(klass, count);
-                        method->Invoke<int>(array);
-                        return array->ToVector();
-                    }
-                }
-
-                return {};
-            }
-
-            auto GetDepth() -> float {
-                static Method *method;
-                if (!method)
-                    method = Get("UnityEngine.CoreModule.dll")->Get("Camera")->Get<Method>("get_depth");
-                if (method)
-                    return method->Invoke<float>(this);
-                return 0.0f;
-            }
-
-            auto SetDepth(const float depth) -> void {
-                static Method *method;
-                if (!method)
-                    method = Get("UnityEngine.CoreModule.dll")->Get("Camera")->Get<Method>("set_depth", {"*"});
-                if (method)
-                    return method->Invoke<void>(this, depth);
-            }
-
-            auto SetFoV(const float fov) -> void {
-                static Method *method_fieldOfView;
-                if (!method_fieldOfView)
-                    method_fieldOfView = Get("UnityEngine.CoreModule.dll")->Get("Camera")->Get<Method>("set_fieldOfView", {"*"});
-                if (method_fieldOfView)
-                    return method_fieldOfView->Invoke<void>(this, fov);
-            }
-
-            auto GetFoV() -> float {
-                static Method *method_fieldOfView;
-                if (!method_fieldOfView)
-                    method_fieldOfView = Get("UnityEngine.CoreModule.dll")->Get("Camera")->Get<Method>("get_fieldOfView");
-                if (method_fieldOfView)
-                    return method_fieldOfView->Invoke<float>(this);
-                return 0.0f;
-            }
-
-            auto WorldToScreenPoint(const Vector3 &position, const Eye eye = Eye::Mono) -> Vector3 {
-                static Method *method;
-                if (!method) {
-                    if (mode_ == Mode::Mono)
-                        method = Get("UnityEngine.CoreModule.dll")->Get("Camera")->Get<Method>("WorldToScreenPoint_Injected");
-                    else
-                        method = Get("UnityEngine.CoreModule.dll")->Get("Camera")->Get<Method>("WorldToScreenPoint", {"*", "*"});
-                }
-                if (mode_ == Mode::Mono && method) {
-                    const Vector3 vec3{};
-                    method->Invoke<void>(this, position, eye, &vec3);
-                    return vec3;
-                }
-                if (method)
-                    return method->Invoke<Vector3>(this, position, eye);
-                return {};
-            }
-
-            auto ScreenToWorldPoint(const Vector3 &position, const Eye eye = Eye::Mono) -> Vector3 {
-                static Method *method;
-                if (!method)
-                    method = Get("UnityEngine.CoreModule.dll")->Get("Camera")->Get<Method>(mode_ == Mode::Mono ? "ScreenToWorldPoint_Injected" : "ScreenToWorldPoint");
-                if (mode_ == Mode::Mono && method) {
-                    const Vector3 vec3{};
-                    method->Invoke<void>(this, position, eye, &vec3);
-                    return vec3;
-                }
-                if (method)
-                    return method->Invoke<Vector3>(this, position, eye);
-                return {};
-            }
-
-            auto CameraToWorldMatrix() -> Matrix4x4 {
-                static Method *method;
-                if (!method)
-                    method = Get("UnityEngine.CoreModule.dll")->Get("Camera")->Get<Method>(mode_ == Mode::Mono ? "get_cameraToWorldMatrix_Injected" : "get_cameraToWorldMatrix");
-                if (mode_ == Mode::Mono && method) {
-                    Matrix4x4 matrix4{};
-                    method->Invoke<void>(this, &matrix4);
-                    return matrix4;
-                }
-                if (method)
-                    return method->Invoke<Matrix4x4>(this);
-                return {};
-            }
-
-            auto ScreenPointToRay(const Vector2 &position, const Eye eye = Eye::Mono) -> Ray {
-                static Method *method;
-                if (!method)
-                    method = Get("UnityEngine.CoreModule.dll")->Get("Camera")->Get<Method>(mode_ == Mode::Mono ? "ScreenPointToRay_Injected" : "ScreenPointToRay");
-                if (mode_ == Mode::Mono && method) {
-                    Ray ray{};
-                    method->Invoke<void>(this, position, eye, &ray);
-                    return ray;
-                }
-                if (method)
-                    return method->Invoke<Ray>(this, position, eye);
-                return {};
-            }
-        };
-
         struct Transform : Component {
             auto GetPosition() -> Vector3 {
                 static Method *method;
@@ -3210,6 +3061,151 @@ class UnityResolve final {
                     method = Get("UnityEngine.CoreModule.dll")->Get("Behaviour")->Get<Method>("set_enabled");
                 if (method)
                     return method->Invoke<void>(this, value);
+            }
+        };
+
+        struct Camera : public Behaviour {
+            enum class Eye : int { Left, Right, Mono };
+
+            static auto GetMain() -> Camera * {
+                static Method *method;
+                if (!method)
+                    method = Get("UnityEngine.CoreModule.dll")->Get("Camera")->Get<Method>("get_main");
+                if (method)
+                    return method->Invoke<Camera *>();
+                return nullptr;
+            }
+
+            static auto GetCurrent() -> Camera * {
+                static Method *method;
+                if (!method)
+                    method = Get("UnityEngine.CoreModule.dll")->Get("Camera")->Get<Method>("get_current");
+                if (method)
+                    return method->Invoke<Camera *>();
+                return nullptr;
+            }
+
+            static auto GetAllCount() -> int {
+                static Method *method;
+                if (!method)
+                    method = Get("UnityEngine.CoreModule.dll")->Get("Camera")->Get<Method>("get_allCamerasCount");
+                if (method)
+                    return method->Invoke<int>();
+                return 0;
+            }
+
+            static auto GetAllCamera() -> std::vector<Camera *> {
+                static Method *method;
+                static Class *klass;
+
+                if (!method || !klass) {
+                    method = Get("UnityEngine.CoreModule.dll")->Get("Camera")->Get<Method>("GetAllCameras", {"*"});
+                    klass = Get("UnityEngine.CoreModule.dll")->Get("Camera");
+                }
+
+                if (method && klass) {
+                    if (const int count = GetAllCount(); count != 0) {
+                        const auto array = Array<Camera *>::New(klass, count);
+                        method->Invoke<int>(array);
+                        return array->ToVector();
+                    }
+                }
+
+                return {};
+            }
+
+            auto GetDepth() -> float {
+                static Method *method;
+                if (!method)
+                    method = Get("UnityEngine.CoreModule.dll")->Get("Camera")->Get<Method>("get_depth");
+                if (method)
+                    return method->Invoke<float>(this);
+                return 0.0f;
+            }
+
+            auto SetDepth(const float depth) -> void {
+                static Method *method;
+                if (!method)
+                    method = Get("UnityEngine.CoreModule.dll")->Get("Camera")->Get<Method>("set_depth", {"*"});
+                if (method)
+                    return method->Invoke<void>(this, depth);
+            }
+
+            auto SetFoV(const float fov) -> void {
+                static Method *method_fieldOfView;
+                if (!method_fieldOfView)
+                    method_fieldOfView = Get("UnityEngine.CoreModule.dll")->Get("Camera")->Get<Method>("set_fieldOfView", {"*"});
+                if (method_fieldOfView)
+                    return method_fieldOfView->Invoke<void>(this, fov);
+            }
+
+            auto GetFoV() -> float {
+                static Method *method_fieldOfView;
+                if (!method_fieldOfView)
+                    method_fieldOfView = Get("UnityEngine.CoreModule.dll")->Get("Camera")->Get<Method>("get_fieldOfView");
+                if (method_fieldOfView)
+                    return method_fieldOfView->Invoke<float>(this);
+                return 0.0f;
+            }
+
+            auto WorldToScreenPoint(const Vector3 &position, const Eye eye = Eye::Mono) -> Vector3 {
+                static Method *method;
+                if (!method) {
+                    if (mode_ == Mode::Mono)
+                        method = Get("UnityEngine.CoreModule.dll")->Get("Camera")->Get<Method>("WorldToScreenPoint_Injected");
+                    else
+                        method = Get("UnityEngine.CoreModule.dll")->Get("Camera")->Get<Method>("WorldToScreenPoint", {"*", "*"});
+                }
+                if (mode_ == Mode::Mono && method) {
+                    const Vector3 vec3{};
+                    method->Invoke<void>(this, position, eye, &vec3);
+                    return vec3;
+                }
+                if (method)
+                    return method->Invoke<Vector3>(this, position, eye);
+                return {};
+            }
+
+            auto ScreenToWorldPoint(const Vector3 &position, const Eye eye = Eye::Mono) -> Vector3 {
+                static Method *method;
+                if (!method)
+                    method = Get("UnityEngine.CoreModule.dll")->Get("Camera")->Get<Method>(mode_ == Mode::Mono ? "ScreenToWorldPoint_Injected" : "ScreenToWorldPoint");
+                if (mode_ == Mode::Mono && method) {
+                    const Vector3 vec3{};
+                    method->Invoke<void>(this, position, eye, &vec3);
+                    return vec3;
+                }
+                if (method)
+                    return method->Invoke<Vector3>(this, position, eye);
+                return {};
+            }
+
+            auto CameraToWorldMatrix() -> Matrix4x4 {
+                static Method *method;
+                if (!method)
+                    method = Get("UnityEngine.CoreModule.dll")->Get("Camera")->Get<Method>(mode_ == Mode::Mono ? "get_cameraToWorldMatrix_Injected" : "get_cameraToWorldMatrix");
+                if (mode_ == Mode::Mono && method) {
+                    Matrix4x4 matrix4{};
+                    method->Invoke<void>(this, &matrix4);
+                    return matrix4;
+                }
+                if (method)
+                    return method->Invoke<Matrix4x4>(this);
+                return {};
+            }
+
+            auto ScreenPointToRay(const Vector2 &position, const Eye eye = Eye::Mono) -> Ray {
+                static Method *method;
+                if (!method)
+                    method = Get("UnityEngine.CoreModule.dll")->Get("Camera")->Get<Method>(mode_ == Mode::Mono ? "ScreenPointToRay_Injected" : "ScreenPointToRay");
+                if (mode_ == Mode::Mono && method) {
+                    Ray ray{};
+                    method->Invoke<void>(this, position, eye, &ray);
+                    return ray;
+                }
+                if (method)
+                    return method->Invoke<Ray>(this, position, eye);
+                return {};
             }
         };
 

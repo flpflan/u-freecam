@@ -27,7 +27,7 @@ namespace FreeCam::Feature
         constexpr static float rollSpeed = 100.f;
         // Properties for Move
         constexpr static float baseMoveSpeed = 1.f;
-        constexpr static float maxMoveSpeed = 25.f;
+        constexpr static float maxMoveSpeed = 50.f;
 
     public:
         enum class Mode
@@ -37,6 +37,7 @@ namespace FreeCam::Feature
         };
         Mode Mode{Mode::Depth};
         bool Enabled = false;
+        bool DisableOrigCam = false;
 
     public:
         auto Enable() -> void;
@@ -45,6 +46,8 @@ namespace FreeCam::Feature
 
     public:
         bool IsCurrentFreeCamera();
+        static auto GetMaxDepthCamera() -> UTYPE::Camera *;
+        static auto SelectGameObject() -> UTYPE::Transform *;
 
     private:
         UTYPE::Camera *origCamera{};
@@ -52,15 +55,17 @@ namespace FreeCam::Feature
         UTYPE::Quaternion origRotation{};
         UTYPE::GameObject *origGObject{};
         UTYPE::GameObject *origParent{};
-        auto getMaxDepthCamera() -> UTYPE::Camera *;
+
         auto backupOrigCamera() -> void;
-        auto selectGameObject() -> UTYPE::Transform *;
 
         auto updateMove() -> void;
         auto updateRotate() -> void;
         auto updateRoll() -> void;
         auto updateZoom() -> void;
         auto updateAttachMode() -> void;
+
+        auto suspend() -> void;
+        auto resume() -> void;
 
         auto enterAttachMode(UTYPE::Transform *target) -> void;
         auto exitAttachMode() -> void;

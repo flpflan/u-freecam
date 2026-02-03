@@ -1,49 +1,37 @@
 #pragma once
 
-#if defined(__ANDROID__) && (__ANDROID_API__ >= 33)
+#if defined(__ANDROID__)
+#if (__ANDROID_API__ >= 33)
 #include "backward.hpp"
 
 #include <csignal>
 
 #include "logger.hpp"
 
-namespace Debug
+namespace umod::debug::crash_handler
 {
-    class CrashHandler final
+    inline void handleSignal(int signal)
     {
-    public:
-        // Setup Crash Handler
-        static void Setup()
+        const char *signal_name = "";
+        switch (signal)
         {
-            std::signal(SIGSEGV, crachHandler);
-            std::signal(SIGABRT, crachHandler);
-            std::signal(SIGFPE, crachHandler);
-            std::signal(SIGILL, crachHandler);
+        case SIGSEGV:
+            signal_name = "SIGABRT";
+            break;
+        case SIGABRT:
+            signal_name = "SIGABRT";
+            break;
+        case SIGFPE:
+            signal_name = "SIGFPE";
+            break;
+        case SIGILL:
+            signal_name = "SIGILL";
+            break;
+        default:
+            signal_name = "UNKNOWN";
+            break;
         }
-
-    private:
-        static void crachHandler(int signal)
-        {
-            const char *signal_name = "";
-            switch (signal)
-            {
-            case SIGSEGV:
-                signal_name = "SIGABRT";
-                break;
-            case SIGABRT:
-                signal_name = "SIGABRT";
-                break;
-            case SIGFPE:
-                signal_name = "SIGFPE";
-                break;
-            case SIGILL:
-                signal_name = "SIGILL";
-                break;
-            default:
-                signal_name = "UNKNOWN";
-                break;
-            }
-            Logger::Critical("===== [Program Crashed:{}] =====", signal_name);
+        logger::critical("===== [Program Crashed:{}] =====", signal_name);
 // #ifndef NDEBUG
 /*
     INFO:
@@ -52,21 +40,34 @@ namespace Debug
 */
 #if defined(__ANDROID__) && (__ANDROID_API__ < 33)
 #else
-            // Stack Trace
-            backward::StackTrace st;
-            st.load_here(32);
+        // Stack Trace
+        backward::StackTrace st;
+        st.load_here(32);
 
-            backward::Printer p;
-            p.address = true;
-            p.object = true;
+        backward::Printer p;
+        p.address = true;
+        p.object = true;
 
-            std::ostringstream oss;
-            p.print(st, oss);
-            Logger::Critical(oss.str());
+        std::ostringstream oss;
+        p.print(st, oss);
+        logger::critical(oss.str());
 #endif
-            // #endif
-            std::exit(signal);
-        }
-    };
+        // #endif
+        std::exit(signal);
+    }
+
+    inline void setup()
+    {
+        std::signal(SIGSEGV, handleSignal);
+        std::signal(SIGABRT, handleSignal);
+        std::signal(SIGFPE, handleSignal);
+        std::signal(SIGILL, handleSignal);
+    }
 }
+#else
+namespace umod::debug::crash_handler
+{
+    inline void setup() {}
+}
+#endif
 #endif

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "UnityResolve.hpp"
-#include "utype/utype.hpp"
+#include "umod/UnityResolve.hpp"
+#include "umod/utype/utype.hpp"
 
-namespace UTYPE
+namespace umod::UTYPE::unity_engine
 {
     using Physics = UnityResolve::UnityType::Physics;
 

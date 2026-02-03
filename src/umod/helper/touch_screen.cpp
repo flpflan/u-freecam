@@ -1,6 +1,5 @@
-#pragma once
-
-#include "UnityResolve.hpp"
+#include "umod/runtime/helper/touch_screen.hpp"
+#include "umod/UnityResolve.hpp"
 
 using UTYPE = UnityResolve::UnityType;
 using UMethod = UnityResolve::Method;
@@ -13,17 +12,20 @@ class TouchControl : public UTYPE::Object
 class UTouchScreen : public UTYPE::Object
 {
 };
-namespace FreeCam::Proxy
-{
-    class TouchScreen
-    {
-        inline static UClass *kTouchscreen = nullptr;
-        inline static UMethod *GetCurrent = nullptr;
-        inline static UMethod *GetTouches = nullptr;
-        static inline float PinchDelta = 0;
 
-    public:
-        inline static auto UpdatePinchDelta() -> void
+namespace umod::umod::unity_runtie::helper
+{
+    namespace
+    {
+        static UClass *kTouchscreen = nullptr;
+        static UMethod *GetCurrent = nullptr;
+        static UMethod *GetTouches = nullptr;
+        static float PinchDelta = 0;
+    }
+    namespace TouchScreenUtils
+    {
+
+        auto UpdatePinchDelta() -> void
         {
             if (!kTouchscreen) kTouchscreen = UnityResolve::Get("Unity.InputSystem.dll")->Get("Touchscreen", "UnityEngine.InputSystem");
             if (!GetCurrent) GetCurrent = kTouchscreen->Get<UMethod>("get_current");
@@ -34,5 +36,5 @@ namespace FreeCam::Proxy
             if (!GetTouches) GetTouches = kTouchscreen->Get<UMethod>("get_touches");
             const auto touches = GetTouches->Invoke<UTYPE::Array<TouchControl *>>().ToVector();
         }
-    };
+    }
 }

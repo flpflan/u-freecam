@@ -1,41 +1,29 @@
 #pragma once
-#include "debug/logger.hpp"
-#include "dobby.h"
 
-#ifdef __ANDROID__
-#define FN_PTR void (*)()
-#define FN_PTR_PTR void (**)()
-#else
-#define FN_PTR void *
-#define FN_PTR_PTR void **
-#endif
-
-inline auto DoHook(void *target, void *detour, void *const * orignal) -> bool
+namespace umod::memory
 {
-#ifndef NDEBUG
-    log_set_level(0);
-#endif
-    log_set_tag("freecam");
-    dobby_enable_near_branch_trampoline();
-    Debug::Logger::Info("Hooking {} with detour {}", target, detour);
-    const auto ok = DobbyHook(target, (FN_PTR)detour, (FN_PTR_PTR)orignal) == RS_SUCCESS ? true : false;
-    if (!ok) Debug::Logger::Warn("Hooking failed");
-    return ok;
-}
-#undef FN_PTR
-#undef FN_PTR_PTR
+    bool hook(void *target, void *detour, void *const *orig);
 
-template <typename RTYPE, typename... ARGS>
-auto DoHook(RTYPE (*target)(ARGS...), RTYPE (*detour)(ARGS...), RTYPE (*const *orignal)(ARGS...)) -> bool
-{
-    return DoHook((void *)target, (void *)detour, (void **)orignal);
-}
+    template <typename RTYPE, typename... ARGS>
+    auto hook(RTYPE (*target)(ARGS...), RTYPE (*detour)(ARGS...), RTYPE (*const *orig)(ARGS...)) -> bool
+    {
+        return hook((void *)target, (void *)detour, (void **)orig);
+    }
 
-constexpr void(*__init_orig__(void *)) { return nullptr; }
-template <typename RTYPE, typename... ARGS>
-constexpr RTYPE (*__init_orig__(RTYPE (*)(ARGS...)))(ARGS...)
-{
-    return nullptr;
+    bool unhook(void *target);
+
+    template <typename RTYPE, typename... ARGS>
+    bool unhook(RTYPE (*target)(ARGS...))
+    {
+        return unhook(reinterpret_cast<void *>(target));
+    }
+
+    constexpr void(*__init_orig__(void *)) { return nullptr; }
+    template <typename RTYPE, typename... ARGS>
+    constexpr RTYPE (*__init_orig__(RTYPE (*)(ARGS...)))(ARGS...)
+    {
+        return nullptr;
+    }
 }
 
 /*
@@ -50,28 +38,20 @@ constexpr RTYPE (*__init_orig__(RTYPE (*)(ARGS...)))(ARGS...)
  * const bool hook_success = Hook(target, detour<CALL_ORIGNAL>);
  */
 #ifndef _MSC_VER
-#define Hook(TARGET, DETOUR)                                                                                                                                                                           \
-    ({                                                                                                                                                                                                 \
-        const static auto CALL_ORIGNAL = __init_orig__(TARGET);                                                                                                                                        \
-        DoHook(TARGET, DETOUR, &CALL_ORIGNAL);                                                                                                                                                         \
+#define Hook(TARGET, DETOUR)                                                                                           \
+    ({                                                                                                                 \
+        const static auto CALL_ORIGNAL = ::umod::memory::__init_orig__(TARGET);                                        \
+        ::umod::memory::hook(TARGET, DETOUR, &CALL_ORIGNAL);                                                           \
     })
 
 #else
-#define Hook(TARGET, DETOUR)                                                                                                                                                                           \
-    (                                                                                                                                                                                                  \
-        [=]                                                                                                                                                                                            \
-        {                                                                                                                                                                                              \
-            static auto CALL_ORIGNAL = __init_orig__(TARGET);                                                                                                                                          \
-            return DoHook(TARGET, DETOUR, &CALL_ORIGNAL);                                                                                                                                              \
+#define Hook(TARGET, DETOUR)                                                                                           \
+    (                                                                                                                  \
+        [=]                                                                                                            \
+        {                                                                                                              \
+            static auto CALL_ORIGNAL = ::umod::memory::__init_orig__(TARGET);                                          \
+            return ::umod::memory::hook(TARGET, DETOUR, &CALL_ORIGNAL);                                                \
         })()
 #endif
 
-inline auto DestoryHook(void *target) -> bool { return DobbyDestroy(target) == RS_SUCCESS; }
-
-template <typename RTYPE, typename... ARGS>
-inline auto DestoryHook(RTYPE (*target)(ARGS...)) -> bool
-{
-    return DestoryHook((void *)target);
-}
-
-#define UnHook(TARGET) DestoryHook(TARGET)
+#define UnHook(TARGET) ::umod::memory::unhook(TARGET)

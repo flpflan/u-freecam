@@ -1,8 +1,8 @@
 #pragma once
 
-#include "freecam/UnityResolve.hpp"
+#include "umod/UnityResolve.hpp"
 
-namespace UTYPE
+namespace umod::UTYPE
 {
     using UClass = UnityResolve::Class;
     using UMethod = UnityResolve::Method;

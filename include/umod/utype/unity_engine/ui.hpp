@@ -1,9 +1,9 @@
 #pragma once
 
-#include "core.hpp"
-#include "utype/utype.hpp"
+#include "umod/utype/unity_engine/core.hpp"
+#include "umod/utype/utype.hpp"
 
-namespace UTYPE
+namespace umod::UTYPE::unity_engine
 {
     enum class RenderMode
     {

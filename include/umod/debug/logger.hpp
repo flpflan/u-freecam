@@ -7,11 +7,11 @@
 #include "spdlog/sinks/basic_file_sink.h"
 #endif
 
-namespace Debug::Logger
+namespace umod::debug::logger
 {
     using spdlog::format_string_t;
 
-    // Setup Logger (Thread Safe)
+    // Setup logger (Thread Safe)
     inline auto logger()
     {
         const static auto _logger = []
@@ -34,65 +34,65 @@ namespace Debug::Logger
         }();
         return _logger;
     }
-    inline void ShutDown() { spdlog::shutdown(); }
+    inline void shutdown() { spdlog::shutdown(); }
     template <typename... Args>
-    void Trace(const format_string_t<Args...> &fmt, Args &&...args)
+    void trace(const format_string_t<Args...> &fmt, Args &&...args)
     {
         logger()->trace(fmt, std::forward<Args>(args)...);
     }
     template <typename T>
-    void Trace(const T &fmt)
+    void trace(T &&fmt)
     {
-        logger()->trace(fmt);
+        logger()->trace(std::forward<T>(fmt));
     }
     template <typename... Args>
-    void Debug(const format_string_t<Args...> &fmt, Args &&...args)
+    void debug(const format_string_t<Args...> &fmt, Args &&...args)
     {
         logger()->debug(fmt, std::forward<Args>(args)...);
     }
     template <typename T>
-    void Debug(const T &fmt)
+    void debug(T &&fmt)
     {
-        logger()->debug(fmt);
+        logger()->debug(std::forward<T>(fmt));
     }
     template <typename... Args>
-    void Info(const format_string_t<Args...> &fmt, Args &&...args)
+    void info(const format_string_t<Args...> &fmt, Args &&...args)
     {
         logger()->info(fmt, std::forward<Args>(args)...);
     }
     template <typename T>
-    void Info(const T &fmt)
+    void info(T &&fmt)
     {
-        logger()->info(fmt);
+        logger()->info(std::forward<T>(fmt));
     }
     template <typename... Args>
-    void Warn(const format_string_t<Args...> &fmt, Args &&...args)
+    void warn(const format_string_t<Args...> &fmt, Args &&...args)
     {
         logger()->warn(fmt, std::forward<Args>(args)...);
     }
     template <typename T>
-    void Warn(const T &fmt)
+    void warn(T &&fmt)
     {
-        logger()->warn(fmt);
+        logger()->warn(std::forward<T>(fmt));
     }
     template <typename... Args>
-    void Error(const format_string_t<Args...> &fmt, Args &&...args)
+    void error(const format_string_t<Args...> &fmt, Args &&...args)
     {
         logger()->error(fmt, std::forward<Args>(args)...);
     }
     template <typename T>
-    void Error(const T &fmt)
+    void error(T &&fmt)
     {
-        logger()->error(fmt);
+        logger()->error(std::forward<T>(fmt));
     }
     template <typename... Args>
-    void Critical(const format_string_t<Args...> &fmt, Args &&...args)
+    void critical(const format_string_t<Args...> &fmt, Args &&...args)
     {
         logger()->critical(fmt, std::forward<Args>(args)...);
     }
     template <typename T>
-    void Critical(const T &fmt)
+    void critical(T &&fmt)
     {
-        logger()->critical(fmt);
+        logger()->critical(std::forward<T>(fmt));
     }
 }

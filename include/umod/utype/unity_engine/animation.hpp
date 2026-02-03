@@ -1,10 +1,10 @@
 #pragma once
 
-#include "utype/utype.hpp"
+#include "umod/utype/utype.hpp"
 
-namespace UTYPE
+namespace umod::UTYPE::unity_engine
 {
-    class Animator : public UTYPE::Animator
+    class Animator : public unity_engine::Animator
     {
         UNITY_CLASS_DECL("UnityEngine.AnimationModule.dll", Animator)
     };

@@ -1,22 +1,41 @@
 #pragma once
 
-#include "feature/free_camera.hpp"
+#include "umod/feature.hpp"
 
-namespace FreeCam
+#include <atomic>
+#include <span>
+#include <string>
+
+namespace umod::core
 {
-    class Core
+    namespace player_loop
     {
-    public:
-        static constexpr float DeltaTime_s = 0.0167f;
-        static constexpr float DeltaTime_ms = DeltaTime_s * 1000;
-        static constexpr float DeltaTime_us = DeltaTime_ms * 1000;
+        enum class Index
+        {
+            Update = 0,
+            LateUpdate = 1,
+            FixedUpdate = 2
+        };
+        struct Handle
+        {
+            using ID = void (*)();
+            ID id;
+            Index index;
+            void dettach();
+        };
 
-    private:
-        inline static auto freeCam = Feature::FreeCamera();
+        const bool isMockLoop();
 
-    public:
-        inline static bool UseMockLoop = false;
-        static auto Update() -> void;
-    };
+        // Handle attach(Index, void (*)());
+        Handle attach(void (*)());
+    }
 
+    namespace feature
+    {
+        std::span<const ::umod::feature::Module> getFeatures();
+        void enable(const std::string &name);
+        void disable(const std::string &name);
+    }
+
+    void run(std::atomic<bool> &stopToken, void *playerLoop, std::span<::umod::feature::Module> modules);
 }

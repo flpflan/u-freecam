@@ -30,6 +30,10 @@ file(GLOB_RECURSE FREECAM_SRC CONFIGURE_DEPENDS
     src/free_camera/*.cpp
 )
 
+if(${CMAKE_SYSTEM_NAME} STREQUAL "Android")
+    list(APPEND FREECAM_SRC include/umod/platform/android.cpp)
+endif()
+
 add_library(${PROJECT_NAME} SHARED ${FREECAM_SRC})
 
 target_include_directories(${PROJECT_NAME} PUBLIC include)

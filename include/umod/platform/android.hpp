@@ -1,23 +1,29 @@
 #pragma once
 
-#include <optional>
 #ifdef __ANDROID__
-#include <memory>
-#include <string_view>
+#include <optional>
+#include <string>
 
-namespace platform::android
+namespace umod::platform::android
 {
     struct ASymbolQuery
     {
-    private:
-        struct Impl;
-        std::unique_ptr<Impl> impl_;
-        ASymbolQuery() = delete;
+        enum class TYPE
+        {
+            Hijacked,
+            Emulated,
+            Native,
+            Base,
+            XDL,
+        };
+        TYPE ty;
+        void *handle;
 
-    public:
-        static std::optional<ASymbolQuery> fromModule(const std::string_view &symName);
-        static std::optional<ASymbolQuery> fromSymbol(const std::string_view &symName);
-        static void* resolve(const ASymbolQuery &query, const std::string_view &symName);
+        ~ASymbolQuery();
+
+        static std::optional<ASymbolQuery> fromModule(const std::string &symName);
+        static std::optional<ASymbolQuery> fromSymbol(const std::string &symName);
+        void *resolve(const std::string &symName) const;
     };
 }
 #endif // __ANDROID__

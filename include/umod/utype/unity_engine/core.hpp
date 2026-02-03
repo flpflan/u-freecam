@@ -1,8 +1,8 @@
 #pragma once
 
-#include "utype/utype.hpp"
+#include "umod/utype/utype.hpp"
 
-namespace UTYPE
+namespace umod::UTYPE::unity_engine
 {
     using Vector2 = UnityResolve::UnityType::Vector2;
     using Vector3 = UnityResolve::UnityType::Vector3;

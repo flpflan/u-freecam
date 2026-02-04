@@ -5,7 +5,6 @@
 #include "umod/memory/hook.hpp"
 #include "umod/memory/scanner.hpp"
 
-#include <atomic>
 #include <vector>
 
 #ifdef __ANDROID__
@@ -22,7 +21,6 @@ namespace umod::bootstrap
     namespace
     {
         static std::vector<feature::Module> modules;
-        static std::atomic<bool> coreStopToken(false);
 #ifdef __ANDROID__
         static std::optional<ASymbolQuery> IL2CPP_LIB_HANDLE;
 #endif
@@ -184,12 +182,6 @@ namespace umod::bootstrap
         debug::logger::info("Try attach to internal loop");
 
         debug::logger::info("Unity initializing success");
-        std::thread([] { core::run(coreStopToken, getPlayerLoop(), modules); }).detach();
-    }
-
-    void shutdown()
-    {
-        coreStopToken.store(true);
-        debug::logger::shutdown();
+        std::thread([] { core::run(getPlayerLoop(), modules); }).detach();
     }
 }

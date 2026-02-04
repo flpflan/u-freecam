@@ -1,5 +1,5 @@
 #include "umod/runtime/helper/touch_screen.hpp"
-#include "umod/UnityResolve.hpp"
+#include "umod/runtime/UnityResolve.hpp"
 
 using UTYPE = UnityResolve::UnityType;
 using UMethod = UnityResolve::Method;

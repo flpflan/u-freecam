@@ -1,5 +1,6 @@
-#include "freecam/freecam.hpp"
+#include "freecam/module.hpp"
 #include "umod/bootstrap.hpp"
+#include "umod/core.hpp"
 
 #include <thread>
 
@@ -14,7 +15,7 @@ __attribute__((constructor)) void on_load()
     std::thread(umod::bootstrap::run).detach();
 }
 
-__attribute__((destructor)) void on_unload() { umod::bootstrap::shutdown(); }
+__attribute__((destructor)) void on_unload() { umod::core::shutdown(); }
 #else
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD reason, LPVOID lpReserved)
 {
@@ -22,6 +23,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD reason, LPVOID lpReserved)
     {
     case DLL_PROCESS_ATTACH:
         DisableThreadLibraryCalls(hModule);
+        umod::bootstrap::addFeature(freecam::kDesc);
         std::thread(umod::bootstrap::run).detach();
         break;
 

@@ -1,62 +1,19 @@
-#include "umod/UnityResolve.hpp"
 #include "umod/core.hpp"
 #include "umod/debug/logger.hpp"
 #include "umod/memory/hook.hpp"
+#include "umod/runtime/UnityResolve.hpp"
+#include "umod/utils/container.hpp"
 #include "umod/utype/unity_engine/time.hpp"
 
 #include "user/config.hpp"
 
-#include <algorithm>
-#include <atomic>
 #include <memory>
-#include <vector>
-
-namespace
-{
-    template <typename T>
-    class CowSeq
-    {
-    public:
-        using Seq = std::vector<T>;
-
-        std::shared_ptr<const Seq> snapshot() const
-        {
-            return std::atomic_load_explicit(&data_, std::memory_order_acquire);
-        }
-
-        void push(const T &v)
-        {
-            modify([&](Seq &s) { s.push_back(v); });
-        }
-
-        void remove(const T &v)
-        {
-            modify([&](Seq &s) { s.erase(std::remove(s.begin(), s.end(), v), s.end()); });
-        }
-
-        bool empty() const { return data_->empty(); }
-
-    private:
-        template <typename F>
-        void modify(F &&f)
-        {
-            const auto old = std::atomic_load_explicit(&data_, std::memory_order_acquire);
-
-            const auto copy = std::make_shared<Seq>(*old);
-            f(*copy);
-
-            std::atomic_store_explicit(&data_, copy, std::memory_order_release);
-        }
-
-        std::shared_ptr<Seq> data_ = std::make_shared<Seq>();
-    };
-}
 
 namespace umod::core::player_loop
 {
     namespace
     {
-        static CowSeq<void (*)()> kUpdateLoops;
+        static utils::container::CowSeq<void (*)()> kUpdateLoops;
         // static CowSeq<void (*)()> kFixedUpdateLoops;
         // static CowSeq<void (*)()> kLateUpdateLoops;
 
@@ -95,9 +52,7 @@ namespace umod::core::player_loop
 
     namespace manager
     {
-        //TODO:
         static void (*kPlayerLoop)(void *, Index){};
-        //TODO: Hook Manager
         static bool Attached{};
         static bool isMockLoop_{};
         static void attach()
@@ -166,4 +121,6 @@ namespace umod::core::player_loop
     }
 
     const bool isMockLoop() { return manager::isMockLoop_; }
+
+    void init(void *playerLoop) { manager::kPlayerLoop = reinterpret_cast<void (*)(void *, Index)>(playerLoop); }
 }

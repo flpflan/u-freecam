@@ -1,8 +1,12 @@
-#include "feature/free_camera.hpp"
-#include "utype/unity_engine/input.hpp"
+#include "freecam/freecam.hpp"
+#include "umod/utype/unity_engine/input.hpp"
 
-using enum UTYPE::KeyCode;
-using UTYPE::Input;
+#include "user/config.hpp"
+
+using namespace umod::UTYPE::unity_engine;
+
+using namespace user;
+using enum user::config::freecam::keybind::KeyCode;
 
 // float getPinchDelta()
 // {
@@ -34,25 +38,26 @@ using UTYPE::Input;
 //     return pinchDelta;
 // }
 
-namespace FreeCam::Feature
+namespace freecam
 {
     auto FreeCamera::updateZoom() -> void
     {
-        const bool toZoom = Input::GetKey(Z);
-        if (!toZoom && zoom_mode) freeCam->ResetZoom();
-        zoom_mode = toZoom;
-        if (zoom_mode)
+        using namespace user::config::freecam;
+        const bool toZoom = Input::GetKey(keybind::ZoomMode);
+        if (!toZoom && kFlags.zoom_mode) cameraHelper_->resetZoom();
+        kFlags.zoom_mode = toZoom;
+        if (kFlags.zoom_mode)
         {
-            if (Input::GetKey(X)) freeCam->ZoomIn(1);
-            if (Input::GetKey(C)) freeCam->ZoomOut(1);
+            if (Input::GetKey(keybind::ZoomIn)) cameraHelper_->zoomIn(1);
+            if (Input::GetKey(keybind::ZoomOut)) cameraHelper_->zoomOut(1);
             const float mouseCenter = Input::GetAxis("Mouse ScrollWheel");
             if (mouseCenter < 0)
             {
-                freeCam->ZoomOut(10);
+                cameraHelper_->zoomOut(10);
             }
             else if (mouseCenter > 0)
             {
-                freeCam->ZoomIn(10);
+                cameraHelper_->zoomIn(10);
             };
         }
     }

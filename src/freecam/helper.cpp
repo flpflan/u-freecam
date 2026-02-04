@@ -1,74 +1,63 @@
-#include "debug/logger.hpp"
-#include "feature/free_camera.hpp"
-#include "utype/unity_engine/physics.hpp"
+#include "freecam/helper.hpp"
+#include "freecam/freecam.hpp"
 
-namespace FreeCam::Feature
+#include "umod/debug/logger.hpp"
+#include "umod/utype/unity_engine/core.hpp"
+#include "umod/utype/unity_engine/physics.hpp"
+#include "user/config.hpp"
+
+using namespace umod::UTYPE::unity_engine;
+using namespace umod::debug;
+
+namespace freecam::helper
 {
-    auto FreeCamera::SelectGameObject() -> UTYPE::Transform *
+    auto selectGameObject() -> Transform *
     {
-        const auto screenCenter = UTYPE::Vector2(UTYPE::Screen::get_width() / 2.f, UTYPE::Screen::get_height() / 2.f);
-        const auto cam = GetMaxDepthCamera();
+        const auto screenCenter = Vector2(Screen::get_width() / 2.f, Screen::get_height() / 2.f);
+        const auto cam = getMaxDepthCamera();
 
         const auto ray = cam->ScreenPointToRay(screenCenter);
-        const auto hit = std::make_unique<UTYPE::RaycastHit>();
-        if (UTYPE::Physics::Raycast(ray, &*hit, 100.f))
+        const auto hit = std::make_unique<RaycastHit>();
+        if (Physics::Raycast(ray, &*hit, 100.f))
         {
             const auto target = hit->get_collider()->GetGameObject();
             // if (const auto animator = target->GetComponentInChildren<UTYPE::Animator *>(UTYPE::Animator::GetUClass()))
             // {
-            //     Debug::Logger::Debug("Found Animator");
-            //     if (const auto head = animator->GetBoneTransform(UTYPE::Animator::HumanBodyBones::Head))
+            //     logger::debug("Found Animator");
+            //     if (const auto head = animator->GetBoneTransform(Animator::HumanBodyBones::Head))
             //     {
-            //         Debug::Logger::Debug("Found Head");
+            //         logger::debug("Found Head");
             //         return head;
             //     }
             // }
-            return static_cast<UTYPE::Transform *>(target->GetTransform());
+            return static_cast<Transform *>(target->GetTransform());
         }
         return nullptr;
     }
 
-    auto FreeCamera::GetMaxDepthCamera() -> UTYPE::Camera *
+    auto getMaxDepthCamera() -> Camera *
     {
-        UTYPE::Camera *max{};
-        for (const auto cam : UTYPE::Camera::GetAllCamera())
+        Camera *max{};
+        for (const auto cam : Camera::GetAllCamera())
         {
             if (!max)
-                max = static_cast<UTYPE::Camera *>(cam);
+                max = static_cast<Camera *>(cam);
             else if (max->GetDepth() < cam->GetDepth())
-                max = static_cast<UTYPE::Camera *>(cam);
+                max = static_cast<Camera *>(cam);
         }
         return max;
     }
-    auto FreeCamera::backupOrigCamera() -> void
-    {
-        // Get original camera or return
-        do
-        {
-            if ((origCamera = UTYPE::Camera::GetMain())) break;
-            if ((origCamera = GetMaxDepthCamera())) break;
-            if (!origCamera) return;
-        } while (0);
 
-        const auto origTransform = origCamera->GetTransform();
-        if (const auto parent = origTransform->GetParent())
-            origParent = static_cast<UTYPE::GameObject *>(parent->GetGameObject());
-        origPosition = origTransform->GetPosition();
-        origRotation = origTransform->GetRotation();
-        origGObject = origCamera->GetGameObject();
-        // if (Mode == Mode::MainCamera) origGObject->SetTag("Untagged");
-        if (DisableOrigCam) origGObject->SetActive(false);
-    }
-    bool FreeCamera::IsCurrentFreeCamera()
+    bool isCurrentFreeCamera()
     {
-        const auto curCam = Mode == Mode::Depth ? GetMaxDepthCamera() : UTYPE::Camera::GetMain();
+        const auto curCam = user::config::freecam::Mode == Mode::Depth ? getMaxDepthCamera() : Camera::GetMain();
         if (curCam == nullptr) return false;
         const auto curCamName = curCam->GetName()->ToString();
-        if (curCamName == "UE_Freecam") return true;
+        if (curCamName == kFreeCameraName) return true;
 
-        Debug::Logger::Debug("Not UE_Freecam: {}", curCamName);
+        logger::debug("Not FreeCamera: {}", curCamName);
         // NOTE: This must be `Camera -> GameObject` -> Tag and not `Camera -> Tag`，otherwise wired bug can happen in some games.
-        Debug::Logger::Debug("Tag: {}", curCam->GetGameObject()->GetTag()->ToString());
+        logger::debug("Tag: {}", curCam->GetGameObject()->GetTag()->ToString());
         return false;
     }
 }

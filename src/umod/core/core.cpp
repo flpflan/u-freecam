@@ -1,5 +1,7 @@
 #include "umod/core.hpp"
+#include "umod/debug/logger.hpp"
 #include "umod/feature.hpp"
+
 #include "user/config.hpp"
 
 #include <algorithm>
@@ -10,12 +12,6 @@ namespace umod::core
     namespace
     {
         static std::span<::umod::feature::Module> modules;
-        static void shutdown()
-        {
-            for (auto &module : modules)
-                module.unload();
-            //TODO: UnHook PlayerLoop
-        }
 
         static void enableModules()
         {
@@ -40,14 +36,20 @@ namespace umod::core
         }
     }
 
-    void run(std::atomic<bool> &stopToken, void *playerLoop, std::span<::umod::feature::Module> features)
+    void run(void *playerLoop, std::span<::umod::feature::Module> features)
     {
+        player_loop::init(playerLoop);
         modules = features;
         enableModules();
-        while (!stopToken.load(std::memory_order_relaxed))
-        {
-        }
-        shutdown();
+    }
+
+    void shutdown()
+    {
+        for (auto &module : modules)
+            module.unload();
+        //TODO: UnHook PlayerLoop
+
+        debug::logger::shutdown();
     }
 
     namespace feature

@@ -4,12 +4,6 @@
 
 #include "user/config.hpp"
 
-template <class Rep, class Period>
-constexpr float to_seconds(std::chrono::duration<Rep, Period> d) noexcept
-{
-    return std::chrono::duration<float>(d).count();
-}
-
 namespace umod::unity_runtime::helper
 {
     using namespace umod::UTYPE::unity_engine;

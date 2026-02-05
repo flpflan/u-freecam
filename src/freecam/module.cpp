@@ -24,13 +24,17 @@ namespace freecam
 
     namespace
     {
-        static umod::core::player_loop::Handle playerLoop;
-        static std::optional<FreeCamera> freeCam;
+        static umod::core::player_loop::Handle playerLoop{};
+        static std::optional<FreeCamera> freeCam{};
     }
 
     static void run()
     {
-        if (freeCam && !helper::isCurrentFreeCamera()) return freeCam->disable();
+        // if (freeCam && !helper::isCurrentFreeCamera())
+        // {
+        //     freeCam->disable();
+        //     freeCam = std::nullopt;
+        // }
 
         if (Input::GetKeyDown(speed_gear::keybind::ToggleFreeze))
         {
@@ -69,6 +73,7 @@ namespace freecam
             else
             {
                 freeCam = FreeCamera::create(user::config::freecam::Mode);
+                freeCam->enable();
             }
             return;
         }

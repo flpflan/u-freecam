@@ -5,5 +5,4 @@ namespace umod::bootstrap
     template <typename T>
     void addFeature(T...);
     void run();
-    void shutdown();
 };

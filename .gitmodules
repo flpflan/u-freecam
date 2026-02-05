@@ -13,9 +13,6 @@
 [submodule "extern/xDL"]
 	path = extern/xDL
 	url = https://github.com/hexhacking/xDL
-[submodule "extern/imgui"]
-	path = extern/imgui
-	url = https://github.com/ocornut/imgui
 [submodule "extern/cpp-httplib"]
 	path = extern/cpp-httplib
 	url = https://github.com/yhirose/cpp-httplib

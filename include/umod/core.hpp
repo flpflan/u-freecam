@@ -2,7 +2,6 @@
 
 #include "umod/feature.hpp"
 
-#include <atomic>
 #include <span>
 #include <string>
 
@@ -10,6 +9,7 @@ namespace umod::core
 {
     namespace player_loop
     {
+        void init(void *);
         enum class Index
         {
             Update = 0,
@@ -37,5 +37,6 @@ namespace umod::core
         void disable(const std::string &name);
     }
 
-    void run(std::atomic<bool> &stopToken, void *playerLoop, std::span<::umod::feature::Module> modules);
+    void run(void *playerLoop, std::span<::umod::feature::Module> modules);
+    void shutdown();
 }

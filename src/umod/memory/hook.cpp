@@ -19,7 +19,9 @@ namespace umod::memory
 #ifndef NDEBUG
         log_set_level(0);
 #endif
+#ifdef __ANDROID__
         log_set_tag("freecam");
+#endif
         dobby_enable_near_branch_trampoline();
         debug::logger::info("Hooking {} with detour {}", target, detour);
         const auto ok = DobbyHook(target, (FN_PTR)detour, (FN_PTR_PTR)orig) == RS_SUCCESS ? true : false;

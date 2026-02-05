@@ -1,6 +1,6 @@
 #pragma once
 
-#include "umod/UnityResolve.hpp"
+#include "umod/runtime/UnityResolve.hpp"
 
 namespace umod::UTYPE
 {

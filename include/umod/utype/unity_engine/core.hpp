@@ -12,6 +12,8 @@ namespace umod::UTYPE::unity_engine
     using Screen = UnityResolve::UnityType::Screen;
     using Color = UnityResolve::UnityType::Color;
 
+    using UnityObject = UnityResolve::UnityType::UnityObject;
+
     enum class Space
     {
         World = 0x0,

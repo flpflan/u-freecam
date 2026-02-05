@@ -21,6 +21,7 @@ namespace umod::core
                 if (std::ranges::find(user::config::core::EnabledModules, module.name()) !=
                     std::ranges::end(user::config::core::EnabledModules))
                 {
+                    debug::logger::info("Feature enabled: {}", module.name());
                     module.load();
                 }
             }
@@ -58,10 +59,12 @@ namespace umod::core
 
         void enable(const std::string &name)
         {
+            debug::logger::info("Feature enabled: {}", name);
             if (auto *module = findModule(name)) module->load();
         }
         void disable(const std::string &name)
         {
+            debug::logger::info("Feature disabled: {}", name);
             if (auto *module = findModule(name)) module->unload();
         }
     }

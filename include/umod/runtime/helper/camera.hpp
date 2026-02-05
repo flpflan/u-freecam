@@ -16,7 +16,7 @@ namespace umod::unity_runtime::helper
         const float zoomSpeed = 20.f;
 
     public:
-        explicit CameraHelper(Camera &c) : cam(c), defaultZoom(cam.GetFoV()) {}
+        CameraHelper(Camera &c) : cam(c), defaultZoom(cam.GetFoV()) {}
         auto zoomIn(float) -> void;
         auto zoomOut(float) -> void;
         auto resetZoom() -> void;

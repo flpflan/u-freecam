@@ -100,6 +100,7 @@ namespace umod::core::player_loop
     void Handle::dettach()
     {
         kUpdateLoops.remove(id);
+        // INFO: Dettach from PlayerLoop if no update hook
         if (kUpdateLoops.empty()) manager::dettach();
     }
 
@@ -115,6 +116,7 @@ namespace umod::core::player_loop
     // }
     Handle attach(void (*target)())
     {
+        // INFO: Attach to PlayerLoop if not yet
         if (!manager::Attached) manager::attach();
         kUpdateLoops.push(target);
         return {target, Index::Update};

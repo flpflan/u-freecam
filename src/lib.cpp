@@ -17,6 +17,7 @@ __attribute__((constructor)) void on_load()
 
 __attribute__((destructor)) void on_unload() { umod::core::shutdown(); }
 #else
+#include "Windows.h"
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD reason, LPVOID lpReserved)
 {
     switch (reason)
@@ -24,7 +25,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD reason, LPVOID lpReserved)
     case DLL_PROCESS_ATTACH:
         DisableThreadLibraryCalls(hModule);
         umod::bootstrap::addFeature(freecam::kDesc);
-        std::thread(umod::bootstrap::run).detach();
+        std::thread(umod::core::run).detach();
         break;
 
     case DLL_PROCESS_DETACH:

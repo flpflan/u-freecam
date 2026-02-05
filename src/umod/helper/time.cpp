@@ -12,7 +12,7 @@ namespace umod::unity_runtime::helper
     {
         auto getDeltaTime_s() -> float
         {
-            if (core::player_loop::isMockLoop()) return to_seconds(user::config::core::MockLoopDeltaTime);
+            if (core::player_loop::isMockLoop()) return to_seconds(user_config::core::MockLoopDeltaTime);
             return Time::GetDeltaTime();
         }
     }

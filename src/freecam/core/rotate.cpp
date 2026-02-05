@@ -5,14 +5,13 @@
 
 using namespace umod::UTYPE::unity_engine;
 
-using namespace user;
-using enum user::config::freecam::keybind::KeyCode;
+using enum user_config::freecam::keybind::KeyCode;
 
 namespace freecam
 {
     auto FreeCamera::updateRotate() -> void
     {
-        using namespace config::freecam;
+        using namespace user_config::freecam;
 
         Vector2 toRotate(0, 0);
         toRotate.x = Input::GetAxis("Mouse X") * property::RotationSpeed;
@@ -25,7 +24,7 @@ namespace freecam
     }
     auto FreeCamera::updateRoll() -> void
     {
-        using namespace config::freecam;
+        using namespace user_config::freecam;
 
         if (Input::GetKey(keybind::RollLeft))
             anchorTransHelper_->roll(Input::GetKey(keybind::SpeedUp) ? -property::RollSpeed * 2 : -property::RollSpeed);

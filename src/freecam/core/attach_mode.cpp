@@ -9,8 +9,8 @@
 using namespace umod::UTYPE::unity_engine;
 using namespace umod::debug;
 
-using namespace user::config::freecam;
-using enum user::config::freecam::keybind::KeyCode;
+using namespace user_config::freecam;
+using enum user_config::freecam::keybind::KeyCode;
 
 namespace freecam
 {

@@ -10,8 +10,6 @@ using namespace umod::UTYPE::unity_engine;
 using namespace umod::unity_runtime::helper;
 using namespace umod::debug;
 
-using namespace user;
-
 namespace freecam
 {
     namespace
@@ -60,7 +58,7 @@ namespace freecam
         anchorTrans_ = createAnchor();
         GameObject::DontDestroyOnLoad(anchorTrans_);
 
-        freeCam_ = createCamera(user::config::freecam::Mode);
+        freeCam_ = createCamera(user_config::freecam::Mode);
         cameraHelper_ = std::make_unique<CameraHelper>(*freeCam_);
         GameObject::DontDestroyOnLoad(freeCam_->GetGameObject());
         static_cast<Transform *>(freeCam_->GetTransform())->SetParent(anchorTrans_);
@@ -97,7 +95,7 @@ namespace freecam
             // {
             // if (origParent && !origParent->IsDestoryed())
             //     origGObject->GetTransform()->SetParent(origParent->GetTransform());
-            if (config::freecam::DisableOrigCam) origGO->SetActive(true);
+            if (user_config::freecam::DisableOrigCam) origGO->SetActive(true);
             // if (Mode == Mode::MainCamera)
             // {
             // origGObject->SetTag("MainCamera");
@@ -154,7 +152,7 @@ namespace freecam
         origPosition_ = origTransform->GetPosition();
         origRotation_ = origTransform->GetRotation();
         // if (Mode == Mode::MainCamera) origGObject->SetTag("Untagged");
-        if (config::freecam::DisableOrigCam) origCamera_->GetGameObject()->SetActive(false);
+        if (user_config::freecam::DisableOrigCam) origCamera_->GetGameObject()->SetActive(false);
     }
 
     // // TODO: merge enable/resume, disable/suspend

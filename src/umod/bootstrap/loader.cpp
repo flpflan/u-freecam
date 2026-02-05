@@ -172,7 +172,7 @@ namespace umod::bootstrap
     {
         loader::bypassHardenedIL2CPP();
 
-        std::this_thread::sleep_for(user::config::loader::WaitBeforeInit);
+        std::this_thread::sleep_for(user_config::loader::WaitBeforeInit);
         debug::logger::info("======= Begin FreeCam =======");
         debug::logger::info("Waiting for Unity initializing");
 

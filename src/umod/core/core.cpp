@@ -18,8 +18,8 @@ namespace umod::core
             for (auto &module : modules)
             {
                 // Enable only if exist in user defined EnabledModules
-                if (std::ranges::find(user::config::core::EnabledModules, module.name()) !=
-                    std::ranges::end(user::config::core::EnabledModules))
+                if (std::ranges::find(user_config::core::EnabledModules, module.name()) !=
+                    std::ranges::end(user_config::core::EnabledModules))
                 {
                     debug::logger::info("Feature enabled: {}", module.name());
                     module.load();

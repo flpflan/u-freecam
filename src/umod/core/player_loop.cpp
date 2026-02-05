@@ -73,7 +73,7 @@ namespace umod::core::player_loop
                         do
                         {
                             runAttached();
-                            std::this_thread::sleep_for(user::config::core::MockLoopDeltaTime);
+                            std::this_thread::sleep_for(user_config::core::MockLoopDeltaTime);
                         } while (1);
                         UnityResolve::ThreadDetach();
                     })

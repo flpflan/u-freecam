@@ -17,10 +17,9 @@ namespace freecam
     using namespace umod::UTYPE::unity_engine;
     using namespace umod::debug;
 
-    using namespace user;
-    using namespace user::config;
+    using namespace user_config;
 
-    using enum user::config::freecam::keybind::KeyCode;
+    using enum user_config::freecam::keybind::KeyCode;
 
     namespace
     {
@@ -63,7 +62,7 @@ namespace freecam
 
             std::this_thread::sleep_for(100ms); // For MockLoop use
         }
-        if (Input::GetKeyDown(config::freecam::keybind::ToggleFreeCam))
+        if (Input::GetKeyDown(user_config::freecam::keybind::ToggleFreeCam))
         {
             if (freeCam)
             {
@@ -72,7 +71,7 @@ namespace freecam
             }
             else
             {
-                freeCam = FreeCamera::create(user::config::freecam::Mode);
+                freeCam = FreeCamera::create(user_config::freecam::Mode);
                 freeCam->enable();
             }
             return;

@@ -50,7 +50,7 @@ namespace freecam::helper
 
     bool isCurrentFreeCamera()
     {
-        const auto curCam = user::config::freecam::Mode == Mode::Depth ? getMaxDepthCamera() : Camera::GetMain();
+        const auto curCam = user_config::freecam::Mode == Mode::Depth ? getMaxDepthCamera() : Camera::GetMain();
         if (curCam == nullptr) return false;
         const auto curCamName = curCam->GetName()->ToString();
         if (curCamName == kFreeCameraName) return true;

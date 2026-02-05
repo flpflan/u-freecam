@@ -5,7 +5,7 @@
 
 #include <array>
 
-namespace user::config
+namespace user_config
 {
     // Loader
     namespace loader

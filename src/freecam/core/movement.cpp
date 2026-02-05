@@ -9,8 +9,7 @@ using namespace umod::UTYPE::unity_engine;
 using namespace umod::unity_runtime::helper;
 using namespace umod::utils;
 
-using namespace user;
-using enum user::config::freecam::keybind::KeyCode;
+using enum user_config::freecam::keybind::KeyCode;
 
 class AccelerationTimer
 {
@@ -22,7 +21,7 @@ public:
     float Tick()
     {
         const auto deltaTime = TimeUtils::getDeltaTime_s();
-        accelTimer += deltaTime != 0 ? deltaTime : to_seconds(config::core::MockLoopDeltaTime);
+        accelTimer += deltaTime != 0 ? deltaTime : to_seconds(user_config::core::MockLoopDeltaTime);
         accelTimer = math::clamp(accelTimer, 0.f, AccelTime);
         return accelTimer / AccelTime;
     }
@@ -51,7 +50,7 @@ namespace freecam
 {
     auto FreeCamera::updateMove() -> void
     {
-        using namespace config::freecam;
+        using namespace user_config::freecam;
         Vector3 toMove(0, 0, 0);
         // toMove.x = UnityApi::GetAxis("Horizontal");
         // toMove.y = UnityApi::GetAxis("Vertical");

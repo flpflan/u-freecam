@@ -5,8 +5,7 @@
 
 using namespace umod::UTYPE::unity_engine;
 
-using namespace user;
-using enum user::config::freecam::keybind::KeyCode;
+using enum user_config::freecam::keybind::KeyCode;
 
 // float getPinchDelta()
 // {
@@ -42,7 +41,7 @@ namespace freecam
 {
     auto FreeCamera::updateZoom() -> void
     {
-        using namespace user::config::freecam;
+        using namespace user_config::freecam;
         const bool toZoom = Input::GetKey(keybind::ZoomMode);
         if (!toZoom && kFlags.zoom_mode) cameraHelper_->resetZoom();
         kFlags.zoom_mode = toZoom;

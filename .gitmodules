@@ -2,7 +2,7 @@
 	path = extern/spdlog
 	url = https://github.com/gabime/spdlog
 [submodule "extern/Dobby"]
-	path = extern/Dobby
+	path = extern/dobby-android
 	url = https://github.com/LSPosed/Dobby
 [submodule "extern/KittyMemory"]
 	path = extern/KittyMemory
@@ -13,6 +13,9 @@
 [submodule "extern/xDL"]
 	path = extern/xDL
 	url = https://github.com/hexhacking/xDL
-[submodule "extern/imgui"]
-	path = extern/imgui
-	url = https://github.com/ocornut/imgui
+[submodule "extern/cpp-httplib"]
+	path = extern/cpp-httplib
+	url = https://github.com/yhirose/cpp-httplib
+[submodule "extern/dobby-windows"]
+	path = extern/dobby-windows
+	url = https://github.com/BepInEx/Dobby

@@ -1,30 +1,37 @@
-#include "bootstrap.hpp"
-#include "debug/crash_handler.hpp"
+#include "freecam/module.hpp"
+#include "umod/bootstrap.hpp"
+#include "umod/core.hpp"
+
 #include <thread>
 
 #ifdef __ANDROID__
+#include "umod/debug/crash_handler.hpp"
 __attribute__((constructor)) void on_load()
 {
-    Debug::CrashHandler::Setup();
-    std::thread(Bootstrap::Run).detach();
+    umod::debug::crash_handler::setup();
+
+    umod::bootstrap::addFeature(freecam::kDesc);
+
+    std::thread(umod::bootstrap::run).detach();
 }
 
-__attribute__((destructor)) void on_unload() { Bootstrap::Shutdown(); }
+__attribute__((destructor)) void on_unload() { umod::core::shutdown(); }
 #else
+#include "Windows.h"
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD reason, LPVOID lpReserved)
 {
     switch (reason)
     {
     case DLL_PROCESS_ATTACH:
-        Debug::CrashHandler::Setup();
         DisableThreadLibraryCalls(hModule);
-        std::thread(Bootstrap::Run).detach();
+        umod::bootstrap::addFeature(freecam::kDesc);
+        std::thread(umod::core::run).detach();
         break;
 
     case DLL_PROCESS_DETACH:
         if (lpReserved == nullptr)
         {
-            Bootstrap::Shutdown();
+            umod::bootstrap::shutdown();
         }
         break;
 

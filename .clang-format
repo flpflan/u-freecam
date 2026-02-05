@@ -8,6 +8,8 @@ SpaceAfterTemplateKeyword: true
 UseTab: Never
 BreakBeforeBraces: Allman
 AllowShortIfStatementsOnASingleLine: WithoutElse
+# AllowShortBlocksOnASingleLine: false
+# AllowShortFunctionsOnASingleLine: Empty
 IndentCaseLabels: false
 ColumnLimit: 120
 ReflowComments: false

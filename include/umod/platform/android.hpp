@@ -13,7 +13,7 @@ namespace umod::platform::android
             Hijacked,
             Emulated,
             Native,
-            Base,
+            Scanner,
             XDL,
         };
         TYPE ty;
@@ -23,6 +23,7 @@ namespace umod::platform::android
 
         static std::optional<ASymbolQuery> fromModule(const std::string &symName);
         static std::optional<ASymbolQuery> fromSymbol(const std::string &symName);
+        static ASymbolQuery fromHijacked(void *);
         void *resolve(const std::string &symName) const;
     };
 }

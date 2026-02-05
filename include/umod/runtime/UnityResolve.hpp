@@ -49,20 +49,17 @@
 #include <regex>
 #endif
 
-#include <algorithm>
 #include <chrono>
 #include <cmath>
 #include <codecvt>
 #include <cstring>
-#include <fstream>
 #include <functional>
-#include <iostream>
-#include <mutex>
 #include <numbers>
 #include <string>
 #include <thread>
 #include <unordered_map>
 #include <vector>
+#include <fstream>
 
 #ifdef USE_GLM
 #include <glm/glm.hpp>
@@ -82,8 +79,8 @@
 #elif ANDROID_MODE || LINUX_MODE || IOS_MODE || HARMONYOS_MODE
 #include <dlfcn.h>
 #include <locale>
-#include "umod/platform/android.hpp"
-using namespace umod::platform::android;
+#include "umod/platform/android_old.hpp"
+// using namespace umod::platform::android;
 #define UNITY_CALLING_CONVENTION
 #endif
 
@@ -670,7 +667,7 @@ class UnityResolve final {
             address_[funcName] = static_cast<void *>(GetProcAddress(static_cast<HMODULE>(hmodule_), funcName.c_str()));
 #elif ANDROID_MODE || LINUX_MODE || IOS_MODE || HARMONYOS_MODE
         if (address_.find(funcName) == address_.end() || !address_[funcName]) {
-            address_[funcName] = static_cast<ASymbolQuery*>(hmodule_)->resolve(funcName);
+            address_[funcName] = A_symbol_resolve(static_cast<Handle*>(hmodule_), funcName.c_str());
         }
 #endif
 

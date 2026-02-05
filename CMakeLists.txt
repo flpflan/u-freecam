@@ -31,7 +31,7 @@ file(GLOB_RECURSE FREECAM_SRC CONFIGURE_DEPENDS
 )
 
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Android")
-    list(APPEND FREECAM_SRC include/umod/platform/android.cpp)
+    # list(APPEND FREECAM_SRC include/umod/platform/android.cpp)
 endif()
 
 add_library(${PROJECT_NAME} SHARED ${FREECAM_SRC})

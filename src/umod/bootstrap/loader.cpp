@@ -8,8 +8,8 @@
 #include <vector>
 
 #ifdef __ANDROID__
-#include "umod/platform/android.hpp"
-using namespace umod::platform::android;
+#include "umod/platform/android_old.hpp"
+// using namespace umod::platform::android;
 #endif
 
 #include "user/config.hpp"
@@ -20,9 +20,9 @@ namespace umod::bootstrap
 {
     namespace
     {
-        static std::vector<feature::Module> modules;
+        static std::vector<feature::Module> modules{};
 #ifdef __ANDROID__
-        static std::optional<ASymbolQuery> IL2CPP_LIB_HANDLE;
+        static Handle *IL2CPP_LIB_HANDLE{};
 #endif
     }
 
@@ -32,9 +32,9 @@ namespace umod::bootstrap
         {
 #ifdef __ANDROID__
             void *assembly{};
-            if (!IL2CPP_LIB_HANDLE) IL2CPP_LIB_HANDLE = ASymbolQuery::fromSymbol("il2cpp_init");
-            if (!IL2CPP_LIB_HANDLE) IL2CPP_LIB_HANDLE = ASymbolQuery::fromModule("libil2cpp.so");
-            if (IL2CPP_LIB_HANDLE) assembly = IL2CPP_LIB_HANDLE.operator->();
+            if (!IL2CPP_LIB_HANDLE) IL2CPP_LIB_HANDLE = new Handle{GetMoudleFromSymbol("il2cpp_init")};
+            if (!IL2CPP_LIB_HANDLE) IL2CPP_LIB_HANDLE = new Handle{A_get_handle("libil2cpp.so")};
+            if (IL2CPP_LIB_HANDLE) assembly = IL2CPP_LIB_HANDLE;
 #else
             const auto assembly = GetModuleHandleA("GameAssembly.dll");
 #endif
@@ -50,8 +50,8 @@ namespace umod::bootstrap
             {
 #ifdef __ANDROID__
                 void *monoHandle{};
-                IL2CPP_LIB_HANDLE = ASymbolQuery::fromModule(monoModule);
-                if (IL2CPP_LIB_HANDLE) monoHandle = IL2CPP_LIB_HANDLE.operator->();
+                IL2CPP_LIB_HANDLE = new Handle{A_get_handle(monoModule)};
+                if (IL2CPP_LIB_HANDLE) monoHandle = IL2CPP_LIB_HANDLE;
 #else
                 const auto monoHandle = GetModuleHandleA(monoModule);
 #endif
@@ -108,12 +108,12 @@ namespace umod::bootstrap
         {
             if (!user::config::loader::Hardened) return;
 
-            const auto query = ASymbolQuery::fromModule("libdl.so");
+            const auto query = A_get_handle("libdl.so");
             // if (!handle) return Debug::Logger::Debug("dlerror {}", dlerror());
 
             using dlsym_t = void *(*)(void *, const char *);
             // using JNI_OnLoad_t = jint (*)(JavaVM *, void *);
-            const auto fn_dlsym = (dlsym_t)query->resolve("dlsym");
+            const auto fn_dlsym = (dlsym_t)A_symbol_resolve(&query, "dlsym");
             Hook(
                 fn_dlsym,
                 +[](void *handle, const char *sym_name)
@@ -128,7 +128,7 @@ namespace umod::bootstrap
                     if (0 == strcmp(sym_name, "il2cpp_init"))
                     {
                         // Hijack libil2cpp.so handle
-                        IL2CPP_LIB_HANDLE = (ASymbolQuery{ASymbolQuery::TYPE::Hijacked, handle});
+                        IL2CPP_LIB_HANDLE = (new Handle{handle, Handle::Hijacked});
                         // UnHook(fn_dlsym);
                     }
                     return symbol;

@@ -22,7 +22,7 @@ namespace umod::bootstrap
     {
         static std::vector<feature::Module> modules{};
 #ifdef __ANDROID__
-        static Handle *IL2CPP_LIB_HANDLE{};
+        static std::optional<Handle> IL2CPP_LIB_HANDLE{};
 #endif
     }
 
@@ -32,9 +32,9 @@ namespace umod::bootstrap
         {
 #ifdef __ANDROID__
             void *assembly{};
-            if (!IL2CPP_LIB_HANDLE) IL2CPP_LIB_HANDLE = new Handle{GetMoudleFromSymbol("il2cpp_init")};
-            if (!IL2CPP_LIB_HANDLE) IL2CPP_LIB_HANDLE = new Handle{A_get_handle("libil2cpp.so")};
-            if (IL2CPP_LIB_HANDLE) assembly = IL2CPP_LIB_HANDLE;
+            if (!IL2CPP_LIB_HANDLE) IL2CPP_LIB_HANDLE = GetMoudleFromSymbol("il2cpp_init");
+            if (!IL2CPP_LIB_HANDLE) IL2CPP_LIB_HANDLE = A_get_handle("libil2cpp.so");
+            if (IL2CPP_LIB_HANDLE) assembly = &*IL2CPP_LIB_HANDLE;
 #else
             const auto assembly = GetModuleHandleA("GameAssembly.dll");
 #endif
@@ -50,8 +50,8 @@ namespace umod::bootstrap
             {
 #ifdef __ANDROID__
                 void *monoHandle{};
-                IL2CPP_LIB_HANDLE = new Handle{A_get_handle(monoModule)};
-                if (IL2CPP_LIB_HANDLE) monoHandle = IL2CPP_LIB_HANDLE;
+                IL2CPP_LIB_HANDLE = A_get_handle(monoModule);
+                if (IL2CPP_LIB_HANDLE) monoHandle = &*IL2CPP_LIB_HANDLE;
 #else
                 const auto monoHandle = GetModuleHandleA(monoModule);
 #endif
@@ -106,14 +106,15 @@ namespace umod::bootstrap
 #ifdef __ANDROID__
         static void bypassHardenedIL2CPP()
         {
-            if (!user::config::loader::Hardened) return;
+            if (!user_config::loader::Hardened) return;
 
             const auto query = A_get_handle("libdl.so");
+            if (!query) return;
             // if (!handle) return Debug::Logger::Debug("dlerror {}", dlerror());
 
             using dlsym_t = void *(*)(void *, const char *);
             // using JNI_OnLoad_t = jint (*)(JavaVM *, void *);
-            const auto fn_dlsym = (dlsym_t)A_symbol_resolve(&query, "dlsym");
+            const auto fn_dlsym = (dlsym_t)A_symbol_resolve(&*query, "dlsym");
             Hook(
                 fn_dlsym,
                 +[](void *handle, const char *sym_name)
@@ -128,7 +129,7 @@ namespace umod::bootstrap
                     if (0 == strcmp(sym_name, "il2cpp_init"))
                     {
                         // Hijack libil2cpp.so handle
-                        IL2CPP_LIB_HANDLE = (new Handle{handle, Handle::Hijacked});
+                        IL2CPP_LIB_HANDLE = (Handle{handle, Handle::Hijacked});
                         // UnHook(fn_dlsym);
                     }
                     return symbol;

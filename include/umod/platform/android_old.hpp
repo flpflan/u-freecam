@@ -1,5 +1,6 @@
 #pragma once
 
+#include <optional>
 #ifdef __ANDROID__
 
 #include "KittyMemory/KittyInclude.hpp"
@@ -21,7 +22,7 @@ struct Handle
     TYPE ty;
 };
 
-inline Handle A_get_handle(const char *path)
+inline std::optional<Handle> A_get_handle(const char *path)
 {
     void *handle{};
     // Emulator
@@ -29,6 +30,7 @@ inline Handle A_get_handle(const char *path)
     // Real device
     if ((handle = xdl_open(path, XDL_DEFAULT))) return Handle{handle, Handle::XDL};
     if ((handle = dlopen(path, RTLD_LAZY))) return Handle{handle, Handle::Native};
+    return std::nullopt;
 }
 
 inline void *A_symbol_resolve(const Handle *handle, const char *sym_name)
@@ -53,9 +55,10 @@ inline void *A_symbol_resolve(const Handle *handle, const char *sym_name)
         if ((symbol = xdl_sym(std::get<void *>(handle->handle), sym_name, NULL))) return symbol;
         break;
     }
+    [[unlikely]] return nullptr;
 }
 
-inline Handle GetMoudleFromSymbol(const char *sym_name)
+inline std::optional<Handle> GetMoudleFromSymbol(const char *sym_name)
 {
     for (auto &it : ElfScanner::findSymbolAll(sym_name, EScanElfType::Any, EScanElfFilter::App))
     {
@@ -64,6 +67,7 @@ inline Handle GetMoudleFromSymbol(const char *sym_name)
             return Handle{it.second, Handle::Base};
         }
     }
+    return std::nullopt;
 }
 
 #endif // __ANDROID__

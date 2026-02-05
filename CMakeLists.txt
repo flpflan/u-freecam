@@ -14,7 +14,7 @@ if(CCACHE_PROGRAM)
 endif()
 
 # ===== Options =====
-option(UMOD_ENABLE_WEBUI "Include webui" ON)
+# option(UMOD_ENABLE_WEBUI "Include webui" ON)
 
 # ===== Deps =====
 include(cmake/deps/spdlog.cmake)
@@ -28,9 +28,9 @@ if(NOT (${CMAKE_SYSTEM_NAME} STREQUAL "Android" AND ${CMAKE_SYSTEM_VERSION} LESS
     include(cmake/deps/backward-cpp.cmake)
 endif()
 
-if(${UMOD_ENABLE_WEBUI})
-    add_subdirectory(webui)
-endif()
+# if(${UMOD_ENABLE_WEBUI})
+#     add_subdirectory(webui)
+# endif()
 
 # ===== Taget Freecam Definition =====
 file(GLOB_RECURSE FREECAM_SRC CONFIGURE_DEPENDS
@@ -57,9 +57,9 @@ if(NOT (${CMAKE_SYSTEM_NAME} STREQUAL "Android" AND ${CMAKE_SYSTEM_VERSION} LESS
     target_link_libraries(${PROJECT_NAME} PRIVATE Backward::Interface)
 endif()
 
-if(${UMOD_ENABLE_WEBUI})
-    target_link_libraries(${PROJECT_NAME} PRIVATE webui)
-endif()
+# if(${UMOD_ENABLE_WEBUI})
+#     target_link_libraries(${PROJECT_NAME} PRIVATE webui)
+# endif()
 
 if(UNIX AND NOT APPLE)
     target_link_libraries(${PROJECT_NAME} PRIVATE dl)

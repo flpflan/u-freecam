@@ -1,2 +1,6 @@
-# target_compile_options(${PROJECT_NAME} PRIVATE -fsanitize=address -fno-omit-frame-pointer)
-# target_link_options(${PROJECT_NAME} PRIVATE -fsanitize=address)
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    # target_compile_options(${PROJECT_NAME} PRIVATE -fsanitize=address -fno-omit-frame-pointer)
+    # target_link_options(${PROJECT_NAME} PRIVATE -fsanitize=address)
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    target_compile_options(${PROJECT_NAME} PRIVATE /MTd)
+endif()

@@ -61,15 +61,15 @@ endif()
 #     target_link_libraries(${PROJECT_NAME} PRIVATE webui)
 # endif()
 
-if(UNIX AND NOT APPLE)
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     target_link_libraries(${PROJECT_NAME} PRIVATE dl)
     target_compile_options(${PROJECT_NAME} PRIVATE -fPIC -fdeclspec)
     target_link_options(${PROJECT_NAME} PRIVATE
-        -fseh-exceptions
+        # -fseh-exceptions
         -Wl,--icf=all
         -Wl,-z,max-page-size=16384)
-elseif(WIN32)
-    target_compile_options(${PROJECT_NAME} PRIVATE /MT /Zc:preprocessor)
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    target_compile_options(${PROJECT_NAME} PRIVATE /Zc:preprocessor)
 endif()
 
 # ===== Build Config =====

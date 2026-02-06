@@ -19,21 +19,21 @@ define build
 	@cmake --build $(BUILDDIR)/$(4) --parallel
 endef
 
-debug-all: debug-arm64 debug-x86_64
+debug-all: debug-aarch64 debug-x86_64
 
-debug-arm64:
-	$(call build,"arm64-v8a",$(DEBUG_ANDROID_API_LEVEL),Debug,debug)
+debug-aarch64:
+	$(call build,"arm64-v8a",$(DEBUG_ANDROID_API_LEVEL),Debug,debug-android-aarch64)
 
 debug-x86_64:
-	$(call build,"x86_64",$(DEBUG_ANDROID_API_LEVEL),Debug,debug-x86_64)
+	$(call build,"x86_64",$(DEBUG_ANDROID_API_LEVEL),Debug,debug-android-x86_64)
 
-release-all: release-arm64 release-x86_64
+release-all: release-aarch64 release-x86_64
 
-release-arm64:
-	$(call build,"arm64-v8a",$(RELEASE_ANDROID_API_LEVEL),Release,release-arm64)
+release-aarch64:
+	$(call build,"arm64-v8a",$(RELEASE_ANDROID_API_LEVEL),Release,release-android-aarch64)
 
 release-x86_64:
-	$(call build,"x86_64",$(RELEASE_ANDROID_API_LEVEL),Release,release-x86_64)
+	$(call build,"x86_64",$(RELEASE_ANDROID_API_LEVEL),Release,release-android-x86_64)
 
 clean:
 	@echo "Cleaning up"

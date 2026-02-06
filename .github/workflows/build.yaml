@@ -7,6 +7,11 @@ on:
 jobs:
   build-android:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        arch: [aarch64, x86_64]
+
     env:
       DEBUG_ANDROID_API_LEVEL: 33
       GENERATOR: "Ninja"
@@ -29,12 +34,17 @@ jobs:
       - name: Export ANDROID_NDK
         run: echo "ANDROID_NDK=$ANDROID_NDK_HOME" >> $GITHUB_ENV
 
-      - name: Build Android debug
-        run: make debug-all
+      - name: Build Android aarch64
+        if: matrix.arch == 'aarch64'
+        run: make debug-aarch64
+
+      - name: Build Android x86_64
+        if: matrix.arch == 'x86_64'
+        run: make debug-x86_64
 
       - uses: actions/upload-artifact@v4
         with:
-          name: freecam-android-debug
+          name: freecam-${{ matrix.arch }}-android-debug
           path: |
             build/**/*.so
 
@@ -43,8 +53,9 @@ jobs:
 
     strategy:
       matrix:
-        build_type: [Debug]
-
+        include:
+          - arch: x86_64
+            cmake_arch: x64
     steps:
       - uses: actions/checkout@v4
         with:
@@ -55,16 +66,16 @@ jobs:
         run: >
           cmake -S . -B build
           -G "Visual Studio 17 2022"
-          -A x64
-          -D CMAKE_BUILD_TYPE=${{ matrix.build_type }}
+          -A ${{ matrix.cmake_arch }} 
+          -D CMAKE_BUILD_TYPE=Debug
 
       - name: Build
         run: >
           cmake --build build
-          --config ${{ matrix.build_type }}
+          --config Debug
 
       - uses: actions/upload-artifact@v4
         with:
-          name: freecam-windows-debug
+          name: freecam-${{ matrix.arch }}-windows-debug
           path: |
             build/**/*.dll

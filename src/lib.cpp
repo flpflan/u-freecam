@@ -25,13 +25,13 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD reason, LPVOID lpReserved)
     case DLL_PROCESS_ATTACH:
         DisableThreadLibraryCalls(hModule);
         umod::bootstrap::addFeature(freecam::kDesc);
-        std::thread(umod::core::run).detach();
+        std::thread(umod::bootstrap::run).detach();
         break;
 
     case DLL_PROCESS_DETACH:
         if (lpReserved == nullptr)
         {
-            umod::bootstrap::shutdown();
+            umod::core::shutdown();
         }
         break;
 

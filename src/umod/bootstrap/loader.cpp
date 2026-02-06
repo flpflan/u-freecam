@@ -148,7 +148,7 @@ namespace umod::bootstrap
 #else
         static void bypassHardenedIL2CPP()
         {
-            if (!user::config::loader::Hardened) return;
+            if (!user_config::loader::Hardened) return;
         }
 #endif
         static bool initializeUnity()

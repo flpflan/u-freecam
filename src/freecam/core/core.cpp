@@ -127,7 +127,7 @@ namespace freecam
             updateAttachMode();
         }
 #ifndef __ANDROID__
-        if (Input::GetMouseButtonDown(2) || Input::GetKeyDown(config::freecam::keybind::UIMode))
+        if (Input::GetMouseButtonDown(2) || Input::GetKeyDown(user_config::freecam::keybind::UIMode))
         {
             CursorUtils::toggleCursor();
             kFlags.ui_layer = !kFlags.ui_layer;

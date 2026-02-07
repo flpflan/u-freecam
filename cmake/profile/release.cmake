@@ -10,10 +10,12 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
         -flto
         -Wl,--gc-sections)
     # Strip
-    add_custom_command(
-        TARGET ${PROJECT_NAME}
-        POST_BUILD
-        COMMAND ${CMAKE_STRIP} --strip-unneeded "$<TARGET_FILE:${PROJECT_NAME}>")
+    if (PROJECT_IS_TOP_LEVEL)
+        add_custom_command(
+            TARGET ${PROJECT_NAME}
+            POST_BUILD
+            COMMAND ${CMAKE_STRIP} --strip-unneeded "$<TARGET_FILE:${PROJECT_NAME}>")
+    endif()
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     target_compile_options(${PROJECT_NAME} PRIVATE /MT)
     target_compile_options(

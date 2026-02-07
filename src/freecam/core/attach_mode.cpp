@@ -2,15 +2,16 @@
 #include "freecam/helper.hpp"
 
 #include "umod/debug/logger.hpp"
-#include "umod/utype/unity_engine/input.hpp"
+#include "umod/runtime/helper/input.hpp"
 
 #include "user/config.hpp"
 
 using namespace umod::UTYPE::unity_engine;
+using namespace umod::unity_runtime::helper;
 using namespace umod::debug;
 
 using namespace user_config::freecam;
-using enum user_config::freecam::keybind::KeyCode;
+using enum user_config::freecam::keybind::Key;
 
 namespace freecam
 {
@@ -60,7 +61,7 @@ namespace freecam
                 exitAttachMode();
             }
         }
-        if (Input::GetKeyDown(keybind::AttachMode))
+        if (InputUtils::GetKeyDown(keybind::AttachMode))
         {
             if (!kFlags.attach_mode && anchorTrans_->GetParent() == nullptr)
             {

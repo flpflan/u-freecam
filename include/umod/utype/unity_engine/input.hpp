@@ -4,77 +4,174 @@
 
 namespace umod::UTYPE::unity_engine
 {
-    enum class KeyCode
+    enum class Key
     {
-        Backspace = 8,
-        TAB = 9,
-        Enter = 13,
-        Space = 32,
-        Minus = 45,
-        Plus = 61,
-        A = 97,
-        B = 98,
-        C = 99,
-        D = 100,
-        E = 101,
-        F = 102,
-        G = 103,
-        H = 104,
-        I = 105,
-        J = 106,
-        K = 107,
-        L = 108,
-        M = 109,
-        N = 110,
-        O = 111,
-        P = 112,
-        Q = 113,
-        R = 114,
-        S = 115,
-        T = 116,
-        U = 117,
-        V = 118,
-        W = 119,
-        X = 120,
-        Y = 121,
-        Z = 122,
-        UpArrow = 273,
-        DownArrow = 274,
-        RightArrow = 275,
-        LeftArrow = 276,
-        CTRL_R = 275,
-        SHIFT_R = 303,
-        SHIFT_L = 304,
-        Ctrl_L = 306,
+        None,
+        Space,
+        Enter,
+        Tab,
+        Backquote,
+        Quote,
+        Semicolon,
+        Comma,
+        Period,
+        Slash,
+        Backslash,
+        LeftBracket,
+        RightBracket,
+        Minus,
+        Equals,
+        A,
+        B,
+        C,
+        D,
+        E,
+        F,
+        G,
+        H,
+        I,
+        J,
+        K,
+        L,
+        M,
+        N,
+        O,
+        P,
+        Q,
+        R,
+        S,
+        T,
+        U,
+        V,
+        W,
+        X,
+        Y,
+        Z,
+        Digit1,
+        Digit2,
+        Digit3,
+        Digit4,
+        Digit5,
+        Digit6,
+        Digit7,
+        Digit8,
+        Digit9,
+        Digit0,
+        Shift_L,
+        Shift_R,
+        Alt_L,
+        Alt_R,
+        AltGr = 54,
+        Ctrl_L,
+        Ctrl_R,
+        Meta_L,
+        Meta_R,
+        Windows_L = 57,
+        Windows_R,
+        Apple_L = 57,
+        Apple_R,
+        Command_L = 57,
+        Command_R,
+        ContextMenu,
+        Esc,
+        LeftArrow,
+        RightArrow,
+        UpArrow,
+        DownArrow,
+        Backspace,
+        PageDown,
+        PageUp,
+        Home,
+        End,
+        Insert,
+        Delete,
+        CapsLock,
+        NumLock,
+        PrintScreen,
+        ScrollLock,
+        Pause,
+        NumpadEnter,
+        NumpadDivide,
+        NumpadMultiply,
+        NumpadPlus,
+        NumpadMinus,
+        NumpadPeriod,
+        NumpadEquals,
+        Numpad0,
+        Numpad1,
+        Numpad2,
+        Numpad3,
+        Numpad4,
+        Numpad5,
+        Numpad6,
+        Numpad7,
+        Numpad8,
+        Numpad9,
+        F1,
+        F2,
+        F3,
+        F4,
+        F5,
+        F6,
+        F7,
+        F8,
+        F9,
+        F10,
+        F11,
+        F12,
+        OEM1,
+        OEM2,
+        OEM3,
+        OEM4,
+        OEM5,
+        IMESelected
     };
-    enum class TouchPhase
+    class AxisControl : public UTYPE::Object
     {
-        Began = 2,
-        Moved = 3,
-        Stationary = 4,
-        Ended = 5,
-        Canceled = 6
-    };
-    struct Touch
-    {
-        UNITY_CLASS_DECL("UnityEngine.InputLegacyModule.dll", Touch)
+        UNITY_CLASS_DECL("Unity.InputSystem.dll", AxisControl)
     public:
-        UNITY_METHOD(TouchPhase, get_phase, (void))
-        UNITY_METHOD(UTYPE::Vector2, get_position, (void))
-        UNITY_METHOD(UTYPE::Vector2, get_deltaPosition, (void))
+    };
+    class ButtonControl : public AxisControl
+    {
+        UNITY_CLASS_DECL("Unity.InputSystem.dll", ButtonControl)
+    public:
+        UNITY_METHOD(bool *, get_isPressed, ())
+        UNITY_METHOD(bool *, get_wasPressedThisFrame, ())
+        UNITY_METHOD(bool *, get_wasReleasedThisFrame, ())
+    };
+    class KeyControl : public ButtonControl
+    {
+        UNITY_CLASS_DECL("Unity.InputSystem.dll", KeyControl)
+    public:
     };
 
-    class Input
+    class Keyboard
     {
-        UNITY_CLASS_DECL("UnityEngine.InputLegacyModule.dll", Input)
+        UNITY_CLASS_DECL("Unity.InputSystem.dll", Keyboard)
     public:
-        UNITY_STATIC_METHOD(bool, GetKey, (const KeyCode key), key)
-        UNITY_STATIC_METHOD(bool, GetKeyDown, (const KeyCode key), key)
-        UNITY_STATIC_METHOD(bool, GetKeyUp, (const KeyCode key), key)
-        UNITY_STATIC_METHOD(float, GetAxis, (const UTYPE::String *const axis), axis)
-        inline static auto GetAxis(const std::string &axis) -> float { return GetAxis(UTYPE::String::New(axis)); }
-        UNITY_STATIC_METHOD(bool, GetMouseButtonDown, (const int key), key)
-        UNITY_STATIC_METHOD(Touch, GetTouch, (int v), v)
-        UNITY_STATIC_METHOD(int, get_touchCount, (void))
+        UNITY_STATIC_METHOD(void, set_current, (const Keyboard *keyboard), keyboard)
+        UNITY_STATIC_METHOD(Keyboard *, get_current, ())
+        UNITY_METHOD(KeyControl *, get_Item, (Key key), key)
+    };
+
+    class DeltaControl
+    {
+        UNITY_CLASS_DECL("Unity.InputSystem.dll", DeltaControl)
+    public:
+    };
+    class Pointer
+    {
+        UNITY_CLASS_DECL("Unity.InputSystem.dll", Pointer)
+    public:
+        UNITY_METHOD(void, set_delta, (DeltaControl * delta), delta)
+        UNITY_METHOD(DeltaControl *, get_delta, ())
+    };
+
+    class Mouse : public Pointer
+    {
+        UNITY_CLASS_DECL("Unity.InputSystem.dll", Mouse)
+    public:
+        UNITY_STATIC_METHOD(void, set_current, (const Mouse *mouse), mouse)
+        UNITY_STATIC_METHOD(Mouse *, get_current, ())
     };
 }

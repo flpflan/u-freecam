@@ -1,7 +1,7 @@
 #pragma once
 
 #include "freecam/freecam.hpp"
-#include "umod/utype/unity_engine/input.hpp"
+#include "umod/runtime/helper/input.hpp"
 
 #include <array>
 
@@ -43,38 +43,38 @@ namespace user_config
         // 键位
         namespace keybind
         {
-            using umod::UTYPE::unity_engine::KeyCode;
-            using enum KeyCode;
+            using umod::unity_runtime::helper::InputUtils::Key;
+            using enum Key;
 
-            inline KeyCode ToggleFreeCam = Enter; // 开启/关闭自由镜头
+            inline Key ToggleFreeCam = Enter; // 开启/关闭自由镜头
 
             // 移动
-            inline KeyCode Up = Space;        // 上升
-            inline KeyCode Down = Ctrl_L;     // 下降
-            inline KeyCode Forward = W;       // 前
-            inline KeyCode Back = S;          // 后
-            inline KeyCode Left = A;          // 左
-            inline KeyCode Right = D;         // 右
-            inline KeyCode SpeedUp = SHIFT_L; // 加速
+            inline Key Up = Space;        // 上升
+            inline Key Down = Ctrl_L;     // 下降
+            inline Key Forward = W;       // 前
+            inline Key Back = S;          // 后
+            inline Key Left = A;          // 左
+            inline Key Right = D;         // 右
+            inline Key SpeedUp = Shift_L; // 加速
 
             // 转动
-            inline KeyCode RotateUp = UpArrow;       // 镜头向上转动
-            inline KeyCode RotateDown = DownArrow;   // 镜头向下转动
-            inline KeyCode RotateLeft = LeftArrow;   // 镜头向左转动
-            inline KeyCode RotateRight = RightArrow; // 镜头向右转动
-            inline KeyCode RollLeft = Q;             // 镜头逆时针滚动
-            inline KeyCode RollRight = E;            // 镜头顺时针滚动
-            inline KeyCode ResetRoll = R;            // 复位镜头滚动
+            inline Key RotateUp = UpArrow;       // 镜头向上转动
+            inline Key RotateDown = DownArrow;   // 镜头向下转动
+            inline Key RotateLeft = LeftArrow;   // 镜头向左转动
+            inline Key RotateRight = RightArrow; // 镜头向右转动
+            inline Key RollLeft = Q;             // 镜头逆时针滚动
+            inline Key RollRight = E;            // 镜头顺时针滚动
+            inline Key ResetRoll = R;            // 复位镜头滚动
 
             // 镜头缩放
-            inline KeyCode ZoomMode = Z; // 镜头缩放模式
-            inline KeyCode ZoomIn = X;   // 放大
-            inline KeyCode ZoomOut = C;  // 缩小
+            inline Key ZoomMode = Z; // 镜头缩放模式
+            inline Key ZoomIn = X;   // 放大
+            inline Key ZoomOut = C;  // 缩小
 
-            inline KeyCode PinAnchor = M; //固定锚点
+            inline Key PinAnchor = M; //固定锚点
 
-            inline KeyCode UIMode = U;         // 开启/关闭 UI 模式
-            inline KeyCode AttachMode = T; // 开启/退出依附模式
+            inline Key UIMode = U;     // 开启/关闭 UI 模式
+            inline Key AttachMode = T; // 开启/退出依附模式
         };
     };
 
@@ -82,12 +82,12 @@ namespace user_config
     {
         namespace keybind
         {
-            using umod::UTYPE::unity_engine::KeyCode;
-            using enum KeyCode;
+            using umod::unity_runtime::helper::InputUtils::Key;
+            using enum Key;
 
-            inline KeyCode ToggleFreeze = Backspace; // 开启/关闭时间流动
-            inline KeyCode SpeedUp = Plus;           // 加速时间流动
-            inline KeyCode SpeedDown = Minus;        // 减速时间流动
+            inline Key ToggleFreeze = Backspace; // 开启/关闭时间流动
+            inline Key SpeedUp = Equals;         // 加速时间流动
+            inline Key SpeedDown = Minus;        // 减速时间流动
         }
     }
 }

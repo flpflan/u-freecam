@@ -1,11 +1,12 @@
 #include "freecam/freecam.hpp"
-#include "umod/utype/unity_engine/input.hpp"
+#include "umod/runtime/helper/input.hpp"
 
 #include "user/config.hpp"
 
 using namespace umod::UTYPE::unity_engine;
+using namespace umod::unity_runtime::helper;
 
-using enum user_config::freecam::keybind::KeyCode;
+using enum user_config::freecam::keybind::Key;
 
 // float getPinchDelta()
 // {
@@ -42,14 +43,14 @@ namespace freecam
     auto FreeCamera::updateZoom() -> void
     {
         using namespace user_config::freecam;
-        const bool toZoom = Input::GetKey(keybind::ZoomMode);
+        const bool toZoom = InputUtils::GetKey(keybind::ZoomMode);
         if (!toZoom && kFlags.zoom_mode) cameraHelper_->resetZoom();
         kFlags.zoom_mode = toZoom;
         if (kFlags.zoom_mode)
         {
-            if (Input::GetKey(keybind::ZoomIn)) cameraHelper_->zoomIn(1);
-            if (Input::GetKey(keybind::ZoomOut)) cameraHelper_->zoomOut(1);
-            const float mouseCenter = Input::GetAxis("Mouse ScrollWheel");
+            if (InputUtils::GetKey(keybind::ZoomIn)) cameraHelper_->zoomIn(1);
+            if (InputUtils::GetKey(keybind::ZoomOut)) cameraHelper_->zoomOut(1);
+            const float mouseCenter = InputUtils::GetAxis("Mouse ScrollWheel");
             if (mouseCenter < 0)
             {
                 cameraHelper_->zoomOut(10);

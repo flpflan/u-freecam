@@ -32,7 +32,7 @@ u-freecam
 - Visual Studio (包含 C++ 工具链和 Cmake)
 
 ### 编译
-用 Visual Studio 打开本项目，选择 `freecam-AMD64` 目标，然后生成。
+用 Visual Studio 打开本项目，选择 `freecam-x86_64-windows` 目标，然后生成。
 
 ## 构建 (Android)
 
@@ -91,7 +91,13 @@ make release-aarch64 # 或者其它目标，如 release-x86_64
 - 托兰异世录 (移动端)
 - 明日方舟：终末地
 
-## Special Thanks
+## 特别鸣谢
 - [UnityResolve.hpp](https://github.com/issuimo/UnityResolve.hpp)
+
+## 常见问题
+ 
+### CE 注入后游戏崩溃
+
+确保 `freecam-x86_86-windows.dll` 文件所在路径为纯英文，不包含中文及特殊字符。
 
 [^1]: 对于部分魔改/加固的引擎，需要在游戏启动时一并注入。

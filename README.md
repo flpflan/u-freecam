@@ -34,7 +34,7 @@ If you want the latest development version, you can also download it from the [C
 - Visual Studio (With C++ toolchain and Cmake)
 
 ### Compile
-Open this project directly in Visual Studio, select the `freecam-AMD64` target, and then generate it.
+Open this project directly in Visual Studio, select the `freecam-x86_64-windows` target, and then generate it.
 
 ## Build (Android)
 
@@ -99,5 +99,11 @@ For example, on Windows, you can use the DLL injection tool that comes with Chea
 ## Special Thanks
 
 - [UnityResolve.hpp](https://github.com/issuimo/UnityResolve.hpp)
+
+## FAQ
+
+### Crashes after injection with CE
+
+Ensure that the directory containing the `freecam-x86_86-windows.dll` file is in a directory with only English characters.
 
 [^1]:For some modified/hardened engines, this need to be injected at the time of game startup. 

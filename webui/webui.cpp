@@ -13,7 +13,7 @@ namespace
     static void page(const httplib::Request &, httplib::Response &res)
     {
         res.set_header("Content-Encoding", "gzip");
-        res.set_content(std::string(__webui_min_html_gz, __webui_min_html_gz_len), "text/html");
+        res.set_content(reinterpret_cast<const char *>(__webui_min_html_gz), __webui_min_html_gz_len, "text/html");
     }
 
     static void getConfig(const httplib::Request &, httplib::Response &res)

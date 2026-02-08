@@ -3,7 +3,8 @@
 #include "freecam/freecam.hpp"
 #include "umod/runtime/helper/input.hpp"
 
-#include <array>
+#include <chrono>
+#include <vector>
 
 namespace user_config
 {
@@ -12,20 +13,22 @@ namespace user_config
     {
         using namespace std::chrono_literals;
         inline bool Hardened = true;
-        inline auto WaitBeforeInit = 5s;
+        inline std::chrono::duration<float> WaitBeforeInit = 5s;
     };
 
     namespace core
     {
         using namespace std::chrono_literals;
-        inline auto MockLoopDeltaTime = 16.7ms;
-        inline auto EnabledModules = std::array{"FreeCam"};
+        inline std::chrono::duration<float> MockLoopDeltaTime = 16.7ms;
+        inline std::vector<std::string> EnabledModules = {"FreeCam"};
     }
 
     namespace freecam
     {
-        inline ::freecam::Mode Mode = ::freecam::Mode::Orignal; // 相机模式
-        inline bool DisableOrigCam = false;                     // 禁用原相机
+        using CameraMode = ::freecam::Mode;
+
+        inline ::freecam::Mode Mode = CameraMode::Orignal; // 相机模式
+        inline bool DisableOrigCam = false;                // 禁用原相机
 
         // 镜头属性
         namespace property
@@ -36,8 +39,8 @@ namespace user_config
             inline float RotationSpeed = 300.f; // 镜头旋转速度
 #endif
             inline float RollSpeed = 100.f;     // 镜头滚动速度
-            inline float BaseMoveSpeed = 100.f; // 基础移动速度
-            inline float MaxMoveSpeed = 100.f;  // 最大移动速度
+            inline float BaseMoveSpeed = 1.f; // 基础移动速度
+            inline float MaxMoveSpeed = 50.f;  // 最大移动速度
         };
 
         // 键位

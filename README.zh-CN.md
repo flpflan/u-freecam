@@ -9,6 +9,31 @@ u-freecam
 如其名所示，这是一个针对基于 Unity 引擎制作的游戏的自由镜头工具。\
 此外，还附带了游戏内变速功能。
 
+## 构建 (Windows)
+
+### 前置需求
+- Visual Studio (包含 C++ 工具链和 Cmake)
+
+### 编译
+用 Visual Studio 打开本项目，选择 `freecam-AMD64` 目标，然后生成。
+
+## 构建 (Android)
+
+### 前置需求
+
+- Android NDK 27+
+- Cmake 3.22+
+- Ninja (可选)
+
+### 编译
+```shell
+export ANDROID_NDK=/path/to/ndk # 设置 NDK 路径
+export GENERATOR=Ninja
+make release-aarch64 # 或者其它目标，如 release-x86_64
+```
+
+输出: `build/release-android-aarch64/libfreecam-aarch64-android.so`
+
 ## 如何使用
 通过任何手段, 将动态库注入目标进程/app即可[^1]。\
 举例来说，Windows 上可通过 CE 自带的 dll 注入工具进行注入，而 Android 上可以使用 [XInjector](https://github.com/WindySha/XInjector) (非 Root 环境可以用 [Android-Virtual-Inject](https://github.com/reveny/Android-Virtual-Inject/releases/latest))

@@ -1,13 +1,30 @@
 u-freecam
 ==========
 
-[English](./README.md) | 中文
+<div align="center">
+  <h3>Unity 引擎自由镜头（运行时）</h3>
+  <p>
+    <a href="./README.md">English</a>  
+    <span>简体中文</span> |
+  </p>
+
+[![Release](https://img.shields.io/github/v/release/flpflan/u-freecam)](https://github.com/flpflan/u-freecam/releases/latest)
+![Unity](https://img.shields.io/badge/Unity-Mono%20%7C%20IL2CPP-green.svg)
+![Platform](https://img.shields.io/badge/Platform-Windows_|_Android-2376E6)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
+</div>
 
 ----------
 
 ## 这是什么
-如其名所示，这是一个针对基于 Unity 引擎制作的游戏的自由镜头工具。\
+如其名所示，这是一个针对基于 Unity 引擎制作的游戏的自由镜头工具。
+
 此外，还附带了游戏内变速功能。
+
+## 下载
+可在 [Release](https://github.com/flpflan/u-freecam/releases) 页面下载预构建版本。
+如果你想获取最新的开发版本，也可从 [CI](https://github.com/flpflan/u-freecam/actions) 构建产物中下载。
 
 ## 构建 (Windows)
 

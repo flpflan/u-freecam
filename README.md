@@ -1,14 +1,32 @@
 u-freecam
 ==========
 
-English | [中文](./README.zh-CN.md)
+<div align="center">
+  <h3>Runtime Freecam for Unity games</h3>
+  <p>
+    <span>English</span> |
+    <a href="./README.zh-CN.md">简体中文</a>  
+  </p>
+
+[![Release](https://img.shields.io/github/v/release/flpflan/u-freecam)](https://github.com/flpflan/u-freecam/releases/latest)
+![Unity](https://img.shields.io/badge/Unity-Mono%20%7C%20IL2CPP-green.svg)
+![Platform](https://img.shields.io/badge/Platform-Windows_|_Android-2376E6)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
+</div>
 
 ----------
 
 ## What's This
 
-As the name suggests, this a free camera tool for games built on the Unity engine. \
+As the name suggests, this a free camera tool for games built on the Unity engine. 
+
 It also comes with an in-game speed change feature.
+
+## Download
+Pre-built versions can be downloaded from the [Release](https://github.com/flpflan/u-freecam/releases) page.
+
+If you want the latest development version, you can also download it from the [CI](https://github.com/flpflan/u-freecam/actions) build artifacts.
 
 ## Build (Windows)
 

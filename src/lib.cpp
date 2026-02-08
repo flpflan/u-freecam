@@ -1,6 +1,8 @@
-#include "freecam/module.hpp"
 #include "umod/bootstrap.hpp"
 #include "umod/core.hpp"
+
+#include "freecam/module.hpp"
+#include "webui.hpp"
 
 #include <thread>
 
@@ -10,8 +12,9 @@ __attribute__((constructor)) void on_load()
 {
     umod::debug::crash_handler::setup();
 
-    umod::bootstrap::addFeature(freecam::kDesc);
+    std::thread(webui::start).detach();
 
+    umod::bootstrap::addFeature(freecam::kDesc);
     std::thread(umod::bootstrap::run).detach();
 }
 

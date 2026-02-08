@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>UMod Config</title>
+
+<style>
+body {
+  font-family: system-ui, sans-serif;
+  max-width: 1000px;
+  margin: 20px auto;
+  padding: 0 12px;
+}
+
+h1 {
+  margin-bottom: 12px;
+}
+
+details {
+  margin-left: 12px;
+  border-left: 2px solid #ddd;
+  padding-left: 8px;
+}
+
+summary {
+  cursor: pointer;
+  font-weight: 600;
+  margin: 4px 0;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 6px;
+  align-items: center;
+  margin: 2px 0;
+}
+
+label {
+  font-family: monospace;
+  white-space: nowrap;
+}
+
+input[type="text"],
+input[type="number"] {
+  width: 100%;
+  padding: 2px 4px;
+}
+
+button.small {
+  padding: 0 6px;
+  font-size: 14px;
+}
+
+button.main {
+  margin-top: 12px;
+  padding: 6px 16px;
+}
+
+#status {
+  margin-top: 6px;
+  font-size: 13px;
+  color: #666;
+}
+</style>
+</head>
+
+<body>
+<h1>UMod 配置</h1>
+
+<div id="form"></div>
+
+<button class="main" id="save">保存配置</button>
+<div id="status"></div>
+
+<script>
+const CONFIG_URL = "/config";
+const REFRESH_INTERVAL = 5000;
+
+let currentConfig = {};
+let editing = false;
+
+/* ---------------- utils ---------------- */
+
+const setStatus = t => document.getElementById("status").textContent = t;
+const deepEqual = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+
+function markEditing(el) {
+  el.addEventListener("focus", () => editing = true);
+  el.addEventListener("blur", () => editing = false);
+}
+
+/* -------- render value -------- */
+
+function renderValue(key, value, path, inArray = false) {
+  /* object */
+  if (value !== null && typeof value === "object" && !Array.isArray(value)) {
+    const details = document.createElement("details");
+    details.open = true;
+
+    const summary = document.createElement("summary");
+    summary.textContent = key;
+    details.appendChild(summary);
+
+    for (const [k, v] of Object.entries(value)) {
+      details.appendChild(renderValue(
+        k, v, path ? path + "." + k : k, false
+      ));
+    }
+    return details;
+  }
+
+  /* array */
+  if (Array.isArray(value)) {
+    const details = document.createElement("details");
+    details.open = true;
+
+    const summary = document.createElement("summary");
+    summary.textContent = key + " [ ]";
+    details.appendChild(summary);
+
+    value.forEach((item, idx) => {
+      details.appendChild(renderValue(
+        idx, item, path + "." + idx, true
+      ));
+    });
+
+    const add = document.createElement("button");
+    add.textContent = "+";
+    add.className = "small";
+    add.onclick = () => {
+      value.push("");
+      renderForm(currentConfig);
+    };
+
+    details.appendChild(add);
+    return details;
+  }
+
+  /* primitive */
+  const row = document.createElement("div");
+  row.className = "row";
+
+  const label = document.createElement("label");
+  label.textContent = path;
+
+  const input = document.createElement("input");
+  input.dataset.path = path;
+  markEditing(input);
+
+  if (typeof value === "boolean") {
+    input.type = "checkbox";
+    input.checked = value;
+  } else if (typeof value === "number") {
+    input.type = "number";
+    input.value = value;
+  } else {
+    input.type = "text";
+    input.value = value;
+  }
+
+  row.appendChild(label);
+  row.appendChild(input);
+
+  /* delete only for array item */
+  if (inArray) {
+    const del = document.createElement("button");
+    del.textContent = "×";
+    del.className = "small";
+    del.onclick = () => {
+      deleteByPath(currentConfig, path);
+      renderForm(currentConfig);
+    };
+    row.appendChild(del);
+  }
+
+  return row;
+}
+
+function renderForm(cfg) {
+  const form = document.getElementById("form");
+  form.innerHTML = "";
+  for (const [k, v] of Object.entries(cfg)) {
+    form.appendChild(renderValue(k, v, k, false));
+  }
+}
+
+/* -------- path helpers -------- */
+
+function setByPath(obj, path, value) {
+  const keys = path.split(".");
+  let cur = obj;
+
+  keys.forEach((k, i) => {
+    const key = isNaN(k) ? k : +k;
+    if (i === keys.length - 1) {
+      cur[key] = value;
+    } else {
+      cur[key] ??= isNaN(keys[i + 1]) ? {} : [];
+      cur = cur[key];
+    }
+  });
+}
+
+function deleteByPath(obj, path) {
+  const keys = path.split(".");
+  let cur = obj;
+
+  keys.forEach((k, i) => {
+    const key = isNaN(k) ? k : +k;
+    if (i === keys.length - 1) {
+      Array.isArray(cur) ? cur.splice(key, 1) : delete cur[key];
+    } else {
+      cur = cur[key];
+    }
+  });
+}
+
+/* -------- collect -------- */
+
+function collectForm() {
+  const inputs = document.querySelectorAll("#form input");
+  const result = {};
+
+  inputs.forEach(i => {
+    const v =
+      i.type === "checkbox" ? i.checked :
+      i.type === "number" ? Number(i.value) :
+      i.value;
+    setByPath(result, i.dataset.path, v);
+  });
+
+  return result;
+}
+
+/* -------- network -------- */
+
+async function fetchConfig() {
+  if (editing) return;
+  try {
+    const r = await fetch(CONFIG_URL, { cache: "no-store" });
+    const j = await r.json();
+    if (!deepEqual(j, currentConfig)) {
+      currentConfig = j;
+      renderForm(j);
+      setStatus("配置已同步");
+    }
+  } catch {
+    setStatus("获取配置失败");
+  }
+}
+
+async function postConfig() {
+  const cfg = collectForm();
+  try {
+    await fetch(CONFIG_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(cfg)
+    });
+    currentConfig = cfg;
+    setStatus("配置已保存");
+  } catch {
+    setStatus("保存失败");
+  }
+}
+
+/* -------- init -------- */
+
+document.getElementById("save").onclick = postConfig;
+fetchConfig();
+setInterval(fetchConfig, REFRESH_INTERVAL);
+</script>
+</body>
+</html>

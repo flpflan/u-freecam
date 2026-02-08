@@ -155,4 +155,5 @@ namespace umod::unity_runtime::helper::InputUtils
         //     return UTYPE::unity_engine::Keyboard::get_current()->get_Item(toRuntimeKey(key))->get_wasPressedThisFrame();
     }
     float GetAxis(const std::string &axis) { return UTYPE::unity_engine::Input::GetAxis(axis); }
+    bool GetMouseButtonDown(const int key) { return UTYPE::unity_engine::Input::GetMouseButtonDown(key); }
 }

@@ -10,5 +10,6 @@ namespace user_config
         // //TODO:
         // os << "}";
         // return os.str();
+        return "";
     }
 }

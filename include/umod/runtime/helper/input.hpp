@@ -54,5 +54,6 @@ namespace umod::unity_runtime::helper
         bool GetKeyUp(const Key);
         bool GetKeyDown(const Key);
         float GetAxis(const std::string &);
+        bool GetMouseButtonDown(const int);
     }
 }

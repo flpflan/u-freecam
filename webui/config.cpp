@@ -1,7 +1,9 @@
 #include "config.hpp"
 #include "json.hpp"
+
 #include "umod/runtime/helper/input.hpp"
 #include "user/config.hpp"
+
 #include <array>
 #include <chrono>
 #include <optional>
@@ -44,7 +46,8 @@ namespace
     // bool
     std::string jsonify(bool v) { return v ? "true" : "false"; }
     // number
-    template <typename T, std::enable_if_t<std::is_arithmetic_v<T> && !std::is_same_v<T, bool>, int> = 0>
+    template <typename T>
+        requires std::is_arithmetic_v<T> && (!std::is_same_v<T, bool>)
     std::string jsonify(T v)
     {
         return std::to_string(v);

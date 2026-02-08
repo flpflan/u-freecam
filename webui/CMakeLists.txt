@@ -22,6 +22,10 @@ target_include_directories(
 
 target_link_libraries(webui PRIVATE httplib::httplib)
 
+if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    target_compile_options(${PROJECT_NAME} PRIVATE /Zc:preprocessor)
+endif()
+
 if(${CMAKE_BUILD_TYPE} STREQUAL "Release")
     include(../cmake/profile/release.cmake)
 else()

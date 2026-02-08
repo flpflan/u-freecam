@@ -14,7 +14,7 @@ namespace user_config
         using namespace std::chrono_literals;
         inline bool Hardened = true;
         inline std::chrono::duration<float> WaitBeforeInit = 5s;
-    };
+    }
 
     namespace core
     {
@@ -27,7 +27,7 @@ namespace user_config
     {
         using CameraMode = ::freecam::Mode;
 
-        inline ::freecam::Mode Mode = CameraMode::Orignal; // 相机模式
+        inline CameraMode Mode = CameraMode::Orignal; // 相机模式
         inline bool DisableOrigCam = false;                // 禁用原相机
 
         // 镜头属性
@@ -41,7 +41,7 @@ namespace user_config
             inline float RollSpeed = 100.f;     // 镜头滚动速度
             inline float BaseMoveSpeed = 1.f; // 基础移动速度
             inline float MaxMoveSpeed = 50.f;  // 最大移动速度
-        };
+        }
 
         // 键位
         namespace keybind
@@ -78,8 +78,8 @@ namespace user_config
 
             inline Key UIMode = U;     // 开启/关闭 UI 模式
             inline Key AttachMode = T; // 开启/退出依附模式
-        };
-    };
+        }
+    }
 
     namespace speed_gear
     {

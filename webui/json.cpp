@@ -2,6 +2,7 @@
 
 #include <optional>
 #include <string>
+#include <stdexcept>
 
 using json::Json;
 using JsonObject = Json::Object;

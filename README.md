@@ -24,6 +24,7 @@ As the name suggests, this a freecam tool for games built on the Unity engine.
 It also comes with an in-game speed change feature.
 
 ## Download
+
 Pre-built versions can be downloaded from the [Release](https://github.com/flpflan/u-freecam/releases) page.
 
 If you want the latest development version, you can also download it from the [CI](https://github.com/flpflan/u-freecam/actions) build artifacts.
@@ -31,9 +32,11 @@ If you want the latest development version, you can also download it from the [C
 ## Build (Windows)
 
 ### Requirement
+
 - Visual Studio (With C++ toolchain and Cmake)
 
 ### Compile
+
 Open this project directly in Visual Studio, select the `freecam-x86_64-windows` target, and then generate it.
 
 ## Build (Android)
@@ -45,6 +48,7 @@ Open this project directly in Visual Studio, select the `freecam-x86_64-windows`
 - Ninja (Optional)
 
 ### Compile
+
 ```shell
 export ANDROID_NDK=/path/to/ndk # Set the path to Android NDK
 export GENERATOR=Ninja
@@ -55,8 +59,22 @@ output: `build/release-android-aarch64/libfreecam-aarch64-android.so`
 
 ## How to Use
 
-By any means, inject this dynamic library into the target process or application[^1]. \
+By any means, inject this dynamic library into the target process or application[^1]. 
+
 For example, on Windows, you can use the DLL injection tool that comes with Cheat Engine (CE), while on Android, you can use [XInjector](https://github.com/WindySha/XInjector) (Non-root environments can use [Android-Virtual-Inject](https://github.com/reveny/Android-Virtual-Inject/releases/latest)).
+
+## Configuration
+
+After injected to the process , a WebUI interface will be started on the local port __23333__. This interface can be accessed via a browser to adjust various program parameters.
+
+To access it locally, simply open http://localhost:23333.
+
+## Modes
+
+u-freecam has three different operating modes, and their behavior can vary greatly depending on the game.\
+Depending on the game, some modes may not work correctly or may even cause the game to crash. Please try all three modes and choose the one that works best for you.
+
+You can switch between modes in the [WebUI](#Configuration).
 
 ## Keybindings
 

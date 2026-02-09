@@ -18,20 +18,24 @@ u-freecam
 ----------
 
 ## 这是什么
+
 如其名所示，这是一个针对基于 Unity 引擎制作的游戏的自由镜头工具。
 
 此外，还附带了游戏内变速功能。
 
 ## 下载
+
 可在 [Release](https://github.com/flpflan/u-freecam/releases) 页面下载预构建版本。
 如果你想获取最新的开发版本，也可从 [CI](https://github.com/flpflan/u-freecam/actions) 构建产物中下载。
 
 ## 构建 (Windows)
 
 ### 前置需求
+
 - Visual Studio (包含 C++ 工具链和 Cmake)
 
 ### 编译
+
 用 Visual Studio 打开本项目，选择 `freecam-x86_64-windows` 目标，然后生成。
 
 ## 构建 (Android)
@@ -43,6 +47,7 @@ u-freecam
 - Ninja (可选)
 
 ### 编译
+
 ```shell
 export ANDROID_NDK=/path/to/ndk # 设置 NDK 路径
 export GENERATOR=Ninja
@@ -52,10 +57,25 @@ make release-aarch64 # 或者其它目标，如 release-x86_64
 输出: `build/release-android-aarch64/libfreecam-aarch64-android.so`
 
 ## 如何使用
-通过任何手段, 将动态库注入目标进程/app即可[^1]。\
+
+通过任何手段, 将动态库注入目标进程/app即可[^1]。
+
 举例来说，Windows 上可通过 CE 自带的 dll 注入工具进行注入，而 Android 上可以使用 [XInjector](https://github.com/WindySha/XInjector) (非 Root 环境可以用 [Android-Virtual-Inject](https://github.com/reveny/Android-Virtual-Inject/releases/latest))
 
+## 配置
+
+注入进程之后，程序会在本地 __23333__ 端口启动一个 WebUI 配置界面，可通过浏览器访问此界面来调整程序的各项参数。
+
+如果是本机访问，打开 http://localhost:23333 即可。
+
+## 模式
+u-freecam 具有三种不同的运行模式，效果根据游戏的不同效果会有很大差异。\
+根据游戏的不同，一些模式可能不能正常运作，甚至导致游戏直接崩溃，请尝试三种模式后选择合适的那个。
+
+模式的切换可在 [WebUI](#配置) 中进行。
+
 ## 按键
+
 > ** Android 上可使用外接键盘 **
 
 | 自由镜头           | 键位                            |
@@ -86,12 +106,14 @@ make release-aarch64 # 或者其它目标，如 release-x86_64
 | 冻结速度 / 恢复正常速度 | Backspace |
 
 ## 已测试游戏
+
 - [蔚蓝档案](https://www.bilibili.com/video/BV1XRpmz8EBW)
 - 喵斯快跑
 - 托兰异世录 (移动端)
 - 明日方舟：终末地
 
 ## 特别鸣谢
+
 - [UnityResolve.hpp](https://github.com/issuimo/UnityResolve.hpp)
 
 ## 常见问题

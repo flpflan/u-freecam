@@ -11,6 +11,8 @@ if(ARCH MATCHES "amd64|x86_64")
     set(ARCH x86_64)
 elseif(ARCH MATCHES "aarch64|arm64")
     set(ARCH aarch64)
+elseif(ARCH MATCHES "x86|i[3-6]86")
+    set(ARCH x86)
 endif()
 
 # platform

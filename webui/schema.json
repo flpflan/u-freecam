@@ -1,165 +1,259 @@
 {
-  "Loader.Hardened": {
-    "type": "bool",
-    "desc": "启用加固模式"
-  },
-  "Loader.WaitBeforeInit": {
-    "min": 0,
-    "desc": "在加载前等待的秒数"
-  },
-
-  "Core.MockLoopDeltaTime": {
-    "min": 0,
-    "desc": "Mock 循环每帧间隔时间"
-  },
-  "Core.EnabledModules": {
-    "desc": "启用的模块"
-  },
-
-  "FreeCam.Mode": {
-    "type": "enum",
-    "values": ["Orignal", "Depth", "MainCamera"],
-    "desc": "相机运行模式"
-  },
-  "FreeCam.DisableOrigCam": {
-    "type": "bool",
-    "desc": "是否禁用原相机"
-  },
-  "FreeCam.property.RotationSpeed": {
-    "min": 0,
-    "desc": "镜头旋转速度"
-  },
-  "FreeCam.property.RollSpeed": {
-    "min": 0,
-    "desc": "镜头滚动速度"
-  },
-  "FreeCam.property.BaseMoveSpeed": {
-    "min": 0,
-    "desc": "基础移动速度"
-  },
-  "FreeCam.property.MaxMoveSpeed": {
-    "min": 0,
-    "desc": "最大移动速度"
-  },
-  "FreeCam.keybind.ToggleFreeCam": {
-    "type": "enum",
-    "values": [ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "UpArrow", "DownArrow", "RightArrow", "LeftArrow", "Shift_L", "Shift_R", "Ctrl_L", "Ctrl_R", "Backspace", "Tab", "Enter", "Space", "Minus", "Equals", "Esc" ],
-    "desc": "开启/关闭自由镜头"
-  },
-  "FreeCam.keybind.Up": {
-    "type": "enum",
-    "values": [ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "UpArrow", "DownArrow", "RightArrow", "LeftArrow", "Shift_L", "Shift_R", "Ctrl_L", "Ctrl_R", "Backspace", "Tab", "Enter", "Space", "Minus", "Equals", "Esc" ],
-    "desc": "上升"
-  },
-  "FreeCam.keybind.Down": {
-    "type": "enum",
-    "values": [ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "UpArrow", "DownArrow", "RightArrow", "LeftArrow", "Shift_L", "Shift_R", "Ctrl_L", "Ctrl_R", "Backspace", "Tab", "Enter", "Space", "Minus", "Equals", "Esc" ],
-    "desc": "下降"
-  },
-  "FreeCam.keybind.Forward": {
-    "type": "enum",
-    "values": [ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "UpArrow", "DownArrow", "RightArrow", "LeftArrow", "Shift_L", "Shift_R", "Ctrl_L", "Ctrl_R", "Backspace", "Tab", "Enter", "Space", "Minus", "Equals", "Esc" ],
-    "desc": "前进"
-  },
-  "FreeCam.keybind.Back": {
-    "type": "enum",
-    "values": [ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "UpArrow", "DownArrow", "RightArrow", "LeftArrow", "Shift_L", "Shift_R", "Ctrl_L", "Ctrl_R", "Backspace", "Tab", "Enter", "Space", "Minus", "Equals", "Esc" ],
-    "desc": "后退"
-  },
-  "FreeCam.keybind.Left": {
-    "type": "enum",
-    "values": [ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "UpArrow", "DownArrow", "RightArrow", "LeftArrow", "Shift_L", "Shift_R", "Ctrl_L", "Ctrl_R", "Backspace", "Tab", "Enter", "Space", "Minus", "Equals", "Esc" ],
-    "desc": "左"
-  },
-  "FreeCam.keybind.Right": {
-    "type": "enum",
-    "values": [ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "UpArrow", "DownArrow", "RightArrow", "LeftArrow", "Shift_L", "Shift_R", "Ctrl_L", "Ctrl_R", "Backspace", "Tab", "Enter", "Space", "Minus", "Equals", "Esc" ],
-    "desc": "右"
-  },
-  "FreeCam.keybind.SpeedUp": {
-    "type": "enum",
-    "values": [ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "UpArrow", "DownArrow", "RightArrow", "LeftArrow", "Shift_L", "Shift_R", "Ctrl_L", "Ctrl_R", "Backspace", "Tab", "Enter", "Space", "Minus", "Equals", "Esc" ],
-    "desc": "加速"
-  },
-  "FreeCam.keybind.RotateUp": {
-    "type": "enum",
-    "values": [ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "UpArrow", "DownArrow", "RightArrow", "LeftArrow", "Shift_L", "Shift_R", "Ctrl_L", "Ctrl_R", "Backspace", "Tab", "Enter", "Space", "Minus", "Equals", "Esc" ],
-    "desc": "镜头向上转动"
-  },
-  "FreeCam.keybind.RotateDown": {
-    "type": "enum",
-    "values": [ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "UpArrow", "DownArrow", "RightArrow", "LeftArrow", "Shift_L", "Shift_R", "Ctrl_L", "Ctrl_R", "Backspace", "Tab", "Enter", "Space", "Minus", "Equals", "Esc" ],
-    "desc": "镜头向下转动"
-  },
-  "FreeCam.keybind.RotateLeft": {
-    "type": "enum",
-    "values": [ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "UpArrow", "DownArrow", "RightArrow", "LeftArrow", "Shift_L", "Shift_R", "Ctrl_L", "Ctrl_R", "Backspace", "Tab", "Enter", "Space", "Minus", "Equals", "Esc" ],
-    "desc": "镜头向左转动"
-  },
-  "FreeCam.keybind.RotateRight": {
-    "type": "enum",
-    "values": [ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "UpArrow", "DownArrow", "RightArrow", "LeftArrow", "Shift_L", "Shift_R", "Ctrl_L", "Ctrl_R", "Backspace", "Tab", "Enter", "Space", "Minus", "Equals", "Esc" ],
-    "desc": "镜头向右转动"
-  },
-  "FreeCam.keybind.RollLeft": {
-    "type": "enum",
-    "values": [ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "UpArrow", "DownArrow", "RightArrow", "LeftArrow", "Shift_L", "Shift_R", "Ctrl_L", "Ctrl_R", "Backspace", "Tab", "Enter", "Space", "Minus", "Equals", "Esc" ],
-    "desc": "镜头逆时针滚动"
-  },
-  "FreeCam.keybind.RollRight": {
-    "type": "enum",
-    "values": [ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "UpArrow", "DownArrow", "RightArrow", "LeftArrow", "Shift_L", "Shift_R", "Ctrl_L", "Ctrl_R", "Backspace", "Tab", "Enter", "Space", "Minus", "Equals", "Esc" ],
-    "desc": "镜头顺时针滚动"
-  },
-  "FreeCam.keybind.ResetRoll": {
-    "type": "enum",
-    "values": [ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "UpArrow", "DownArrow", "RightArrow", "LeftArrow", "Shift_L", "Shift_R", "Ctrl_L", "Ctrl_R", "Backspace", "Tab", "Enter", "Space", "Minus", "Equals", "Esc" ],
-    "desc": "复位镜头滚动"
-  },
-  "FreeCam.keybind.ZoomMode": {
-    "type": "enum",
-    "values": [ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "UpArrow", "DownArrow", "RightArrow", "LeftArrow", "Shift_L", "Shift_R", "Ctrl_L", "Ctrl_R", "Backspace", "Tab", "Enter", "Space", "Minus", "Equals", "Esc" ],
-    "desc": "镜头缩放模式"
-  },
-  "FreeCam.keybind.ZoomIn": {
-    "type": "enum",
-    "values": [ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "UpArrow", "DownArrow", "RightArrow", "LeftArrow", "Shift_L", "Shift_R", "Ctrl_L", "Ctrl_R", "Backspace", "Tab", "Enter", "Space", "Minus", "Equals", "Esc" ],
-    "desc": "放大"
-  },
-  "FreeCam.keybind.ZoomOut": {
-    "type": "enum",
-    "values": [ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "UpArrow", "DownArrow", "RightArrow", "LeftArrow", "Shift_L", "Shift_R", "Ctrl_L", "Ctrl_R", "Backspace", "Tab", "Enter", "Space", "Minus", "Equals", "Esc" ],
-    "desc": "缩小"
-  },
-  "FreeCam.keybind.PinAnchor": {
-    "type": "enum",
-    "values": [ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "UpArrow", "DownArrow", "RightArrow", "LeftArrow", "Shift_L", "Shift_R", "Ctrl_L", "Ctrl_R", "Backspace", "Tab", "Enter", "Space", "Minus", "Equals", "Esc" ],
-    "desc": "固定锚点"
-  },
-  "FreeCam.keybind.UIMode": {
-    "type": "enum",
-    "values": [ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "UpArrow", "DownArrow", "RightArrow", "LeftArrow", "Shift_L", "Shift_R", "Ctrl_L", "Ctrl_R", "Backspace", "Tab", "Enter", "Space", "Minus", "Equals", "Esc" ],
-    "desc": "开启/关闭 UI 模式"
-  },
-  "FreeCam.keybind.AttachMode": {
-    "type": "enum",
-    "values": [ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "UpArrow", "DownArrow", "RightArrow", "LeftArrow", "Shift_L", "Shift_R", "Ctrl_L", "Ctrl_R", "Backspace", "Tab", "Enter", "Space", "Minus", "Equals", "Esc" ],
-    "desc": "开启/退出依附模式"
+  "Loader": {
+    "type": "object",
+    "properties": {
+      "Hardened": {
+        "type": "bool",
+        "label": "加固",
+        "desc": "启用加固模式"
+      },
+      "WaitBeforeInit": {
+        "type": "range",
+        "label": "延迟加载",
+        "desc": "在加载前等待的秒数",
+        "min": 0,
+        "max": 60
+      }
+    }
   },
 
-  "Speed Gear.keybind.ToggleFreeze": {
-    "type": "enum",
-    "values": [ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "UpArrow", "DownArrow", "RightArrow", "LeftArrow", "Shift_L", "Shift_R", "Ctrl_L", "Ctrl_R", "Backspace", "Tab", "Enter", "Space", "Minus", "Equals", "Esc" ],
-    "desc": "开启/关闭时间流动"
+  "Core": {
+    "type": "object",
+    "properties": {
+      "MockLoopDeltaTime": {
+        "type": "range",
+        "label": "Mock 帧率",
+        "desc": "Mock 循环每帧间隔时间（秒）",
+        "min": 0,
+        "max": 0.05,
+        "step": 0.0083
+      },
+      "EnabledModules": {
+        "type": "array",
+        "label": "启用模块",
+        "desc": "启用的模块",
+        "items": { "type": "enum", "values": ["FreeCam"] }
+      }
+    }
   },
-  "Speed Gear.keybind.SpeedUp": {
-    "type": "enum",
-    "values": [ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "UpArrow", "DownArrow", "RightArrow", "LeftArrow", "Shift_L", "Shift_R", "Ctrl_L", "Ctrl_R", "Backspace", "Tab", "Enter", "Space", "Minus", "Equals", "Esc" ],
-    "desc": "加速时间流动"
+
+  "FreeCam": {
+    "type": "object",
+    "label": "自由镜头",
+    "desc": "自由镜头",
+    "properties": {
+      "Mode": {
+        "type": "enum",
+        "label": "相机模式",
+        "desc": "自由镜头工作模式",
+        "values": ["Orignal", "Depth", "MainCamera"]
+      },
+      "DisableOrigCam": {
+        "type": "bool",
+        "label": "禁用原相机",
+        "desc": "是否禁用原相机"
+      },
+      "property": {
+        "type": "object",
+        "label": "属性",
+        "desc": "属性",
+        "properties": {
+          "RotationSpeed": {
+            "type": "range",
+            "label": "旋转速度",
+            "desc": "镜头旋转速度",
+            "min": 0,
+            "max": 400
+          },
+          "RollSpeed": {
+            "type": "range",
+            "label": "滚动速度",
+            "desc": "镜头滚动速度",
+            "min": 0,
+            "max": 150
+          },
+          "BaseMoveSpeed": {
+            "type": "range",
+            "label": "移动速度",
+            "desc": "基础移动速度",
+            "min": 0,
+            "max": 20
+          },
+          "MaxMoveSpeed": {
+            "type": "range",
+            "label": "最大移动速度",
+            "desc": "加速状态下可达到的最大移动速度",
+            "min": 0,
+            "max": 200
+          }
+        }
+      },
+      "keybind": {
+        "type": "object",
+        "label": "键位",
+        "desc": "键位",
+        "properties": {
+          "ToggleFreeCam": {
+            "type": "enum",
+            "label": "开关",
+            "desc": "开启/关闭自由镜头",
+            "values": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "UpArrow", "DownArrow", "RightArrow", "LeftArrow", "Shift_L", "Shift_R", "Ctrl_L", "Ctrl_R", "Backspace", "Tab", "Enter", "Space", "Minus", "Equals", "Esc"]
+          },
+          "Up": {
+            "type": "enum",
+            "label": "上",
+            "desc": "上升",
+            "values": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "UpArrow", "DownArrow", "RightArrow", "LeftArrow", "Shift_L", "Shift_R", "Ctrl_L", "Ctrl_R", "Backspace", "Tab", "Enter", "Space", "Minus", "Equals", "Esc"]
+          },
+          "Down": {
+            "type": "enum",
+            "label": "下",
+            "desc": "下降",
+            "values": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "UpArrow", "DownArrow", "RightArrow", "LeftArrow", "Shift_L", "Shift_R", "Ctrl_L", "Ctrl_R", "Backspace", "Tab", "Enter", "Space", "Minus", "Equals", "Esc"]
+          },
+          "Forward": {
+            "type": "enum",
+            "label": "前",
+            "desc": "向前移动",
+            "values": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "UpArrow", "DownArrow", "RightArrow", "LeftArrow", "Shift_L", "Shift_R", "Ctrl_L", "Ctrl_R", "Backspace", "Tab", "Enter", "Space", "Minus", "Equals", "Esc"]
+          },
+          "Back": {
+            "type": "enum",
+            "label": "后",
+            "desc": "向后移动",
+            "values": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "UpArrow", "DownArrow", "RightArrow", "LeftArrow", "Shift_L", "Shift_R", "Ctrl_L", "Ctrl_R", "Backspace", "Tab", "Enter", "Space", "Minus", "Equals", "Esc"]
+          },
+          "Left": {
+            "type": "enum",
+            "label": "左",
+            "desc": "向左移动",
+            "values": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "UpArrow", "DownArrow", "RightArrow", "LeftArrow", "Shift_L", "Shift_R", "Ctrl_L", "Ctrl_R", "Backspace", "Tab", "Enter", "Space", "Minus", "Equals", "Esc"]
+          },
+          "Right": {
+            "type": "enum",
+            "label": "右",
+            "desc": "向右移动",
+            "values": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "UpArrow", "DownArrow", "RightArrow", "LeftArrow", "Shift_L", "Shift_R", "Ctrl_L", "Ctrl_R", "Backspace", "Tab", "Enter", "Space", "Minus", "Equals", "Esc"]
+          },
+          "SpeedUp": {
+            "type": "enum",
+            "label": "加速",
+            "desc": "加速移动",
+            "values": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "UpArrow", "DownArrow", "RightArrow", "LeftArrow", "Shift_L", "Shift_R", "Ctrl_L", "Ctrl_R", "Backspace", "Tab", "Enter", "Space", "Minus", "Equals", "Esc"]
+          },
+          "RotateUp": {
+            "type": "enum",
+            "label": "向上转动",
+            "desc": "镜头向上转动",
+            "values": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "UpArrow", "DownArrow", "RightArrow", "LeftArrow", "Shift_L", "Shift_R", "Ctrl_L", "Ctrl_R", "Backspace", "Tab", "Enter", "Space", "Minus", "Equals", "Esc"]
+          },
+          "RotateDown": {
+            "type": "enum",
+            "label": "向下转动",
+            "desc": "镜头向下转动",
+            "values": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "UpArrow", "DownArrow", "RightArrow", "LeftArrow", "Shift_L", "Shift_R", "Ctrl_L", "Ctrl_R", "Backspace", "Tab", "Enter", "Space", "Minus", "Equals", "Esc"]
+          },
+          "RotateLeft": {
+            "type": "enum",
+            "label": "向左转动",
+            "desc": "镜头向左转动",
+            "values": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "UpArrow", "DownArrow", "RightArrow", "LeftArrow", "Shift_L", "Shift_R", "Ctrl_L", "Ctrl_R", "Backspace", "Tab", "Enter", "Space", "Minus", "Equals", "Esc"]
+          },
+          "RotateRight": {
+            "type": "enum",
+            "label": "向右转动",
+            "desc": "镜头向右转动",
+            "values": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "UpArrow", "DownArrow", "RightArrow", "LeftArrow", "Shift_L", "Shift_R", "Ctrl_L", "Ctrl_R", "Backspace", "Tab", "Enter", "Space", "Minus", "Equals", "Esc"]
+          },
+          "RollLeft": {
+            "type": "enum",
+            "label": "逆时针滚动",
+            "desc": "镜头逆时针滚动",
+            "values": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "UpArrow", "DownArrow", "RightArrow", "LeftArrow", "Shift_L", "Shift_R", "Ctrl_L", "Ctrl_R", "Backspace", "Tab", "Enter", "Space", "Minus", "Equals", "Esc"]
+          },
+          "RollRight": {
+            "type": "enum",
+            "label": "顺时针滚动",
+            "desc": "镜头顺时针滚动",
+            "values": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "UpArrow", "DownArrow", "RightArrow", "LeftArrow", "Shift_L", "Shift_R", "Ctrl_L", "Ctrl_R", "Backspace", "Tab", "Enter", "Space", "Minus", "Equals", "Esc"]
+          },
+          "ResetRoll": {
+            "type": "enum",
+            "label": "滚动复位",
+            "desc": "复位镜头滚动",
+            "values": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "UpArrow", "DownArrow", "RightArrow", "LeftArrow", "Shift_L", "Shift_R", "Ctrl_L", "Ctrl_R", "Backspace", "Tab", "Enter", "Space", "Minus", "Equals", "Esc"]
+          },
+          "ZoomMode": {
+            "type": "enum",
+            "label": "缩放模式",
+            "desc": "进入镜头缩放模式（需按住）",
+            "values": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "UpArrow", "DownArrow", "RightArrow", "LeftArrow", "Shift_L", "Shift_R", "Ctrl_L", "Ctrl_R", "Backspace", "Tab", "Enter", "Space", "Minus", "Equals", "Esc"]
+          },
+          "ZoomIn": {
+            "type": "enum",
+            "label": "放大",
+            "desc": "缩放模式下放大",
+            "values": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "UpArrow", "DownArrow", "RightArrow", "LeftArrow", "Shift_L", "Shift_R", "Ctrl_L", "Ctrl_R", "Backspace", "Tab", "Enter", "Space", "Minus", "Equals", "Esc"]
+          },
+          "ZoomOut": {
+            "type": "enum",
+            "label": "缩小",
+            "desc": "缩放模式下缩小",
+            "values": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "UpArrow", "DownArrow", "RightArrow", "LeftArrow", "Shift_L", "Shift_R", "Ctrl_L", "Ctrl_R", "Backspace", "Tab", "Enter", "Space", "Minus", "Equals", "Esc"]
+          },
+          "PinAnchor": {
+            "type": "enum",
+            "label": "固定锚点",
+            "desc": "固定锚点（需按住）",
+            "values": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "UpArrow", "DownArrow", "RightArrow", "LeftArrow", "Shift_L", "Shift_R", "Ctrl_L", "Ctrl_R", "Backspace", "Tab", "Enter", "Space", "Minus", "Equals", "Esc"]
+          },
+          "UIMode": {
+            "type": "enum",
+            "label": "切换 UI 模式",
+            "desc": "开启/关闭 UI 模式（可通过鼠标中键）",
+            "values": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "UpArrow", "DownArrow", "RightArrow", "LeftArrow", "Shift_L", "Shift_R", "Ctrl_L", "Ctrl_R", "Backspace", "Tab", "Enter", "Space", "Minus", "Equals", "Esc"]
+          },
+          "AttachMode": {
+            "type": "enum",
+            "label": "切换依附模式",
+            "desc": "开启/退出依附模式",
+            "values": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "UpArrow", "DownArrow", "RightArrow", "LeftArrow", "Shift_L", "Shift_R", "Ctrl_L", "Ctrl_R", "Backspace", "Tab", "Enter", "Space", "Minus", "Equals", "Esc"]
+          }
+        }
+      }
+    }
   },
-  "Speed Gear.keybind.SpeedDown": {
-    "type": "enum",
-    "values": [ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "UpArrow", "DownArrow", "RightArrow", "LeftArrow", "Shift_L", "Shift_R", "Ctrl_L", "Ctrl_R", "Backspace", "Tab", "Enter", "Space", "Minus", "Equals", "Esc" ],
-    "desc": "减缓时间流动"
+
+  "Speed Gear": {
+    "type": "object",
+    "label": "变速齿轮",
+    "desc": "变速齿轮",
+    "properties": {
+      "keybind": {
+        "type": "object",
+        "label": "键位",
+        "desc": "键位",
+        "properties": {
+          "ToggleFreeze": {
+            "type": "enum",
+            "label": "开/关时间流动",
+            "desc": "开启/关闭时间流动",
+            "values": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "UpArrow", "DownArrow", "RightArrow", "LeftArrow", "Shift_L", "Shift_R", "Ctrl_L", "Ctrl_R", "Backspace", "Tab", "Enter", "Space", "Minus", "Equals", "Esc"]
+          },
+          "SpeedUp": {
+            "type": "enum",
+            "label": "加速",
+            "desc": "加快时间流动",
+            "values": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "UpArrow", "DownArrow", "RightArrow", "LeftArrow", "Shift_L", "Shift_R", "Ctrl_L", "Ctrl_R", "Backspace", "Tab", "Enter", "Space", "Minus", "Equals", "Esc"]
+          },
+          "SpeedDown": {
+            "type": "enum",
+            "label": "减速",
+            "desc": "减缓时间流动",
+            "values": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "UpArrow", "DownArrow", "RightArrow", "LeftArrow", "Shift_L", "Shift_R", "Ctrl_L", "Ctrl_R", "Backspace", "Tab", "Enter", "Space", "Minus", "Equals", "Esc"]
+          }
+        }
+      }
+    }
   }
 }

@@ -1,0 +1,10 @@
+{
+  "overrides": [
+    {
+      "files": "schema.json",
+      "options": {
+        "printWidth": 400
+      }
+    }
+  ]
+}

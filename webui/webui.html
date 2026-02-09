@@ -1,276 +1,383 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8" />
 <title>UMod Config</title>
 
 <style>
 body {
   font-family: system-ui, sans-serif;
-  max-width: 1000px;
-  margin: 20px auto;
-  padding: 0 12px;
+  background: #f5f6f7;
+  margin: 0;
+  padding: 12px;
 }
 
-h1 { margin-bottom: 12px; }
-
-details {
-  margin-left: 12px;
-  border-left: 2px solid #ddd;
-  padding-left: 8px;
+.panel {
+  max-width: 960px;
+  margin: auto;
+  background: #fff;
+  padding: 12px;
+  border-radius: 6px;
 }
 
-summary {
-  cursor: pointer;
-  font-weight: 600;
-  margin: 4px 0;
+h1 {
+  font-size: 18px;
+  margin: 0 0 8px;
+}
+
+#status {
+  font-size: 12px;
+  margin-bottom: 8px;
+  color: #666;
 }
 
 .row {
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: 160px 1fr auto;
   gap: 6px;
   align-items: center;
-  margin: 2px 0;
+  margin-bottom: 6px;
 }
 
-label {
-  font-family: monospace;
-  white-space: nowrap;
+.row label {
+  font-size: 13px;
 }
+
+/* small { */
+/*   grid-column: 2 / -1; */
+/*   font-size: 11px; */
+/*   color: #888; */
+/* } */
 
 input, select {
-  width: 100%;
-  padding: 2px 4px;
-}
-
-button.small {
-  padding: 0 6px;
-  font-size: 14px;
-}
-
-button.main {
-  margin-top: 12px;
-  padding: 6px 16px;
-}
-
-#status {
-  margin-top: 6px;
   font-size: 13px;
-  color: #666;
+  padding: 4px 6px;
+  width: 100%;
+}
+
+/* input[type="checkbox"] {} */
+
+.inline {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.object {
+  border-left: 2px solid #ddd;
+  margin-left: 8px;
+  padding-left: 8px;
+  margin-bottom: 6px;
+}
+
+.array-item {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+button {
+  font-size: 12px;
+  padding: 2px 6px;
+  cursor: pointer;
+}
+
+.footer {
+  text-align: right;
+  margin-top: 12px;
 }
 </style>
 </head>
 
 <body>
-<h1>UMod 配置</h1>
-
-<div id="form"></div>
-
-<button class="main" id="save">保存配置</button>
-<div id="status"></div>
+<div class="panel">
+  <h1>UMod 配置</h1>
+  <div id="status">初始化中…</div>
+  <div id="form"></div>
+  <div class="footer">
+    <button onclick="document.getElementById('importer').click()">
+      <input id="importer" type="file" accept=".json" onchange="importConfig(event.target.files[0])" style="display: none;" />
+      <span>从本地导入</span>
+    </button>
+    <button onclick="exportConfig()">保存到本地</button>
+  </div>
+</div>
 
 <script>
-const CONFIG_URL = "/config";
-const SCHEMA_URL = "/config/schema";
+/* =============== 全局配置 ================ */
+
+const API = {
+  config: "/config",
+  schema: "/config/schema",
+  syncIntervalMs: 3000
+};
+
+/* ================= 状态 ================= */
 
 let schema = {};
-let currentConfig = {};
-let editing = false;
+let config = {};
+let dirty = false;
+let syncing = false;
 
-/* ---------- utils ---------- */
+/* ================= 工具 ================= */
 
-const setStatus = t => document.getElementById("status").textContent = t;
-const deepEqual = (a,b) => JSON.stringify(a) === JSON.stringify(b);
-
-function markEditing(el) {
-  el.addEventListener("focus", () => editing = true);
-  el.addEventListener("blur", () => editing = false);
+function setStatus(text) {
+  document.getElementById("status").textContent = text;
 }
 
-/* ---------- render ---------- */
+function deepClone(obj) {
+  return JSON.parse(JSON.stringify(obj));
+}
 
-function renderValue(key, value, path, inArray=false) {
-  /* object */
-  if (value !== null && typeof value === "object" && !Array.isArray(value)) {
-    const d = document.createElement("details");
-    d.open = true;
+/* ================= 加载 ================= */
 
-    const s = document.createElement("summary");
-    s.textContent = key;
-    d.appendChild(s);
+async function loadSchema() {
+  schema = await fetch(API.schema).then(r => r.json());
+}
 
-    for (const [k,v] of Object.entries(value)) {
-      d.appendChild(renderValue(k, v, path ? path+"."+k : k));
-    }
-    return d;
+async function loadConfig(remote = false) {
+  if (dirty && remote) return;
+
+  const data = await fetch(API.config).then(r => r.json());
+  config = deepClone(data);
+  render();
+  setStatus("已同步");
+}
+
+async function init() {
+  await loadSchema();
+  await loadConfig();
+  setInterval(() => loadConfig(true), API.syncIntervalMs);
+}
+
+init();
+
+/* ================= 渲染 ================= */
+
+function render() {
+  const root = document.getElementById("form");
+  root.innerHTML = "";
+  renderObject(root, schema, config, []);
+}
+
+function renderObject(container, schemaObj, dataObj, path) {
+  for (const key in schemaObj) {
+    renderField(container, key, schemaObj[key], dataObj[key], path.concat(key));
+  }
+}
+
+function renderField(container, key, meta, value, path) {
+  const name = meta?.label === undefined ? key : meta.label;
+  const desc = meta?.desc === undefined ? "" : meta.desc;
+
+  if (meta.type === "object") {
+    const div = document.createElement("div");
+    div.className = "object";
+    div.innerHTML = `<strong title="${desc}">${name}</strong>`;
+    renderObject(div, meta.properties, value || {}, path);
+    container.appendChild(div);
+    return;
   }
 
-  /* array */
-  if (Array.isArray(value)) {
-    const d = document.createElement("details");
-    d.open = true;
+  if (meta.type === "array") {
+    const div = document.createElement("div");
+    div.className = "object";
+    div.innerHTML = `<strong title="${desc}">${name}</strong>`;
 
-    const s = document.createElement("summary");
-    s.textContent = key + " [ ]";
-    d.appendChild(s);
-
-    value.forEach((item, i) => {
-      d.appendChild(renderValue(i, item, path+"."+i, true));
+    (value || []).forEach((v, i) => {
+      const row = document.createElement("div");
+      row.className = "array-item";
+      row.appendChild(makeInput(meta.items, v, path.concat(i)));
+      const del = document.createElement("button");
+      del.textContent = "×";
+      del.onclick = () => {
+        value.splice(i, 1);
+        markDirty();
+        render();
+      };
+      row.appendChild(del);
+      div.appendChild(row);
     });
 
     const add = document.createElement("button");
-    add.textContent = "+";
-    add.className = "small";
+    add.textContent = "+ 添加";
     add.onclick = () => {
-      value.push("");
-      renderForm(currentConfig);
+      value.push(defaultValue(meta.items));
+      markDirty();
+      render();
     };
-    d.appendChild(add);
-    return d;
+
+    div.appendChild(add);
+    container.appendChild(div);
+    return;
   }
 
-  /* primitive */
   const row = document.createElement("div");
   row.className = "row";
 
   const label = document.createElement("label");
-  label.textContent = path;
-  label.title = schema[path]?.desc ?? "";
+  label.textContent = name;
+  label.title = desc;
+  row.appendChild(label);
 
-  let input;
-  const meta = schema[path];
+  row.appendChild(makeInput(meta, value, path));
 
-  if (meta?.type === "enum") {
-    input = document.createElement("select");
+  container.appendChild(row);
+
+  // if (meta.desc) {
+  //   const desc = document.createElement("small");
+  //   desc.textContent = meta.desc;
+  //   row.appendChild(desc);
+  // }
+}
+
+function makeInput(meta, value, path) {
+  let el;
+
+  if (meta.type === "enum") {
+    el = document.createElement("select");
     meta.values.forEach(v => {
       const o = document.createElement("option");
       o.value = v;
       o.textContent = v;
-      if (v === value) o.selected = true;
-      input.appendChild(o);
+      el.appendChild(o);
     });
-  } else {
-    input = document.createElement("input");
-    if (meta?.type === "bool" || typeof value === "boolean") {
-      input.type = "checkbox";
-      input.checked = value;
-    } else if (meta?.type === "int" || typeof value === "number") {
-      input.type = "number";
-      input.value = value;
-      if (meta?.min !== undefined) input.min = meta.min;
-      if (meta?.max !== undefined) input.max = meta.max;
-    } else {
-      input.type = "text";
-      input.value = value;
-    }
+    el.value = value;
+    el.onchange = () => update(path, el.value);
+    return el;
   }
 
-  input.dataset.path = path;
-  markEditing(input);
+  if (meta.type === "range") {
+    const wrap = document.createElement("div");
+    wrap.className = "inline";
 
-  row.appendChild(label);
-  row.appendChild(input);
+    const r = document.createElement("input");
+    r.type = "range";
+    r.min = meta.min;
+    r.max = meta.max;
+    r.step = meta.step || 1;
+    r.value = value;
 
-  if (inArray) {
-    const del = document.createElement("button");
-    del.textContent = "×";
-    del.className = "small";
-    del.onclick = () => {
-      deleteByPath(currentConfig, path);
-      renderForm(currentConfig);
+    const n = document.createElement("input");
+    n.type = "number";
+    n.value = value;
+
+    r.oninput = () => {
+      n.value = r.value;
+      update(path, Number(r.value));
     };
-    row.appendChild(del);
+
+    n.onchange = () => {
+      r.value = n.value;
+      update(path, Number(n.value));
+    };
+
+    wrap.append(r, n);
+    return wrap;
   }
 
-  return row;
-}
-
-function renderForm(cfg) {
-  const f = document.getElementById("form");
-  f.innerHTML = "";
-  for (const [k,v] of Object.entries(cfg)) {
-    f.appendChild(renderValue(k, v, k));
+  if (meta.type === "bool") {
+    el = document.createElement("input");
+    el.type = "checkbox";
+    el.checked = value;
+    el.onchange = () => update(path, el.checked);
+    return el;
   }
+
+  el = document.createElement("input");
+  el.type = meta.type === "number" ? "number" : "text";
+  el.value = value;
+  el.onchange = () => update(path, meta.type === "number" ? Number(el.value) : el.value);
+  return el;
 }
 
-/* ---------- path helpers ---------- */
+/* ================= 数据修改 ================= */
 
-function setByPath(obj, path, value) {
-  const ks = path.split(".");
-  let cur = obj;
-  ks.forEach((k,i) => {
-    const key = isNaN(k) ? k : +k;
-    if (i === ks.length-1) cur[key] = value;
-    else {
-      cur[key] ??= isNaN(ks[i+1]) ? {} : [];
-      cur = cur[key];
-    }
-  });
+function update(path, val) {
+  let obj = config;
+  for (let i = 0; i < path.length - 1; i++) obj = obj[path[i]];
+  obj[path[path.length - 1]] = val;
+  markDirty();
 }
 
-function deleteByPath(obj, path) {
-  const ks = path.split(".");
-  let cur = obj;
-  ks.forEach((k,i) => {
-    const key = isNaN(k) ? k : +k;
-    if (i === ks.length-1) {
-      Array.isArray(cur) ? cur.splice(key,1) : delete cur[key];
-    } else cur = cur[key];
-  });
+function markDirty() {
+  dirty = true;
+  setStatus("本地修改，未保存");
+  // TODO
+  submitConfig()
 }
 
-/* ---------- collect ---------- */
+/* ================= 默认值 ================= */
 
-function collectForm() {
-  const inputs = document.querySelectorAll("#form input, #form select");
-  const r = {};
-  inputs.forEach(i => {
-    let v =
-      i.type === "checkbox" ? i.checked :
-      i.type === "number"   ? Number(i.value) :
-      i.value;
-    setByPath(r, i.dataset.path, v);
-  });
-  return r;
+function defaultValue(meta) {
+  if (meta.type === "number" || meta.type === "range") return meta.min ?? 0;
+  if (meta.type === "string") return "";
+  if (meta.type === "bool") return false;
+  if (meta.type === "enum") return meta.values[0];
+  if (meta.type === "object") return {};
+  if (meta.type === "array") return [];
 }
 
-/* ---------- network ---------- */
+/* ================= 提交 ================= */
 
-async function loadAll() {
+async function submitConfig() {
+  setStatus("保存中…");
   try {
-    const [s, c] = await Promise.all([
-      fetch(SCHEMA_URL).then(r=>r.json()),
-      fetch(CONFIG_URL, {cache:"no-store"}).then(r=>r.json())
-    ]);
-    schema = s;
-    currentConfig = c;
-    renderForm(c);
-    setStatus("配置已加载");
-  } catch {
-    setStatus("加载失败");
-  }
-}
-
-async function postConfig() {
-  try {
-    const cfg = collectForm();
-    await fetch(CONFIG_URL, {
-      method:"POST",
-      headers:{ "Content-Type":"application/json" },
-      body:JSON.stringify(cfg)
+    await fetch(API.config, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(config)
     });
-    currentConfig = cfg;
-    setStatus("配置已保存");
+    dirty = false;
+    setStatus("保存成功");
   } catch {
     setStatus("保存失败");
   }
 }
 
-/* ---------- init ---------- */
+/* ================ 本地同步 ================ */
+function exportConfig(filename = "umod.config.json") {
+  try {
+    const blob = new Blob([JSON.stringify(config)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
 
-document.getElementById("save").onclick = postConfig;
-loadAll();
+    link.href = url;
+    link.download = filename;
+
+    document.body.appendChild(link);
+    link.click();
+
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    setStatus("导出成功");
+  } catch (error) {
+    console.error('导出失败:', error);
+    setStatus("导出失败");
+  }
+}
+
+function importConfig(file) {
+  if(!file) return;
+
+  try {
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+      const content = e.target.result;
+      const data = JSON.parse(content);
+      markDirty();
+      config = deepClone(data);
+      setStatus("导入成功");
+    }
+
+    reader.readAsText(file);
+  }
+  catch (error) {
+    console.error('导入失败:', error);
+    setStatus("导入失败");
+  };
+}
 </script>
 </body>
 </html>

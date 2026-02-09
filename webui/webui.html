@@ -129,6 +129,10 @@ function deepClone(obj) {
   return JSON.parse(JSON.stringify(obj));
 }
 
+function deepEqual(a, b) {
+  return JSON.stringify(a) === JSON.stringify(b);
+}
+
 /* ================= 加载 ================= */
 
 async function loadSchema() {
@@ -139,9 +143,11 @@ async function loadConfig(remote = false) {
   if (dirty && remote) return;
 
   const data = await fetch(API.config).then(r => r.json());
-  config = deepClone(data);
-  render();
-  setStatus("已同步");
+  if(!deepEqual(data, config)) {
+    config = deepClone(data);
+    render();
+    setStatus("已同步");
+  }
 }
 
 async function init() {

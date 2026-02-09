@@ -26,9 +26,10 @@ namespace
             if (const auto data = json::parse(req.body)) user_config::from_json(*data);
         return res.set_content(user_config::to_json(), "application/json");
     }
-    static void meta(const httplib::Request &, httplib::Response &res)
+    static void schema(const httplib::Request &, httplib::Response &res)
     {
-        res.set_content(user_config::meta(), "application/json");
+        res.set_header("Content-Encoding", "gzip");
+        res.set_content(user_config::schema(), "application/json");
     }
 }
 
@@ -38,7 +39,7 @@ namespace webui
     void start()
     {
         svr.Get("/", page);
-        svr.Get("/meta", meta);
+        svr.Get("/config/schema", schema);
         svr.Get("/config", getConfig);
         svr.Post("/config", setConfig);
 

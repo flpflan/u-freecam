@@ -12,9 +12,7 @@ body {
   padding: 0 12px;
 }
 
-h1 {
-  margin-bottom: 12px;
-}
+h1 { margin-bottom: 12px; }
 
 details {
   margin-left: 12px;
@@ -41,8 +39,7 @@ label {
   white-space: nowrap;
 }
 
-input[type="text"],
-input[type="number"] {
+input, select {
   width: 100%;
   padding: 2px 4px;
 }
@@ -75,54 +72,51 @@ button.main {
 
 <script>
 const CONFIG_URL = "/config";
-const REFRESH_INTERVAL = 5000;
+const SCHEMA_URL = "/config/schema";
 
+let schema = {};
 let currentConfig = {};
 let editing = false;
 
-/* ---------------- utils ---------------- */
+/* ---------- utils ---------- */
 
 const setStatus = t => document.getElementById("status").textContent = t;
-const deepEqual = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+const deepEqual = (a,b) => JSON.stringify(a) === JSON.stringify(b);
 
 function markEditing(el) {
   el.addEventListener("focus", () => editing = true);
   el.addEventListener("blur", () => editing = false);
 }
 
-/* -------- render value -------- */
+/* ---------- render ---------- */
 
-function renderValue(key, value, path, inArray = false) {
+function renderValue(key, value, path, inArray=false) {
   /* object */
   if (value !== null && typeof value === "object" && !Array.isArray(value)) {
-    const details = document.createElement("details");
-    details.open = true;
+    const d = document.createElement("details");
+    d.open = true;
 
-    const summary = document.createElement("summary");
-    summary.textContent = key;
-    details.appendChild(summary);
+    const s = document.createElement("summary");
+    s.textContent = key;
+    d.appendChild(s);
 
-    for (const [k, v] of Object.entries(value)) {
-      details.appendChild(renderValue(
-        k, v, path ? path + "." + k : k, false
-      ));
+    for (const [k,v] of Object.entries(value)) {
+      d.appendChild(renderValue(k, v, path ? path+"."+k : k));
     }
-    return details;
+    return d;
   }
 
   /* array */
   if (Array.isArray(value)) {
-    const details = document.createElement("details");
-    details.open = true;
+    const d = document.createElement("details");
+    d.open = true;
 
-    const summary = document.createElement("summary");
-    summary.textContent = key + " [ ]";
-    details.appendChild(summary);
+    const s = document.createElement("summary");
+    s.textContent = key + " [ ]";
+    d.appendChild(s);
 
-    value.forEach((item, idx) => {
-      details.appendChild(renderValue(
-        idx, item, path + "." + idx, true
-      ));
+    value.forEach((item, i) => {
+      d.appendChild(renderValue(i, item, path+"."+i, true));
     });
 
     const add = document.createElement("button");
@@ -132,9 +126,8 @@ function renderValue(key, value, path, inArray = false) {
       value.push("");
       renderForm(currentConfig);
     };
-
-    details.appendChild(add);
-    return details;
+    d.appendChild(add);
+    return d;
   }
 
   /* primitive */
@@ -143,26 +136,42 @@ function renderValue(key, value, path, inArray = false) {
 
   const label = document.createElement("label");
   label.textContent = path;
+  label.title = schema[path]?.desc ?? "";
 
-  const input = document.createElement("input");
+  let input;
+  const meta = schema[path];
+
+  if (meta?.type === "enum") {
+    input = document.createElement("select");
+    meta.values.forEach(v => {
+      const o = document.createElement("option");
+      o.value = v;
+      o.textContent = v;
+      if (v === value) o.selected = true;
+      input.appendChild(o);
+    });
+  } else {
+    input = document.createElement("input");
+    if (meta?.type === "bool" || typeof value === "boolean") {
+      input.type = "checkbox";
+      input.checked = value;
+    } else if (meta?.type === "int" || typeof value === "number") {
+      input.type = "number";
+      input.value = value;
+      if (meta?.min !== undefined) input.min = meta.min;
+      if (meta?.max !== undefined) input.max = meta.max;
+    } else {
+      input.type = "text";
+      input.value = value;
+    }
+  }
+
   input.dataset.path = path;
   markEditing(input);
-
-  if (typeof value === "boolean") {
-    input.type = "checkbox";
-    input.checked = value;
-  } else if (typeof value === "number") {
-    input.type = "number";
-    input.value = value;
-  } else {
-    input.type = "text";
-    input.value = value;
-  }
 
   row.appendChild(label);
   row.appendChild(input);
 
-  /* delete only for array item */
   if (inArray) {
     const del = document.createElement("button");
     del.textContent = "×";
@@ -178,85 +187,78 @@ function renderValue(key, value, path, inArray = false) {
 }
 
 function renderForm(cfg) {
-  const form = document.getElementById("form");
-  form.innerHTML = "";
-  for (const [k, v] of Object.entries(cfg)) {
-    form.appendChild(renderValue(k, v, k, false));
+  const f = document.getElementById("form");
+  f.innerHTML = "";
+  for (const [k,v] of Object.entries(cfg)) {
+    f.appendChild(renderValue(k, v, k));
   }
 }
 
-/* -------- path helpers -------- */
+/* ---------- path helpers ---------- */
 
 function setByPath(obj, path, value) {
-  const keys = path.split(".");
+  const ks = path.split(".");
   let cur = obj;
-
-  keys.forEach((k, i) => {
+  ks.forEach((k,i) => {
     const key = isNaN(k) ? k : +k;
-    if (i === keys.length - 1) {
-      cur[key] = value;
-    } else {
-      cur[key] ??= isNaN(keys[i + 1]) ? {} : [];
+    if (i === ks.length-1) cur[key] = value;
+    else {
+      cur[key] ??= isNaN(ks[i+1]) ? {} : [];
       cur = cur[key];
     }
   });
 }
 
 function deleteByPath(obj, path) {
-  const keys = path.split(".");
+  const ks = path.split(".");
   let cur = obj;
-
-  keys.forEach((k, i) => {
+  ks.forEach((k,i) => {
     const key = isNaN(k) ? k : +k;
-    if (i === keys.length - 1) {
-      Array.isArray(cur) ? cur.splice(key, 1) : delete cur[key];
-    } else {
-      cur = cur[key];
-    }
+    if (i === ks.length-1) {
+      Array.isArray(cur) ? cur.splice(key,1) : delete cur[key];
+    } else cur = cur[key];
   });
 }
 
-/* -------- collect -------- */
+/* ---------- collect ---------- */
 
 function collectForm() {
-  const inputs = document.querySelectorAll("#form input");
-  const result = {};
-
+  const inputs = document.querySelectorAll("#form input, #form select");
+  const r = {};
   inputs.forEach(i => {
-    const v =
+    let v =
       i.type === "checkbox" ? i.checked :
-      i.type === "number" ? Number(i.value) :
+      i.type === "number"   ? Number(i.value) :
       i.value;
-    setByPath(result, i.dataset.path, v);
+    setByPath(r, i.dataset.path, v);
   });
-
-  return result;
+  return r;
 }
 
-/* -------- network -------- */
+/* ---------- network ---------- */
 
-async function fetchConfig() {
-  if (editing) return;
+async function loadAll() {
   try {
-    const r = await fetch(CONFIG_URL, { cache: "no-store" });
-    const j = await r.json();
-    if (!deepEqual(j, currentConfig)) {
-      currentConfig = j;
-      renderForm(j);
-      setStatus("配置已同步");
-    }
+    const [s, c] = await Promise.all([
+      fetch(SCHEMA_URL).then(r=>r.json()),
+      fetch(CONFIG_URL, {cache:"no-store"}).then(r=>r.json())
+    ]);
+    schema = s;
+    currentConfig = c;
+    renderForm(c);
+    setStatus("配置已加载");
   } catch {
-    setStatus("获取配置失败");
+    setStatus("加载失败");
   }
 }
 
 async function postConfig() {
-  const cfg = collectForm();
   try {
+    const cfg = collectForm();
     await fetch(CONFIG_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(cfg)
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body:JSON.stringify(cfg)
     });
     currentConfig = cfg;
     setStatus("配置已保存");
@@ -265,11 +267,10 @@ async function postConfig() {
   }
 }
 
-/* -------- init -------- */
+/* ---------- init ---------- */
 
 document.getElementById("save").onclick = postConfig;
-fetchConfig();
-setInterval(fetchConfig, REFRESH_INTERVAL);
+loadAll();
 </script>
 </body>
 </html>

@@ -28,7 +28,7 @@ namespace user_config
         using CameraMode = ::freecam::Mode;
 
         inline CameraMode Mode = CameraMode::Orignal; // 相机模式
-        inline bool DisableOrigCam = false;                // 禁用原相机
+        inline bool DisableOrigCam = false;           // 禁用原相机
 
         // 镜头属性
         namespace property
@@ -38,9 +38,9 @@ namespace user_config
 #else
             inline float RotationSpeed = 300.f; // 镜头旋转速度
 #endif
-            inline float RollSpeed = 100.f;     // 镜头滚动速度
+            inline float RollSpeed = 100.f;   // 镜头滚动速度
             inline float BaseMoveSpeed = 1.f; // 基础移动速度
-            inline float MaxMoveSpeed = 50.f;  // 最大移动速度
+            inline float MaxMoveSpeed = 50.f; // 最大移动速度
         }
 
         // 键位

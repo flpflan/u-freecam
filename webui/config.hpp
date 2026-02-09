@@ -11,7 +11,7 @@ namespace user_config::webui
 
 namespace user_config
 {
-    std::string meta();
+    std::string schema();
 
     namespace loader
     {

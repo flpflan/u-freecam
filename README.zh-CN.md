@@ -56,7 +56,7 @@ make release-aarch64 # 或者其它目标，如 release-x86_64
 举例来说，Windows 上可通过 CE 自带的 dll 注入工具进行注入，而 Android 上可以使用 [XInjector](https://github.com/WindySha/XInjector) (非 Root 环境可以用 [Android-Virtual-Inject](https://github.com/reveny/Android-Virtual-Inject/releases/latest))
 
 ## 按键
-> ** Android 上可使用外接键盘 ** \
+> ** Android 上可使用外接键盘 **
 
 | 自由镜头           | 键位                            |
 | ------------------ | ------------------------------- |
@@ -71,7 +71,7 @@ make release-aarch64 # 或者其它目标，如 release-x86_64
 > 初始状态下，锚点与镜头重合。\
 > 任何情况下，镜头始终随着锚点移动，绕着锚点旋转。\
 > 在锚点固定时，通过移动可改变镜头与锚点相对位置。\
-> 所谓依附模式，即是将目标物体设为锚点。(默认情况下将屏幕中心所对物体选为目标)\
+> 所谓依附模式，即是将目标物体设为锚点。(默认情况下将屏幕中心所对物体选为目标)
 
 | 锚点         | 键位        |
 | ------------ | ----------- |

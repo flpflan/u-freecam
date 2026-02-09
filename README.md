@@ -19,7 +19,7 @@ u-freecam
 
 ## What's This
 
-As the name suggests, this a free camera tool for games built on the Unity engine. 
+As the name suggests, this a freecam tool for games built on the Unity engine. 
 
 It also comes with an in-game speed change feature.
 
@@ -62,9 +62,9 @@ For example, on Windows, you can use the DLL injection tool that comes with Chea
 
 > ** You can use an external keyboard on Android. **
 
-| Free Camera    | Keybind                                    |
+| Freecam        | Keybind                                    |
 | -------------- | ------------------------------------------ |
-| Toggle FreeCam | Enter                                      |
+| Toggle Freecam | Enter                                      |
 | Movement       | WASD, Ctrl, Space, and Shift_L (Sprint)    |
 | Rotation       | Mouse / Arrow keys / Touch screen (Moblie) |
 | UI Mode        | Mouse middle button / U                    |

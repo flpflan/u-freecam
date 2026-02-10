@@ -335,6 +335,7 @@ namespace user_config
             if (const auto value = data.as<Json::Object>())
             {
                 M(Mode)
+                B(DisableOrigCam)
                 if (auto it = value->find("property"); it != value->end()) property::from_json(it->second);
                 if (auto it = value->find("keybind"); it != value->end()) keybind::from_json(it->second);
             }

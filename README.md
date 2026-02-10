@@ -63,22 +63,26 @@ By any means, inject this dynamic library into the target process or application
 
 For example, on Windows, you can use the DLL injection tool that comes with Cheat Engine (CE), while on Android, you can use [XInjector](https://github.com/WindySha/XInjector) (Non-root environments can use [Android-Virtual-Inject](https://github.com/reveny/Android-Virtual-Inject/releases/latest)).
 
+> [!IMPORTANT]
+> u-freecam has three different operating modes, and their behavior can vary greatly depending on the game.\
+> Depending on the game, some modes may not work correctly or may even cause the game to crash.
+> You can try out all three modes and choose the one that works best for you.
+
+You can switch between modes in the [WebUI](#Configuration).
+
 ## Configuration
 
 After injected to the process , a WebUI interface will be started on the local port __23333__. This interface can be accessed via a browser to adjust various program parameters.
 
 To access it locally, simply open http://localhost:23333.
 
-## Modes
-
-u-freecam has three different operating modes, and their behavior can vary greatly depending on the game.\
-Depending on the game, some modes may not work correctly or may even cause the game to crash. Please try all three modes and choose the one that works best for you.
-
-You can switch between modes in the [WebUI](#Configuration).
-
 ## Keybindings
 
-> ** You can use an external keyboard on Android. **
+> [!TIP]
+> These keybindings are configurable through [WebUI](#Configuration).
+
+> [!TIP]
+> You can use an external keyboard on Android.
 
 | Freecam        | Keybind                                    |
 | -------------- | ------------------------------------------ |
@@ -123,5 +127,9 @@ You can switch between modes in the [WebUI](#Configuration).
 ### Crashes after injection with CE
 
 Ensure that the directory containing the `freecam-x86_86-windows.dll` file is in a directory with only English characters.
+
+### The game crashes on the first attempt
+
+This is normal; please try again. If it still doesn't work, please submit an issue.
 
 [^1]:For some modified/hardened engines, this need to be injected at the time of game startup. 

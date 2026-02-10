@@ -31,6 +31,9 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD reason, LPVOID lpReserved)
     {
     case DLL_PROCESS_ATTACH:
         DisableThreadLibraryCalls(hModule);
+
+        std::thread(webui::start).detach();
+
         umod::bootstrap::addFeature(freecam::kDesc);
         std::thread(umod::bootstrap::run).detach();
         break;
@@ -38,6 +41,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD reason, LPVOID lpReserved)
     case DLL_PROCESS_DETACH:
         if (lpReserved == nullptr)
         {
+            webui::stop();
             umod::core::shutdown();
         }
         break;

@@ -18,7 +18,11 @@ __attribute__((constructor)) void on_load()
     std::thread(umod::bootstrap::run).detach();
 }
 
-__attribute__((destructor)) void on_unload() { umod::core::shutdown(); }
+__attribute__((destructor)) void on_unload()
+{
+    webui::stop();
+    umod::core::shutdown();
+}
 #else
 #include "Windows.h"
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD reason, LPVOID lpReserved)

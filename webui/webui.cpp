@@ -45,4 +45,5 @@ namespace webui
 
         svr.listen("0.0.0.0", user_config::webui::Port);
     }
+    void stop() { svr.stop(); }
 }

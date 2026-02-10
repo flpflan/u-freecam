@@ -2,4 +2,5 @@
 namespace webui
 {
     void start();
+    void stop();
 }

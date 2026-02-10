@@ -118,6 +118,7 @@ let schema = {};
 let config = {};
 let dirty = false;
 let syncing = false;
+let editing = false;
 
 /* ================= 工具 ================= */
 
@@ -140,7 +141,7 @@ async function loadSchema() {
 }
 
 async function loadConfig(remote = false) {
-  if (dirty && remote) return;
+  if (editing || (dirty && remote)) return;
 
   const data = await fetch(API.config).then(r => r.json());
   if(!deepEqual(data, config)) {
@@ -249,6 +250,7 @@ function makeInput(meta, value, path) {
       el.appendChild(o);
     });
     el.value = value;
+    markEditing(el)
     el.onchange = () => update(path, el.value);
     return el;
   }
@@ -273,6 +275,7 @@ function makeInput(meta, value, path) {
       update(path, Number(r.value));
     };
 
+    markEditing(n)
     n.onchange = () => {
       r.value = n.value;
       update(path, Number(n.value));
@@ -311,6 +314,11 @@ function markDirty() {
   setStatus("本地修改，未保存");
   // TODO
   submitConfig()
+}
+
+function markEditing(el) {
+  el.addEventListener("focus", () => editing = true);
+  el.addEventListener("blur", () => editing = false);
 }
 
 /* ================= 默认值 ================= */

@@ -27,7 +27,7 @@ namespace user_config
     {
         using CameraMode = ::freecam::Mode;
 
-        inline CameraMode Mode = CameraMode::Orignal; // 相机模式
+        inline CameraMode Mode = CameraMode::Depth; // 相机模式
         inline bool DisableOrigCam = false;           // 禁用原相机
 
         // 镜头属性

@@ -183,6 +183,6 @@ namespace umod::bootstrap
         debug::logger::info("Try attach to internal loop");
 
         debug::logger::info("Unity initializing success");
-        std::thread([] { core::run(getPlayerLoop(), modules); }).detach();
+        core::init(getPlayerLoop(), modules);
     }
 }

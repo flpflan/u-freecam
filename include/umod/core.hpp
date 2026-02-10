@@ -37,6 +37,6 @@ namespace umod::core
         void disable(const std::string &name);
     }
 
-    void run(void *playerLoop, std::span<::umod::feature::Module> modules);
+    void init(void *playerLoop, std::span<::umod::feature::Module> modules);
     void shutdown();
 }

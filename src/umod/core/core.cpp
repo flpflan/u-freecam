@@ -37,7 +37,7 @@ namespace umod::core
         }
     }
 
-    void run(void *playerLoop, std::span<::umod::feature::Module> features)
+    void init(void *playerLoop, std::span<::umod::feature::Module> features)
     {
         player_loop::init(playerLoop);
         modules = features;

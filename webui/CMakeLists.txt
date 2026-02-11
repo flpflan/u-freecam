@@ -20,7 +20,7 @@ target_include_directories(
         ../extern/xDL/xdl/src/main/cpp/include
 )
 
-target_link_libraries(webui PRIVATE httplib::httplib)
+target_link_libraries(webui PRIVATE httplib::httplib spdlog::spdlog_header_only)
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     target_compile_options(${PROJECT_NAME} PRIVATE /Zc:preprocessor)

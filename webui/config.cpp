@@ -325,6 +325,7 @@ namespace user_config
             std::ostringstream os;
             os << "{";
             os << "\"Mode\":" << jsonify(Mode) << ",";
+            os << "\"DisableOrigCam\":" << jsonify(DisableOrigCam) << ",";
             os << "\"property\":" << property::to_json() << ",";
             os << "\"keybind\":" << keybind::to_json();
             os << "}";

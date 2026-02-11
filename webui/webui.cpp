@@ -4,8 +4,14 @@
 #include "page.inc"
 
 #include "httplib.h"
+#include "umod/debug/logger.hpp"
 
+#include <chrono>
+#include <exception>
 #include <string>
+#include <thread>
+
+using namespace std::chrono_literals;
 
 namespace
 {
@@ -43,7 +49,18 @@ namespace webui
         svr.Get("/config", getConfig);
         svr.Post("/config", setConfig);
 
-        svr.listen("0.0.0.0", user_config::webui::Port);
+        try
+        {
+            umod::debug::logger::info("Try starting WebUI...");
+            while (svr.listen("0.0.0.0", user_config::webui::Port))
+                std::this_thread::sleep_for(3s);
+            umod::debug::logger::info("WebUI started");
+        }
+        catch (std::exception &e)
+        {
+            umod::debug::logger::info("Failed starting WebUI");
+            umod::debug::logger::error(e.what());
+        }
     }
     void stop() { svr.stop(); }
 }

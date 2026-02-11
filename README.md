@@ -59,6 +59,8 @@ output: `build/release-android-aarch64/libfreecam-aarch64-android.so`
 
 ## How to Use
 
+### General methods
+
 By any means, inject this dynamic library into the target process or application[^1]. 
 
 For example, on Windows, you can use the DLL injection tool that comes with Cheat Engine (CE), while on Android, you can use [XInjector](https://github.com/WindySha/XInjector) (Non-root environments can use [Android-Virtual-Inject](https://github.com/reveny/Android-Virtual-Inject/releases/latest)).
@@ -69,6 +71,16 @@ For example, on Windows, you can use the DLL injection tool that comes with Chea
 > You can try out all three modes and choose the one that works best for you.
 
 You can switch between modes in the [WebUI](#Configuration).
+
+### Bypassing XignCode3
+
+> Note: Currently, bypass support for XignCode3 is only available on Windows 64-bit systems.
+> You must handle file integrity checks and other protection mechanisms on your own.\
+> If you have any questions, please submit an Issue.
+
+If the target process uses __XignCode3__ anti-cheat protection, locate the `x3_x64.xem` file in the game directory and rename it to `x3_x64.xem.bak`.
+Then place the DLL in the same directory and rename it to `x3_x64.xem`.\
+After that, launch the game as usual. u-freecam will load automatically.
 
 ## Configuration
 

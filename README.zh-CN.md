@@ -58,6 +58,8 @@ make release-aarch64 # 或者其它目标，如 release-x86_64
 
 ## 如何使用
 
+### 一般方法
+
 通过任何手段, 将动态库注入目标进程/app即可[^1]。
 
 举例来说，Windows 上可通过 CE 自带的 dll 注入工具进行注入，而 Android 上可以使用 [XInjector](https://github.com/WindySha/XInjector) (非 Root 环境可以用 [Android-Virtual-Inject](https://github.com/reveny/Android-Virtual-Inject/releases/latest))
@@ -67,6 +69,14 @@ make release-aarch64 # 或者其它目标，如 release-x86_64
 > 根据游戏的不同，一些模式可能不能正常运作，甚至导致游戏直接崩溃，请尝试三种模式后选择合适的那个。
 
 模式的切换可在 [WebUI](#配置) 中进行。
+
+### 绕过 XignCode3
+
+> 注：目前仅提供对 Windows 64-bits 下对 XignCode3 的绕过支持，且需自行处理文件完整性校验及其它保护手段。
+> 如有疑问请提交 Issue。
+
+如果目标进程使用 __XignCode3__ 反作弊保护，请在游戏目录下搜寻 `x3_x64.xem` 文件，并重命名为 `x3_x64.xem.bak`，然后将 DLL 置于相同目录下并命名为 `x3_x64.xem`。
+之后按常规流程启动游戏即可，u-freecam 会自动加载。
 
 ## 配置
 

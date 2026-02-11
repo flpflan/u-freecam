@@ -8,37 +8,32 @@ namespace umod::unity_runtime::helper
 
     namespace
     {
-        static bool storedLockState{};
-        static bool storedVisible{};
+        static LockState storedLockState{};
     }
 
     auto CursorUtils::enableCursor() -> void
     {
 #ifndef __ANDROID__
         debug::logger::info("Enable cursor");
-        Cursor::set_lockState(false);
-        Cursor::set_visible(true);
+        Cursor::set_lockState(LockState::None);
+        // Cursor::set_visible(true);
 #endif
     }
     auto CursorUtils::disableCursor() -> void
     {
 #ifndef __ANDROID__
         debug::logger::info("Disable cursor");
-        Cursor::set_lockState(true);
-        Cursor::set_visible(false);
+        Cursor::set_lockState(LockState::Locked);
+        //Cursor::set_visible(false);
 #endif
     }
     auto CursorUtils::toggleCursor() -> void
     {
 #ifndef __ANDROID__
-        if (Cursor::get_lockState() == 0)
-        {
-            disableCursor();
-        }
-        else
-        {
+        if (Cursor::get_lockState() == LockState::Locked)
             enableCursor();
-        }
+        else
+            disableCursor();
 #endif
     }
     auto CursorUtils::backup() -> void
@@ -46,15 +41,17 @@ namespace umod::unity_runtime::helper
 #ifndef __ANDROID__
         debug::logger::info("Backup cursor");
         storedLockState = Cursor::get_lockState();
-        storedVisible = Cursor::get_visible();
+        disableCursor();
 #endif
     }
     auto CursorUtils::resume() -> void
     {
 #ifndef __ANDROID__
         debug::logger::info("Resume cursor");
-        Cursor::set_lockState(storedLockState);
-        Cursor::set_visible(storedVisible);
+        if (storedLockState != LockState::Locked)
+            enableCursor();
+        else
+            disableCursor();
 #endif
     }
 }

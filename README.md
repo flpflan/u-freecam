@@ -74,8 +74,9 @@ You can switch between modes in the [WebUI](#Configuration).
 
 ### Bypassing XignCode3
 
-> Note: Currently, bypass support for XignCode3 is only available on Windows 64-bit systems.
-> You must handle file integrity checks and other protection mechanisms on your own.\
+> Note: This only applies to Windows applications.
+> Bypassing on Android should occur automatically (injection is required when the app starts). \
+> This method only bypasses XignCode3 itself. You must handle file integrity checks and other protection mechanisms on your own. \
 > If you have any questions, please submit an Issue.
 
 If the target process uses __XignCode3__ anti-cheat protection, locate the `x3_x64.xem` file in the game directory and rename it to `x3_x64.xem.bak`.

@@ -73,7 +73,7 @@ namespace freecam
 
         // Set Cursor
 #ifndef __ANDROID__
-        CursorUtils::disableCursor();
+        CursorUtils::backup();
 #endif
     }
 
@@ -106,7 +106,7 @@ namespace freecam
             // }
         }
 #ifndef __ANDROID__
-        CursorUtils::enableCursor();
+        CursorUtils::resume();
 #endif
     }
 

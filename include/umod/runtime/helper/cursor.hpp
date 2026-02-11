@@ -7,5 +7,8 @@ namespace umod::unity_runtime::helper
         void disableCursor();
         void enableCursor();
         void toggleCursor();
+
+        void backup();
+        void resume();
     }
 }

@@ -6,6 +6,12 @@ namespace umod::unity_runtime::helper
 {
     using namespace UTYPE::unity_engine;
 
+    namespace
+    {
+        static bool storedLockState{};
+        static bool storedVisible{};
+    }
+
     auto CursorUtils::enableCursor() -> void
     {
 #ifndef __ANDROID__
@@ -33,6 +39,22 @@ namespace umod::unity_runtime::helper
         {
             enableCursor();
         }
+#endif
+    }
+    auto CursorUtils::backup() -> void
+    {
+#ifndef __ANDROID__
+        debug::logger::info("Backup cursor");
+        storedLockState = Cursor::get_lockState();
+        storedVisible = Cursor::get_visible();
+#endif
+    }
+    auto CursorUtils::resume() -> void
+    {
+#ifndef __ANDROID__
+        debug::logger::info("Resume cursor");
+        Cursor::set_lockState(storedLockState);
+        Cursor::set_visible(storedVisible);
 #endif
     }
 }

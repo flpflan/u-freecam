@@ -2,6 +2,8 @@
 #include "umod/runtime/helper/time.hpp"
 #include "umod/utils/math.hpp"
 
+#include "user/config.hpp"
+
 namespace umod::unity_runtime::helper
 {
     using namespace utils::math;
@@ -19,7 +21,9 @@ namespace umod::unity_runtime::helper
     auto TransformHelper::calculToRotate(const Vector2 input) -> Vector2 { return input; }
     auto TransformHelper::rotate(const Vector2 input) -> void
     {
-        const auto rotateDelta = calculToRotate(input) * TimeUtils::getDeltaTime_s();
+        auto deltaTime = TimeUtils::getDeltaTime_s();
+        if (deltaTime == 0) deltaTime = to_seconds(user_config::core::MockLoopDeltaTime);
+        const auto rotateDelta = calculToRotate(input) * deltaTime;
 
         auto [pitch, yaw, roll] = trans.GetRotation().ToEuler();
         yaw += rotateDelta.x;
@@ -31,14 +35,19 @@ namespace umod::unity_runtime::helper
     }
     auto TransformHelper::move(const Vector3 input) -> void
     {
-        const auto moveDelta = calculToMove(input) * TimeUtils::getDeltaTime_s();
+        auto deltaTime = TimeUtils::getDeltaTime_s();
+        if (deltaTime == 0) deltaTime = to_seconds(user_config::core::MockLoopDeltaTime);
+        const auto moveDelta = calculToMove(input) * deltaTime;
         trans.SetPosition(trans.GetPosition() + moveDelta);
     }
     auto TransformHelper::roll(const float toRoll) -> void
     {
+        auto deltaTime = TimeUtils::getDeltaTime_s();
+        if (deltaTime == 0) deltaTime = to_seconds(user_config::core::MockLoopDeltaTime);
+
         const auto forward = trans.GetForward();
         auto [pitch, yaw, roll] = trans.GetRotation().ToEuler();
-        roll += toRoll * TimeUtils::getDeltaTime_s();
+        roll += toRoll * deltaTime;
         roll = clamp(roll, -180.f, 180.f);
         const auto euler = Quaternion().Euler(pitch, yaw, roll);
         trans.SetRotation(euler);

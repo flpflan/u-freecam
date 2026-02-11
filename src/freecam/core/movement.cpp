@@ -1,7 +1,7 @@
 #include "freecam/freecam.hpp"
+#include "umod/runtime/helper/input.hpp"
 #include "umod/runtime/helper/time.hpp"
 #include "umod/utils/math.hpp"
-#include "umod/runtime/helper/input.hpp"
 
 #include "user/config.hpp"
 
@@ -20,8 +20,7 @@ private:
 public:
     float Tick()
     {
-        const auto deltaTime = TimeUtils::getDeltaTime_s();
-        accelTimer += deltaTime != 0 ? deltaTime : to_seconds(user_config::core::MockLoopDeltaTime);
+        accelTimer += TimeUtils::getDeltaTime_s();
         accelTimer = math::clamp(accelTimer, 0.f, AccelTime);
         return accelTimer / AccelTime;
     }

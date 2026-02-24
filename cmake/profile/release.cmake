@@ -1,6 +1,10 @@
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     target_compile_options(${PROJECT_NAME} PRIVATE
-        -O2
+        -O3
+        -ffast-math
+        -fomit-frame-pointer
+        # -funroll-loops    # May break I-cache so...
+        # -floop-interchange
         -fvisibility=hidden
         -fno-rtti
         -flto

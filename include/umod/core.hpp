@@ -24,10 +24,19 @@ namespace umod::core
             void dettach();
         };
 
-        const bool isMockLoop();
+        enum class Type
+        {
+            None,
+            Internal,
+            Mock
+        };
+
+        const Type currentState();
 
         // Handle attach(Index, void (*)());
         Handle attach(void (*)());
+
+        void reload(Type ty);
     }
 
     namespace feature

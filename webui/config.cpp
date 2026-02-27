@@ -1,6 +1,7 @@
 #include "config.hpp"
 #include "json.hpp"
 
+#include "umod/core.hpp"
 #include "umod/runtime/helper/input.hpp"
 #include "user/config.hpp"
 
@@ -151,6 +152,20 @@ namespace
             RET_CAMERA_MODE_STR(MainCamera)
         }
     }
+    // PlayerLoop Type
+    std::string jsonify(const user_config::core::player_loop::Type &v)
+    {
+#define RET_PlayerLoop_TYPE_STR(ty)                                                                                    \
+    case user_config::core::player_loop::Type::ty:                                                                     \
+        return QUOTE(ty);
+
+        switch (v)
+        {
+            RET_PlayerLoop_TYPE_STR(None);
+            RET_PlayerLoop_TYPE_STR(Internal);
+            RET_PlayerLoop_TYPE_STR(Mock);
+        }
+    }
 
     std::optional<user_config::freecam::keybind::Key> key_from_literal(const std::string &literal)
     {
@@ -206,6 +221,15 @@ namespace
         RET_STR_CAMERA_MODE(Orignal)
         RET_STR_CAMERA_MODE(Depth)
         RET_STR_CAMERA_MODE(MainCamera)
+        return std::nullopt;
+    }
+    std::optional<user_config::core::player_loop::Type> player_loop_type_from_literal(const std::string &literal)
+    {
+#define RET_STR_PLAYER_LOOP_TYPE(str)                                                                                  \
+    if (literal == #str) return user_config::core::player_loop::Type::str;
+        RET_STR_PLAYER_LOOP_TYPE(None)
+        RET_STR_PLAYER_LOOP_TYPE(Internal)
+        RET_STR_PLAYER_LOOP_TYPE(Mock)
         return std::nullopt;
     }
 }
@@ -302,6 +326,7 @@ namespace user_config
         {
             std::ostringstream os;
             os << "{";
+            os << "\"PlayerLoopType\":" << jsonify(player_loop::currentState()) << ",";
             os << "\"MockLoopDeltaTime\":" << jsonify(core::MockLoopDeltaTime) << ",";
             os << "\"EnabledModules\":" << jsonify(core::EnabledModules);
             os << "}";
@@ -311,6 +336,13 @@ namespace user_config
         {
             if (const auto value = data.as<Json::Object>())
             {
+                if (auto it = value->find("PlayerLoopType"); it != value->end())
+                    if (const auto value = it->second.as<std ::string>())
+                        if (auto ty = player_loop_type_from_literal(*value))
+                        {
+                            PlayerLoopType = *ty;
+                            player_loop::reload(PlayerLoopType);
+                        }
                 C(MockLoopDeltaTime)
                 AS(EnabledModules)
             }

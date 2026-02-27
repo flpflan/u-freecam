@@ -1,6 +1,7 @@
 #pragma once
 
 #include "freecam/freecam.hpp"
+#include "umod/core.hpp"
 #include "umod/runtime/helper/input.hpp"
 
 #include <chrono>
@@ -12,6 +13,7 @@ namespace user_config
     namespace loader
     {
         using namespace std::chrono_literals;
+
         inline bool Hardened = true;
         inline std::chrono::duration<float> WaitBeforeInit = 5s;
     }
@@ -19,6 +21,10 @@ namespace user_config
     namespace core
     {
         using namespace std::chrono_literals;
+        using namespace umod::core;
+        using namespace player_loop;
+
+        inline player_loop::Type PlayerLoopType = player_loop::Type::Internal;
         inline std::chrono::duration<float> MockLoopDeltaTime = 16.7ms;
         inline std::vector<std::string> EnabledModules = {"FreeCam"};
     }
@@ -28,7 +34,7 @@ namespace user_config
         using CameraMode = ::freecam::Mode;
 
         inline CameraMode Mode = CameraMode::Depth; // 相机模式
-        inline bool DisableOrigCam = false;           // 禁用原相机
+        inline bool DisableOrigCam = false;         // 禁用原相机
 
         // 镜头属性
         namespace property

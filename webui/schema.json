@@ -20,6 +20,12 @@
   "Core": {
     "type": "object",
     "properties": {
+      "PlayerLoopType": {
+        "type": "enum",
+        "label": "循环模式",
+        "desc": "帧更新模式，按键无响应时可尝试 Mock 模式",
+        "values": ["None", "Internal", "Mock"]
+      },
       "MockLoopDeltaTime": {
         "type": "range",
         "label": "Mock 帧率",

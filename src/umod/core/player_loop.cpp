@@ -53,38 +53,71 @@ namespace umod::core::player_loop
     namespace manager
     {
         static void (*kPlayerLoop)(void *, Index){};
-        static bool Attached{};
-        static bool isMockLoop_{};
-        static void attach()
+        static bool Attached{false};
+        static Type currentState_{Type::None};
+
+        static std::optional<std::thread> mockLoopWorker;
+
+        static void mockUpdate()
+        {
+            UnityResolve::ThreadAttach();
+            debug::logger::info("Mock loop started");
+            do
+            {
+                runAttached();
+                // TODO: Interval
+                std::this_thread::sleep_for(user_config::core::MockLoopDeltaTime);
+            } while (Attached && currentState_ == Type::Mock);
+            debug::logger::info("Mock loop ended");
+            // UnityResolve::ThreadDetach();
+        }
+
+        static void attach(Type ty)
         {
             if (Attached) return;
+
+            if (ty == Type::Internal)
+                goto INTERNAL;
+            else if (ty == Type::Mock)
+                goto MOCK;
+
+        INTERNAL:
             debug::logger::info("Try attaching to internal player loop");
             if (Hook(kPlayerLoop, (detour_update<CALL_ORIGNAL>)))
+            {
+                currentState_ = Type::Internal;
                 debug::logger::info("Hooking success");
+                goto END;
+            }
             else
             {
                 debug::logger::warn("Failed attaching to internal loop, fallback to mock loop");
-                isMockLoop_ = true;
-                std::thread(
-                    []
-                    {
-                        UnityResolve::ThreadAttach();
-                        debug::logger::info("Mock loop started");
-                        do
-                        {
-                            runAttached();
-                            std::this_thread::sleep_for(user_config::core::MockLoopDeltaTime);
-                        } while (1);
-                        UnityResolve::ThreadDetach();
-                    })
-                    .detach();
+                goto MOCK;
             }
+        MOCK:
+            mockLoopWorker = std::thread(mockUpdate);
+            currentState_ = Type::Mock;
+            goto END;
+        END:
+            Attached = true;
         }
+
         static void dettach()
         {
             if (!Attached) return;
-            debug::logger::info("Dettached from internal player loop");
-            UnHook(kPlayerLoop);
+            if (UnHook(kPlayerLoop)) debug::logger::info("Dettached from internal player loop");
+            currentState_ = Type::None;
+            if (mockLoopWorker && mockLoopWorker->joinable()) mockLoopWorker->join();
+            Attached = false;
+        }
+
+        static void reattach(Type ty)
+        {
+            if (currentState_ == ty) return;
+
+            debug::logger::info("Reloading player loop");
+            dettach();
+            attach(ty);
         }
     }
 
@@ -117,12 +150,14 @@ namespace umod::core::player_loop
     Handle attach(void (*target)())
     {
         // INFO: Attach to PlayerLoop if not yet
-        if (!manager::Attached) manager::attach();
+        if (!manager::Attached) manager::attach(user_config::core::PlayerLoopType);
         kUpdateLoops.push(target);
         return {target, Index::Update};
     }
 
-    const bool isMockLoop() { return manager::isMockLoop_; }
+    const Type currentState() { return manager::currentState_; }
 
     void init(void *playerLoop) { manager::kPlayerLoop = reinterpret_cast<void (*)(void *, Index)>(playerLoop); }
+
+    void reload(Type ty) { manager::reattach(ty); }
 }

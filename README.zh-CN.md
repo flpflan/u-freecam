@@ -137,8 +137,16 @@ make release-aarch64 # 或者其它目标，如 release-x86_64
 
 确保 `freecam-x86_86-windows.dll` 文件所在路径为纯英文，不包含中文及特殊字符。
 
+### 无法注入！我需要一个更强大的注入工具！
+
+可尝试 [Xenos](https://github.com/DarthTon/Xenos)，或者 [ExtremeInjector](https://github.com/master131/ExtremeInjector)。
+
 ### 游戏在第一次尝试时崩溃。
 
 这是正常现象，请多试几次。如果还不行，请提交 Issue。
+
+### 能够访问 WebUI，但功能按键均无响应
+
+尝试将循环模式更改为 `Mock`，此模式会造成按键灵敏度下降，但提供更好的兼容性。
 
 [^1]: 对于部分魔改/加固的引擎，需要在游戏启动时一并注入。

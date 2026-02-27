@@ -141,8 +141,16 @@ To access it locally, simply open http://localhost:23333.
 
 Ensure that the directory containing the `freecam-x86_86-windows.dll` file is in a directory with only English characters.
 
+### Injection failed! I need a more feature-rich injector!
+
+Try [Xenos](https://github.com/DarthTon/Xenos) or [ExtremeInjector](https://github.com/master131/ExtremeInjector)。
+
 ### The game crashes on the first attempt
 
 This is normal; please try again. If it still doesn't work, please submit an issue.
+
+### Access to the WebUI is available, but function keys are unresponsive
+
+Try changing the loop mode to `Mock`. This mode reduces key sensitivity but provides better compatibility.
 
 [^1]:For some modified/hardened engines, this need to be injected at the time of game startup. 

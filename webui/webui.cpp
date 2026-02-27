@@ -54,7 +54,6 @@ namespace webui
             umod::debug::logger::info("Try starting WebUI...");
             while (!svr.listen("0.0.0.0", user_config::webui::Port))
                 std::this_thread::sleep_for(3s);
-            umod::debug::logger::info("WebUI started");
         }
         catch (std::exception &e)
         {

@@ -12,7 +12,7 @@ AllowShortIfStatementsOnASingleLine: WithoutElse
 # AllowShortFunctionsOnASingleLine: Empty
 IndentCaseLabels: false
 ColumnLimit: 120
-ReflowComments: false
+ReflowComments: IndentOnly
 AccessModifierOffset: -4
 NamespaceIndentation: All
 FixNamespaceComments: false

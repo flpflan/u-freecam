@@ -4,3 +4,4 @@ out/
 build/
 compile_commands.json
 TODO
+.direnv

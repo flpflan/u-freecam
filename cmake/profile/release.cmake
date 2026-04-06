@@ -6,13 +6,15 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
         # -funroll-loops    # May break I-cache so...
         # -floop-interchange
         -fvisibility=hidden
+        -fvisibility-inlines-hidden
         -fno-rtti
         -flto
         -fdata-sections
         -ffunction-sections)
     target_link_options(${PROJECT_NAME} PRIVATE
         -flto
-        -Wl,--gc-sections)
+        -Wl,--gc-sections
+        -Wl,--exclude-libs,ALL)
     # Strip
     if (PROJECT_IS_TOP_LEVEL)
         add_custom_command(

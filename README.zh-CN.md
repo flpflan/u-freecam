@@ -32,7 +32,7 @@ u-freecam
 
 ### 前置需求
 
-- Visual Studio (包含 C++ 工具链和 Cmake)
+- Visual Studio (包含 C++ 工具链和 CMake)
 
 ### 编译
 

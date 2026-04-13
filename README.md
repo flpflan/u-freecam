@@ -33,7 +33,7 @@ If you want the latest development version, you can also download it from the [C
 
 ### Requirement
 
-- Visual Studio (With C++ toolchain and Cmake)
+- Visual Studio (With C++ toolchain and CMake)
 
 ### Compile
 

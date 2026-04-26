@@ -147,7 +147,7 @@ namespace umod::core::player_loop
     //         kLateUpdateLoops.push(target);
     //     return {target, index};
     // }
-    Handle attach(void (*target)())
+    [[nodiscard]] Handle attach(void (*target)())
     {
         // INFO: Attach to PlayerLoop if not yet
         if (!manager::Attached) manager::attach(user_config::core::PlayerLoopType);

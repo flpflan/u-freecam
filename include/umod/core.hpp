@@ -34,7 +34,7 @@ namespace umod::core
         const Type currentState();
 
         // Handle attach(Index, void (*)());
-        Handle attach(void (*)());
+        [[nodiscard]] Handle attach(void (*)());
 
         void reload(Type ty);
     }

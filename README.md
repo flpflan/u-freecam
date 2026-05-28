@@ -59,7 +59,7 @@ output: `build/release-android-aarch64/libfreecam-aarch64-android.so`
 
 ## How to Use
 
-### General methods
+### General Methods
 
 By any means, inject this dynamic library into the target process or application[^1]. 
 
@@ -71,6 +71,10 @@ For example, on Windows, you can use the DLL injection tool that comes with Chea
 > You can try out all three modes and choose the one that works best for you.
 
 You can switch between modes in the [WebUI](#Configuration).
+
+### Loading via dwmapi.dll Proxy
+
+This method only works on Windows. Copy the DLL to game directory and rename it to `dwmapi.dll`, then launch the game.
 
 ### Bypassing XignCode3
 

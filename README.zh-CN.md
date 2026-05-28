@@ -62,13 +62,18 @@ make release-aarch64 # 或者其它目标，如 release-x86_64
 
 通过任何手段, 将动态库注入目标进程/app即可[^1]。
 
-举例来说，Windows 上可通过 CE 自带的 dll 注入工具进行注入，而 Android 上可以使用 [XInjector](https://github.com/WindySha/XInjector) (非 Root 环境可以用 [Android-Virtual-Inject](https://github.com/reveny/Android-Virtual-Inject/releases/latest))
+举例来说，Windows 上可通过 CE 自带的 DLL 注入工具进行注入，而 Android 上可以使用 [XInjector](https://github.com/WindySha/XInjector) (非 Root 环境可以用 [Android-Virtual-Inject](https://github.com/reveny/Android-Virtual-Inject/releases/latest))
 
 > [!IMPORTANT]
 > u-freecam 具有三种不同的运行模式，效果根据游戏的不同效果会有很大差异。\
 > 根据游戏的不同，一些模式可能不能正常运作，甚至导致游戏直接崩溃，请尝试三种模式后选择合适的那个。
 
 模式的切换可在 [WebUI](#配置) 中进行。
+
+### 通过 dwmapi.dll 代理加载
+
+此方法仅在 Windows 上可用。
+将 DLL 重命名为 `dwmapi.dll` 并置于游戏目录下，随后启动游戏即可。
 
 ### 绕过 XignCode3
 

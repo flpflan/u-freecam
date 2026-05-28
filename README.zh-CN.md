@@ -64,12 +64,6 @@ make release-aarch64 # 或者其它目标，如 release-x86_64
 
 举例来说，Windows 上可通过 CE 自带的 DLL 注入工具进行注入，而 Android 上可以使用 [XInjector](https://github.com/WindySha/XInjector) (非 Root 环境可以用 [Android-Virtual-Inject](https://github.com/reveny/Android-Virtual-Inject/releases/latest))
 
-> [!IMPORTANT]
-> u-freecam 具有三种不同的运行模式，效果根据游戏的不同效果会有很大差异。\
-> 根据游戏的不同，一些模式可能不能正常运作，甚至导致游戏直接崩溃，请尝试三种模式后选择合适的那个。
-
-模式的切换可在 [WebUI](#配置) 中进行。
-
 ### 通过 dwmapi.dll 代理加载
 
 此方法仅在 Windows 上可用。
@@ -85,6 +79,10 @@ make release-aarch64 # 或者其它目标，如 release-x86_64
 之后按常规流程启动游戏即可，u-freecam 会自动加载。
 
 ## 配置
+
+> [!IMPORTANT]
+> u-freecam 具有三种不同的运行模式，效果根据游戏的不同效果会有很大差异。\
+> 根据游戏的不同，一些模式可能不能正常运作，甚至导致游戏直接崩溃，请尝试三种模式后选择合适的那个。
 
 注入进程之后，程序会在本地 __23333__ 端口启动一个 WebUI 配置界面，可通过浏览器访问此界面来调整程序的各项参数。
 

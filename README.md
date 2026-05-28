@@ -65,13 +65,6 @@ By any means, inject this dynamic library into the target process or application
 
 For example, on Windows, you can use the DLL injection tool that comes with Cheat Engine (CE), while on Android, you can use [XInjector](https://github.com/WindySha/XInjector) (Non-root environments can use [Android-Virtual-Inject](https://github.com/reveny/Android-Virtual-Inject/releases/latest)).
 
-> [!IMPORTANT]
-> u-freecam has three different operating modes, and their behavior can vary greatly depending on the game.\
-> Depending on the game, some modes may not work correctly or may even cause the game to crash.
-> You can try out all three modes and choose the one that works best for you.
-
-You can switch between modes in the [WebUI](#Configuration).
-
 ### Loading via dwmapi.dll Proxy
 
 This method only works on Windows. Copy the DLL to game directory and rename it to `dwmapi.dll`, then launch the game.
@@ -88,6 +81,11 @@ Then place the DLL in the same directory and rename it to `x3_x64.xem`.\
 After that, launch the game as usual. u-freecam will load automatically.
 
 ## Configuration
+
+> [!IMPORTANT]
+> u-freecam has three different operating modes, and their behavior can vary greatly depending on the game.\
+> Depending on the game, some modes may not work correctly or may even cause the game to crash.
+> You can try out all three modes and choose the one that works best for you.
 
 After injected to the process , a WebUI interface will be started on the local port __23333__. This interface can be accessed via a browser to adjust various program parameters.
 

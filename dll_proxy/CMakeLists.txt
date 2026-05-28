@@ -1,7 +1,12 @@
 cmake_minimum_required(VERSION 3.22)
 project(dll_proxy LANGUAGES CXX ASM_MASM)
 
-add_library(${PROJECT_NAME} STATIC dwmapi.asm dwmapi.cpp)
+add_library(${PROJECT_NAME} STATIC dwmapi.cpp)
+if(CMAKE_SIZEOF_VOID_P EQUAL 8) # x64
+    target_sources(${PROJECT_NAME} PRIVATE dwmapi.asm)
+else()                          # x86
+    target_sources(${PROJECT_NAME} PRIVATE dwmapi32.asm)
+endif()
 
 target_link_options(${PROJECT_NAME} INTERFACE
     "/DEF:${CMAKE_CURRENT_SOURCE_DIR}/dwmapi.def"

@@ -24,7 +24,10 @@ __attribute__((destructor)) void on_unload()
     umod::core::shutdown();
 }
 #else
+#define WIN32_LEAN_AND_MEAN
 #include "Windows.h"
+
+#include "dll_proxy.h"
 
 static HMODULE g_hModule{};
 
@@ -34,6 +37,8 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD reason, LPVOID lpReserved)
     {
     case DLL_PROCESS_ATTACH:
         g_hModule = hModule;
+
+        DoDllProxy();
 
         DisableThreadLibraryCalls(hModule);
 

@@ -57,6 +57,11 @@ if(NOT (${CMAKE_SYSTEM_NAME} STREQUAL "Android" AND ${CMAKE_SYSTEM_VERSION} LESS
     target_link_libraries(${PROJECT_NAME} PRIVATE Backward::Interface)
 endif()
 
+if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
+    add_subdirectory(dll_proxy)
+    target_link_libraries(${PROJECT_NAME} PRIVATE dll_proxy)
+endif()
+
 if(${UMOD_ENABLE_WEBUI})
     target_link_libraries(${PROJECT_NAME} PRIVATE webui)
 endif()

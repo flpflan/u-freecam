@@ -1,0 +1,432 @@
+.code
+extern mProcs:QWORD
+f0 proc
+  jmp mProcs[8*0]
+f0 endp
+f1 proc
+  jmp mProcs[8*1]
+f1 endp
+f2 proc
+  jmp mProcs[8*2]
+f2 endp
+f3 proc
+  jmp mProcs[8*3]
+f3 endp
+f4 proc
+  jmp mProcs[8*4]
+f4 endp
+f5 proc
+  jmp mProcs[8*5]
+f5 endp
+f6 proc
+  jmp mProcs[8*6]
+f6 endp
+f7 proc
+  jmp mProcs[8*7]
+f7 endp
+f8 proc
+  jmp mProcs[8*8]
+f8 endp
+f9 proc
+  jmp mProcs[8*9]
+f9 endp
+f10 proc
+  jmp mProcs[8*10]
+f10 endp
+f11 proc
+  jmp mProcs[8*11]
+f11 endp
+f12 proc
+  jmp mProcs[8*12]
+f12 endp
+f13 proc
+  jmp mProcs[8*13]
+f13 endp
+f14 proc
+  jmp mProcs[8*14]
+f14 endp
+f15 proc
+  jmp mProcs[8*15]
+f15 endp
+f16 proc
+  jmp mProcs[8*16]
+f16 endp
+f17 proc
+  jmp mProcs[8*17]
+f17 endp
+f18 proc
+  jmp mProcs[8*18]
+f18 endp
+f19 proc
+  jmp mProcs[8*19]
+f19 endp
+f20 proc
+  jmp mProcs[8*20]
+f20 endp
+f21 proc
+  jmp mProcs[8*21]
+f21 endp
+f22 proc
+  jmp mProcs[8*22]
+f22 endp
+f23 proc
+  jmp mProcs[8*23]
+f23 endp
+f24 proc
+  jmp mProcs[8*24]
+f24 endp
+f25 proc
+  jmp mProcs[8*25]
+f25 endp
+f26 proc
+  jmp mProcs[8*26]
+f26 endp
+f27 proc
+  jmp mProcs[8*27]
+f27 endp
+f28 proc
+  jmp mProcs[8*28]
+f28 endp
+f29 proc
+  jmp mProcs[8*29]
+f29 endp
+f30 proc
+  jmp mProcs[8*30]
+f30 endp
+f31 proc
+  jmp mProcs[8*31]
+f31 endp
+f32 proc
+  jmp mProcs[8*32]
+f32 endp
+f33 proc
+  jmp mProcs[8*33]
+f33 endp
+f34 proc
+  jmp mProcs[8*34]
+f34 endp
+f35 proc
+  jmp mProcs[8*35]
+f35 endp
+f36 proc
+  jmp mProcs[8*36]
+f36 endp
+f37 proc
+  jmp mProcs[8*37]
+f37 endp
+f38 proc
+  jmp mProcs[8*38]
+f38 endp
+f39 proc
+  jmp mProcs[8*39]
+f39 endp
+f40 proc
+  jmp mProcs[8*40]
+f40 endp
+f41 proc
+  jmp mProcs[8*41]
+f41 endp
+f42 proc
+  jmp mProcs[8*42]
+f42 endp
+f43 proc
+  jmp mProcs[8*43]
+f43 endp
+f44 proc
+  jmp mProcs[8*44]
+f44 endp
+f45 proc
+  jmp mProcs[8*45]
+f45 endp
+f46 proc
+  jmp mProcs[8*46]
+f46 endp
+f47 proc
+  jmp mProcs[8*47]
+f47 endp
+f48 proc
+  jmp mProcs[8*48]
+f48 endp
+f49 proc
+  jmp mProcs[8*49]
+f49 endp
+f50 proc
+  jmp mProcs[8*50]
+f50 endp
+f51 proc
+  jmp mProcs[8*51]
+f51 endp
+f52 proc
+  jmp mProcs[8*52]
+f52 endp
+f53 proc
+  jmp mProcs[8*53]
+f53 endp
+f54 proc
+  jmp mProcs[8*54]
+f54 endp
+f55 proc
+  jmp mProcs[8*55]
+f55 endp
+f56 proc
+  jmp mProcs[8*56]
+f56 endp
+f57 proc
+  jmp mProcs[8*57]
+f57 endp
+f58 proc
+  jmp mProcs[8*58]
+f58 endp
+f59 proc
+  jmp mProcs[8*59]
+f59 endp
+f60 proc
+  jmp mProcs[8*60]
+f60 endp
+f61 proc
+  jmp mProcs[8*61]
+f61 endp
+f62 proc
+  jmp mProcs[8*62]
+f62 endp
+f63 proc
+  jmp mProcs[8*63]
+f63 endp
+f64 proc
+  jmp mProcs[8*64]
+f64 endp
+f65 proc
+  jmp mProcs[8*65]
+f65 endp
+f66 proc
+  jmp mProcs[8*66]
+f66 endp
+f67 proc
+  jmp mProcs[8*67]
+f67 endp
+f68 proc
+  jmp mProcs[8*68]
+f68 endp
+f69 proc
+  jmp mProcs[8*69]
+f69 endp
+f70 proc
+  jmp mProcs[8*70]
+f70 endp
+f71 proc
+  jmp mProcs[8*71]
+f71 endp
+f72 proc
+  jmp mProcs[8*72]
+f72 endp
+f73 proc
+  jmp mProcs[8*73]
+f73 endp
+f74 proc
+  jmp mProcs[8*74]
+f74 endp
+f75 proc
+  jmp mProcs[8*75]
+f75 endp
+f76 proc
+  jmp mProcs[8*76]
+f76 endp
+f77 proc
+  jmp mProcs[8*77]
+f77 endp
+f78 proc
+  jmp mProcs[8*78]
+f78 endp
+f79 proc
+  jmp mProcs[8*79]
+f79 endp
+f80 proc
+  jmp mProcs[8*80]
+f80 endp
+f81 proc
+  jmp mProcs[8*81]
+f81 endp
+f82 proc
+  jmp mProcs[8*82]
+f82 endp
+f83 proc
+  jmp mProcs[8*83]
+f83 endp
+f84 proc
+  jmp mProcs[8*84]
+f84 endp
+f85 proc
+  jmp mProcs[8*85]
+f85 endp
+f86 proc
+  jmp mProcs[8*86]
+f86 endp
+f87 proc
+  jmp mProcs[8*87]
+f87 endp
+f88 proc
+  jmp mProcs[8*88]
+f88 endp
+f89 proc
+  jmp mProcs[8*89]
+f89 endp
+f90 proc
+  jmp mProcs[8*90]
+f90 endp
+f91 proc
+  jmp mProcs[8*91]
+f91 endp
+f92 proc
+  jmp mProcs[8*92]
+f92 endp
+f93 proc
+  jmp mProcs[8*93]
+f93 endp
+f94 proc
+  jmp mProcs[8*94]
+f94 endp
+f95 proc
+  jmp mProcs[8*95]
+f95 endp
+f96 proc
+  jmp mProcs[8*96]
+f96 endp
+f97 proc
+  jmp mProcs[8*97]
+f97 endp
+f98 proc
+  jmp mProcs[8*98]
+f98 endp
+f99 proc
+  jmp mProcs[8*99]
+f99 endp
+f100 proc
+  jmp mProcs[8*100]
+f100 endp
+f101 proc
+  jmp mProcs[8*101]
+f101 endp
+f102 proc
+  jmp mProcs[8*102]
+f102 endp
+f103 proc
+  jmp mProcs[8*103]
+f103 endp
+f104 proc
+  jmp mProcs[8*104]
+f104 endp
+f105 proc
+  jmp mProcs[8*105]
+f105 endp
+f106 proc
+  jmp mProcs[8*106]
+f106 endp
+f107 proc
+  jmp mProcs[8*107]
+f107 endp
+f108 proc
+  jmp mProcs[8*108]
+f108 endp
+f109 proc
+  jmp mProcs[8*109]
+f109 endp
+f110 proc
+  jmp mProcs[8*110]
+f110 endp
+f111 proc
+  jmp mProcs[8*111]
+f111 endp
+f112 proc
+  jmp mProcs[8*112]
+f112 endp
+f113 proc
+  jmp mProcs[8*113]
+f113 endp
+f114 proc
+  jmp mProcs[8*114]
+f114 endp
+f115 proc
+  jmp mProcs[8*115]
+f115 endp
+f116 proc
+  jmp mProcs[8*116]
+f116 endp
+f117 proc
+  jmp mProcs[8*117]
+f117 endp
+f118 proc
+  jmp mProcs[8*118]
+f118 endp
+f119 proc
+  jmp mProcs[8*119]
+f119 endp
+f120 proc
+  jmp mProcs[8*120]
+f120 endp
+f121 proc
+  jmp mProcs[8*121]
+f121 endp
+f122 proc
+  jmp mProcs[8*122]
+f122 endp
+f123 proc
+  jmp mProcs[8*123]
+f123 endp
+f124 proc
+  jmp mProcs[8*124]
+f124 endp
+f125 proc
+  jmp mProcs[8*125]
+f125 endp
+f126 proc
+  jmp mProcs[8*126]
+f126 endp
+f127 proc
+  jmp mProcs[8*127]
+f127 endp
+f128 proc
+  jmp mProcs[8*128]
+f128 endp
+f129 proc
+  jmp mProcs[8*129]
+f129 endp
+f130 proc
+  jmp mProcs[8*130]
+f130 endp
+f131 proc
+  jmp mProcs[8*131]
+f131 endp
+f132 proc
+  jmp mProcs[8*132]
+f132 endp
+f133 proc
+  jmp mProcs[8*133]
+f133 endp
+f134 proc
+  jmp mProcs[8*134]
+f134 endp
+f135 proc
+  jmp mProcs[8*135]
+f135 endp
+f136 proc
+  jmp mProcs[8*136]
+f136 endp
+f137 proc
+  jmp mProcs[8*137]
+f137 endp
+f138 proc
+  jmp mProcs[8*138]
+f138 endp
+f139 proc
+  jmp mProcs[8*139]
+f139 endp
+f140 proc
+  jmp mProcs[8*140]
+f140 endp
+f141 proc
+  jmp mProcs[8*141]
+f141 endp
+f142 proc
+  jmp mProcs[8*142]
+f142 endp
+end

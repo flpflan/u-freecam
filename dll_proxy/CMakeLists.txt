@@ -10,6 +10,7 @@ endif()
 
 target_link_options(${PROJECT_NAME} INTERFACE
     "/DEF:${CMAKE_CURRENT_SOURCE_DIR}/dwmapi.def"
+    # /SAFESEH:NO # Fix x86 build with Visual Studio 17 2022 Generator.
 )
 
 target_include_directories(

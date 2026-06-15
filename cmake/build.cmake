@@ -15,6 +15,13 @@ elseif(ARCH MATCHES "x86|i[3-6]86")
     set(ARCH x86)
 endif()
 
+# Sometimes CMAKE_SYSTEM_PROCESSOR reports the host architecture rather than the compiler's actual output target.
+if(ARCH MATCHES "x86_64")
+    if(CMAKE_SIZEOF_VOID_P EQUAL 4)
+        set(ARCH x86)
+    endif()
+endif()
+
 # platform
 if(ANDROID)
     set(PLATFORM android)

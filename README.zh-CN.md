@@ -60,7 +60,7 @@ make release-aarch64 # 或者其它目标，如 release-x86_64
 
 ### 一般方法
 
-通过任何手段, 将动态库注入目标进程/app即可[^1]。
+通过任何手段, 将动态库加载进目标进程/App即可[^1]。
 
 举例来说，Windows 上可通过 CE 自带的 DLL 注入工具进行注入，而 Android 上可以使用 [XInjector](https://github.com/WindySha/XInjector) (非 Root 环境可以用 [Android-Virtual-Inject](https://github.com/reveny/Android-Virtual-Inject/releases/latest))
 
@@ -71,7 +71,7 @@ make release-aarch64 # 或者其它目标，如 release-x86_64
 
 ### 绕过 XignCode3
 
-> 注：这只针对 Windows 应用程序，安卓上的绕过应该会自动进行（需要在应用启动时一并注入）。\
+> 注：这只针对 Windows 应用程序，安卓上的绕过应该会自动进行（需要在应用启动时一并载入）。\
 > 该方法仅绕过 XignCode3 本身，需自行处理文件完整性校验及其它保护手段。\
 > 如有疑问请提交 Issue。
 
@@ -84,7 +84,7 @@ make release-aarch64 # 或者其它目标，如 release-x86_64
 > u-freecam 具有三种不同的运行模式，效果根据游戏的不同效果会有很大差异。\
 > 根据游戏的不同，一些模式可能不能正常运作，甚至导致游戏直接崩溃，请尝试三种模式后选择合适的那个。
 
-注入进程之后，程序会在本地 __23333__ 端口启动一个 WebUI 配置界面，可通过浏览器访问此界面来调整程序的各项参数。
+载入进程之后，程序会在本地 __23333__ 端口启动一个 WebUI 配置界面，可通过浏览器访问此界面来调整程序的各项参数。
 
 如果是本机访问，打开 http://localhost:23333 即可。
 
@@ -136,14 +136,6 @@ make release-aarch64 # 或者其它目标，如 release-x86_64
 
 ## 常见问题
  
-### CE 注入后游戏崩溃
-
-确保 `freecam-x86_86-windows.dll` 文件所在路径为纯英文，不包含中文及特殊字符。
-
-### 无法注入！我需要一个更强大的注入工具！
-
-可尝试 [Xenos](https://github.com/DarthTon/Xenos)，或者 [ExtremeInjector](https://github.com/master131/ExtremeInjector)。
-
 ### 游戏在第一次尝试时崩溃。
 
 这是正常现象，请多试几次。如果还不行，请提交 Issue。

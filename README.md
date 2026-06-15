@@ -61,7 +61,7 @@ output: `build/release-android-aarch64/libfreecam-aarch64-android.so`
 
 ### General Methods
 
-By any means, inject this dynamic library into the target process or application[^1]. 
+By any means, load this dynamic library into the target process or application[^1]. 
 
 For example, on Windows, you can use the DLL injection tool that comes with Cheat Engine (CE), while on Android, you can use [XInjector](https://github.com/WindySha/XInjector) (Non-root environments can use [Android-Virtual-Inject](https://github.com/reveny/Android-Virtual-Inject/releases/latest)).
 
@@ -72,7 +72,7 @@ This method only works on Windows. Copy the DLL to game directory and rename it 
 ### Bypassing XignCode3
 
 > Note: This only applies to Windows applications.
-> Bypassing on Android should occur automatically (injection is required when the app starts). \
+> Bypassing on Android should occur automatically (Needs to be loaded together when the app starts). \
 > This method only bypasses XignCode3 itself. You must handle file integrity checks and other protection mechanisms on your own. \
 > If you have any questions, please submit an Issue.
 
@@ -87,7 +87,7 @@ After that, launch the game as usual. u-freecam will load automatically.
 > Depending on the game, some modes may not work correctly or may even cause the game to crash.
 > You can try out all three modes and choose the one that works best for you.
 
-After injected to the process , a WebUI interface will be started on the local port __23333__. This interface can be accessed via a browser to adjust various program parameters.
+After loaded to the process , a WebUI interface will be started on the local port __23333__. This interface can be accessed via a browser to adjust various program parameters.
 
 To access it locally, simply open http://localhost:23333.
 
@@ -138,14 +138,6 @@ To access it locally, simply open http://localhost:23333.
 - [UnityResolve.hpp](https://github.com/issuimo/UnityResolve.hpp)
 
 ## FAQ
-
-### Crashes after injection with CE
-
-Ensure that the directory containing the `freecam-x86_86-windows.dll` file is in a directory with only English characters.
-
-### Injection failed! I need a more feature-rich injector!
-
-Try [Xenos](https://github.com/DarthTon/Xenos) or [ExtremeInjector](https://github.com/master131/ExtremeInjector)。
 
 ### The game crashes on the first attempt
 

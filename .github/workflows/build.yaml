@@ -69,7 +69,7 @@ jobs:
       - name: Configure CMake
         run: >
           cmake -S . -B build
-          -G "Ninja"
+          -G "Visual Studio 17 2022"
           -A ${{ matrix.cmake_arch }} 
           -D CMAKE_BUILD_TYPE=Debug
 

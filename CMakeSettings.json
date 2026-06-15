@@ -7,6 +7,7 @@
       "inheritEnvironments": [ "msvc_x64_x64" ],
       "buildRoot": "${projectDir}\\build\\${name}",
       "installRoot": "${projectDir}\\install\\${name}",
+      "cmakeCommandArgs": "-D CMAKE_BUILD_TYPE=Debug",
       "buildCommandArgs": "",
       "ctestCommandArgs": ""
     },
@@ -16,6 +17,7 @@
       "configurationType": "Release",
       "buildRoot": "${projectDir}\\build\\${name}",
       "installRoot": "${projectDir}\\install\\${name}",
+      "cmakeCommandArgs": "-D CMAKE_BUILD_TYPE=Release",
       "buildCommandArgs": "",
       "ctestCommandArgs": "",
       "inheritEnvironments": [ "msvc_x64_x64" ]
@@ -26,7 +28,7 @@
       "configurationType": "Debug",
       "buildRoot": "${projectDir}\\build\\${name}",
       "installRoot": "${projectDir}\\install\\${name}",
-      "cmakeCommandArgs": "",
+      "cmakeCommandArgs": "-D CMAKE_BUILD_TYPE=Debug",
       "buildCommandArgs": "",
       "ctestCommandArgs": "",
       "inheritEnvironments": [ "msvc_x86" ]
@@ -37,7 +39,7 @@
       "configurationType": "Release",
       "buildRoot": "${projectDir}\\build\\${name}",
       "installRoot": "${projectDir}\\install\\${name}",
-      "cmakeCommandArgs": "",
+      "cmakeCommandArgs": "-D CMAKE_BUILD_TYPE=Release",
       "buildCommandArgs": "",
       "ctestCommandArgs": "",
       "inheritEnvironments": [ "msvc_x86" ]

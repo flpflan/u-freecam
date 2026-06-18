@@ -29,33 +29,9 @@ Pre-built versions can be downloaded from the [Release](https://github.com/flpfl
 
 If you want the latest development version, you can also download it from the [CI](https://github.com/flpflan/u-freecam/actions) build artifacts.
 
-## Build (Windows)
+## Build
 
-### Requirement
-
-- Visual Studio (With C++ toolchain and CMake)
-
-### Compile
-
-Open this project directly in Visual Studio, select the `freecam-x86_64-windows` target, and then generate it.
-
-## Build (Android)
-
-### Requirement
-
-- Android NDK 27+
-- Cmake 3.22+
-- Ninja (Optional)
-
-### Compile
-
-```shell
-export ANDROID_NDK=/path/to/ndk # Set the path to Android NDK
-export GENERATOR=Ninja
-make release-aarch64 # Or the other target, e.g. release-x86_64
-```
-
-output: `build/release-android-aarch64/libfreecam-aarch64-android.so`
+[docs/BUILD.md](/docs/BUILD.md)
 
 ## How to Use
 

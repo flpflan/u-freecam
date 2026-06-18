@@ -28,33 +28,9 @@ u-freecam
 可在 [Release](https://github.com/flpflan/u-freecam/releases) 页面下载预构建版本。
 如果你想获取最新的开发版本，也可从 [CI](https://github.com/flpflan/u-freecam/actions) 构建产物中下载。
 
-## 构建 (Windows)
+## 构建
 
-### 前置需求
-
-- Visual Studio (包含 C++ 工具链和 CMake)
-
-### 编译
-
-用 Visual Studio 打开本项目，选择 `freecam-x86_64-windows` 目标，然后生成。
-
-## 构建 (Android)
-
-### 前置需求
-
-- Android NDK 27+
-- Cmake 3.22+
-- Ninja (可选)
-
-### 编译
-
-```shell
-export ANDROID_NDK=/path/to/ndk # 设置 NDK 路径
-export GENERATOR=Ninja
-make release-aarch64 # 或者其它目标，如 release-x86_64
-```
-
-输出: `build/release-android-aarch64/libfreecam-aarch64-android.so`
+[docs/BUILD.md](/docs/BUILD.md)
 
 ## 如何使用
 

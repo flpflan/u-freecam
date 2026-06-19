@@ -24,9 +24,6 @@ jobs:
           submodules: recursive
           fetch-depth: 1
 
-      - name: Setup Ninja
-        uses: ashutoshvarma/setup-ninja@master
-
       - name: Setup Android NDK
         uses: nttld/setup-ndk@v1
         with:

@@ -45,17 +45,6 @@ For example, on Windows, you can use the DLL injection tool that comes with Chea
 
 This method only works on Windows. Copy the DLL to game directory and rename it to `dwmapi.dll`, then launch the game.
 
-### Bypassing XignCode3
-
-> Note: This only applies to Windows applications.
-> Bypassing on Android should occur automatically (Needs to be loaded together when the app starts). \
-> This method only bypasses XignCode3 itself. You must handle file integrity checks and other protection mechanisms on your own. \
-> If you have any questions, please submit an Issue.
-
-If the target process uses __XignCode3__ anti-cheat protection, locate the `x3_x64.xem` file in the game directory and rename it to `x3_x64.xem.bak`.
-Then place the DLL in the same directory and rename it to `x3_x64.xem`.\
-After that, launch the game as usual. u-freecam will load automatically.
-
 ## Configuration
 
 > [!IMPORTANT]
